@@ -1,4 +1,4 @@
-import { ButtonBack, ButtonContinue, InputBoxes, InputPhone, TermsCheck } from '@/app/Components/LoginPageComponents'
+import { ButtonBack, ButtonContinue, InputPhone, TermsCheck } from '@/app/Components/LoginPageComponents'
 import { Datepicker } from 'flowbite-react'
 import Image from 'next/image'
 import React from 'react'
