@@ -12,37 +12,37 @@ export function NavbarComponent() {
         <SidebarItemGroup>
           <SidebarItem href="/Home" >
             <div className="flex items-center">
-            <img className="h-5 w-5" src="../assets/house.svg" alt="home" /><p className="pl-2">Home</p>
+            <img className="h-5 w-5 dark:invert" src="../assets/house.svg" alt="home"/><p className="pl-2">Home</p>
             </div>
           </SidebarItem>
           <SidebarItem href="/Discover">
           <div className="flex items-center">
-            <img className="h-5 w-5" src="../assets/search.svg" alt="discover" /><p className="pl-2">Discover</p>
+            <img className="h-5 w- dark:invert" src="../assets/search.svg" alt="discover" /><p className="pl-2">Discover</p>
             </div>
           </SidebarItem>
           <SidebarItem href="/Notifications">
           <div className="flex items-center">
-            <img className="h-5 w-5" src="../assets/bell.svg" alt="notifications" /><p className="pl-2">Notifications</p>
+            <img className="h-5 w-5 dark:invert" src="../assets/bell.svg" alt="notifications" /><p className="pl-2">Notifications</p>
             </div>
           </SidebarItem>
           <SidebarItem href="/Premium">
           <div className="flex items-center">
-            <img className="h-5 w-5" src="../assets/award.svg" alt="notifications" /><p className="pl-2">Premium</p>
+            <img className="h-5 w-5 dark:invert" src="../assets/award.svg" alt="notifications" /><p className="pl-2">Premium</p>
             </div>
           </SidebarItem>
           <SidebarItem href="/Messages" >
           <div className="flex items-center">
-            <img className="h-5 w-5" src="../assets/envelope.svg" alt="messages" /><p className="pl-2">Messages</p>
+            <img className="h-5 w-5 dark:invert" src="../assets/envelope.svg" alt="messages" /><p className="pl-2">Messages</p>
             </div>
           </SidebarItem>
           <SidebarItem href="/RecipeBook" >
           <div className="flex items-center">
-            <img className="h-5 w-5" src="../assets/book.svg" alt="book" /><p className="pl-2">Recipe Book</p>
+            <img className="h-5 w-5 dark:invert" src="../assets/book.svg" alt="book" /><p className="pl-2">Recipe Book</p>
             </div>
           </SidebarItem>
           <SidebarItem href="/Profile" >
           <div className="flex items-center">
-            <img className="h-5 w-5" src="../assets/person.svg" alt="profile" /><p className="pl-2">Profile</p>
+            <img className="h-5 w-5 dark:invert" src="../assets/person.svg" alt="profile" /><p className="pl-2">Profile</p>
             </div>
           </SidebarItem>
           <Button className="w-full text-center" href="/NewPost">Post</Button>
@@ -50,12 +50,12 @@ export function NavbarComponent() {
         <SidebarItemGroup>
           <SidebarItem href="#" >
           <div className="flex items-center">
-            <img className="h-5 w-5" src="../assets/person.svg" alt="profile" /><p className="pl-2">UserName</p>
+            <img className="h-5 w-5 dark:invert" src="../assets/person.svg" alt="profile" /><p className="pl-2">UserName</p>
             </div>
           </SidebarItem>
           <SidebarItem href="#" >
           <div className="flex items-center">
-            <img className="h-5 w-5" src="../assets/gear.svg" alt="profile" /><p className="pl-2">Settings and Privacy</p>
+            <img className="h-5 w-5 dark:invert" src="../assets/gear.svg" alt="profile" /><p className="pl-2">Settings and Privacy</p>
             </div>
           </SidebarItem>
           <SidebarItem href="/" >

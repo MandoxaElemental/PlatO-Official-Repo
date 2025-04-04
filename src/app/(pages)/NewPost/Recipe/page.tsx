@@ -57,7 +57,7 @@ const Recipe = () => {
             <p className='font-semibold text-xl text-center'>Ingredients</p>
             {ingredients.map((ingredient: string, ibx: number) => (
                 <div key={ibx} className='flex items-center px-2'>
-            <img className='h-10 w-10 pr-5 hover:opacity-50' src="../assets/x-lg.svg" alt="remove" onClick={() => removeIngredient(ibx)}/>
+            <img className='h-10 w-10 pr-5 hover:opacity-50 dark:invert cursor-pointer' src="../assets/x-lg.svg" alt="remove" onClick={() => removeIngredient(ibx)}/>
                 <div className="mb-4 px-1">
         <label className="block text-gray-700 text-sm font-bold mb-2">
             AMOUNT
@@ -79,13 +79,13 @@ const Recipe = () => {
                 </div>
             )
         )}
-            <div className='flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600' onClick={addIngredient}><img className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" /><p>Add Ingredient</p></div>
+            <div className='flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer' onClick={addIngredient}><img className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" /><p>Add Ingredient</p></div>
         </div>
         <div className='border-b-1 border-solid border-slate-300 p-2'>
         <p className='font-semibold text-xl text-center'>Instructions</p>
             {steps.map((step: string, ibx: number) => (
                 <div key={ibx} className='flex items-center px-2'>
-            <img className='h-10 w-10 pr-5 hover:opacity-50' src="../assets/x-lg.svg" alt="remove" onClick={() => removeStep(ibx)}/>
+            <img className='h-10 w-10 pr-5 hover:opacity-50 dark:invert cursor-pointer' src="../assets/x-lg.svg" alt="remove" onClick={() => removeStep(ibx)}/>
                 <div className="mb-4 px-1">
         <label className="block text-gray-700 text-sm font-bold mb-2">
             Step {ibx + 1}
@@ -95,11 +95,11 @@ const Recipe = () => {
                 </div>
             )
         )}
-            <div className='flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600' onClick={addStep}><img className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" /><p>Add Step</p></div>
+            <div className='flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer' onClick={addStep}><img className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" /><p>Add Step</p></div>
         </div>
         <div className='border-b-1 border-solid border-slate-300 p-2'>
         <p className='font-semibold text-xl text-center'>Tags</p>
-        <div onClick={() => setOpenModal(true)} className='flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600'><img className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" /><p>Add Tags</p></div>
+        <div onClick={() => setOpenModal(true)} className='flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer'><img className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" /><p>Add Tags</p></div>
         </div>
         <div className='p-2 flex justify-end'>
             <Button outline className='mx-1 w-[100px]'>Draft</Button>
