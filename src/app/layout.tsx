@@ -32,17 +32,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="flex justify-between px-5 max-h-[100vh]">
-          <div className="max-h-screen overflow-y-auto scrollbar-hide">
-        <NavbarComponent/>
-          </div>
-          <div className="w-min-screenmax-h-screen overflow-y-auto scrollbar-hide">
+        <div>
         {children}
-          </div>
-          <div className="max-h-screen overflow-y-auto scrollbar-hide">
-        <NavbarComponentRight/>
         </div>
-    </div>
       </body>
     </html>
   );

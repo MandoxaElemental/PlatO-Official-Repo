@@ -9,6 +9,7 @@ const SignupPage2 = () => {
         <div className='justify-items-center'>
             <Image src={`/assets/4.svg`} alt="logo" width={400} height={400}/>  
         </div>
+    <div className='flex items-center justify-center'>
         <div className='grid gap-3'>
             <InputPhone setFormtype='Phone Number'/>
             <Datepicker/>
@@ -16,6 +17,7 @@ const SignupPage2 = () => {
             <ButtonContinue pageLink='Login/SignupPageFour'/>
             <ButtonBack pageLink='SignupPageOne'/>
         </div>
+    </div>
     </>
   )
 }

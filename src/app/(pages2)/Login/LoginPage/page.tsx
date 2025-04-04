@@ -8,6 +8,7 @@ const LogInPage = () => {
         <div className='justify-items-center'>
             <Image src={`/assets/4.svg`} alt="logo" width={400} height={400}/>  
         </div>
+      <div className='flex items-center justify-center'>
         <div className='grid gap-3'>
         <InputBoxes setFormtype='Username/Email'/>
         <InputBoxes setFormtype='Password'/>
@@ -18,6 +19,7 @@ const LogInPage = () => {
         <ButtonLogInFB/>
         <ButtonLogInX/>
         </div>
+      </div>
     </>
   )
 }
