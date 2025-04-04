@@ -10,7 +10,7 @@ const SignupPage2 = () => {
             <Image src={`/assets/4.svg`} alt="logo" width={400} height={400}/>  
         </div>
         <div className='grid gap-3'>
-            <InputPhone setFormtype='Phone Number' setVar=''/>
+            <InputPhone setFormtype='Phone Number'/>
             <Datepicker/>
             <TermsCheck/>
             <ButtonContinue pageLink='Login/SignupPageFour'/>

@@ -163,10 +163,9 @@ const ButtonPreferences = ({ imageDescription, imageSrc }: ButtonPreferencesProp
 
 type InputBoxesProps = {
     setFormtype: string;
-    setVar: string;
 }
 
-const InputBoxes = ({ setFormtype, setVar }: InputBoxesProps) => {
+const InputBoxes = ({ setFormtype }: InputBoxesProps) => {
     //setVar can be used to set the variable for usernames, passwords, etc, to be salt and hash'd
     return(
         <div>
@@ -176,7 +175,7 @@ const InputBoxes = ({ setFormtype, setVar }: InputBoxesProps) => {
     )
 }
 
-const InputPhone = ({ setFormtype, setVar }: InputBoxesProps) => {
+const InputPhone = ({ setFormtype }: InputBoxesProps) => {
     //setVar can be used to set the variable for usernames, passwords, etc, to be salt and hash'd
     return(
         <div>

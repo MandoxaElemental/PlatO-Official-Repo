@@ -10,10 +10,10 @@ const SignUpPage1 = () => {
       </div>
       <div className='grid gap-3'>
       
-        <InputBoxes setFormtype='Name' setVar=''/>
-        <InputBoxes setFormtype='Username' setVar=''/>
-        <InputBoxes setFormtype='Email' setVar=''/>
-        <InputBoxes setFormtype='Password' setVar=''/>
+        <InputBoxes setFormtype='Name'/>
+        <InputBoxes setFormtype='Username'/>
+        <InputBoxes setFormtype='Email'/>
+        <InputBoxes setFormtype='Password'/>
         <ButtonSignUpGoogle/>
         <ButtonSignUpFB/>
         <ButtonSignUpX/>

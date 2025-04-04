@@ -9,8 +9,8 @@ const LogInPage = () => {
             <Image src={`/assets/4.svg`} alt="logo" width={400} height={400}/>  
         </div>
         <div className='grid gap-3'>
-        <InputBoxes setFormtype='Username/Email' setVar=''/>
-        <InputBoxes setFormtype='Password' setVar=''/>
+        <InputBoxes setFormtype='Username/Email'/>
+        <InputBoxes setFormtype='Password'/>
         <RememberCheck/>
         <ButtonLogin pageLink='/Home'/>
         <ButtonCancel pageLink=''/>
