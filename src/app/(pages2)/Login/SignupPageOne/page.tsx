@@ -8,7 +8,7 @@ const SignUpPage1 = () => {
       <div className='justify-items-center'>
         <Image src={`/assets/4.svg`} alt="logo" width={400} height={400}/>  
       </div>
-    <div className='flex items-center'>
+    <div className='flex items-center justify-center'>
       <div className='grid gap-3'>
       
         <InputBoxes setFormtype='Name'/>
