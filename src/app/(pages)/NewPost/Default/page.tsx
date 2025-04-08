@@ -1,8 +1,22 @@
+'use client'
+
 import { Button, FileInput, TextInput } from 'flowbite-react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 const Post = () => {
-  return (
+
+        const [description, setDescription] = useState('');
+        const [length, setLength] = useState(200);
+    
+        useEffect(() => {
+            const num = (200 - description.length)
+            setLength(num)
+            if(description.length === 200){
+                alert('error')
+            }
+          }, [description])
+
+    return (
        <div className='pt-10 px-5 w-full'>
             <div className='border-b-1 border-solid border-slate-300 p-2 text-2xl font-semibold text-center'>
                 New Post
@@ -11,8 +25,8 @@ const Post = () => {
                 <FileInput/>
             </div>
             <div className='border-b-1 border-solid border-slate-300 p-2 flex flex-col items-center'>
-                <p className='text-center text-blue-600'>Description 200/200</p>
-                <TextInput className='w-[400px]'></TextInput>
+                <p className='text-center text-blue-600'>Description 200/{length}</p>
+            <TextInput onChange={(e) => setDescription(e.target.value)} className='w-[400px]'></TextInput>
             </div>
             <div className='border-b-1 border-solid border-slate-300 p-2'>
             <p className='font-semibold text-xl text-center'>Tags</p>
