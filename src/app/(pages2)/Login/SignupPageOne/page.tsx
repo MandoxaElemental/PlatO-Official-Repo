@@ -72,7 +72,7 @@ const SignUpPage1 = () =>
           </div>
           <div>
             <h1 className=' text-gray-400'>Password</h1>
-            <TextInput onChange={(event) => setPassword(event.target.value)} type='text'/>
+            <TextInput onChange={(event) => setPassword(event.target.value)} type='password'/>
           </div>
           <ButtonSignUpGoogle/>
           <ButtonSignUpFB/>
