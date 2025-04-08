@@ -4,7 +4,6 @@ import { ButtonCancel, ButtonSignUpFB, ButtonSignUpGoogle, ButtonSignUpX, TermsC
 import { createAccount } from '@/app/Utils/DataServices'
 import { Button, TextInput } from 'flowbite-react'
 import Image from 'next/image'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 
@@ -29,7 +28,7 @@ const SignUpPage1 = () =>
 
   const handleSubmit = async () =>
   {
-    let userData = {
+    const userData = {
       email: email,
       username: username,
       password: password,
@@ -38,9 +37,16 @@ const SignUpPage1 = () =>
       dateOfBirth: dateOfBirth
     }
 
-    let result = await createAccount(userData);
+    const result = await createAccount(userData);
 
-    result ? (alert("Account Created!"), router.push("/Login/SignupPageFour")) : alert("Username or Email already exists");
+    if (result)
+    {
+      alert("Account Created!");
+      router.push("/Login/SignupPageFour");
+    }else
+    {
+      alert("Username or Email already exists");
+    }
   }
 
   return (
@@ -54,19 +60,19 @@ const SignUpPage1 = () =>
         <div className='grid gap-3'>
           <div>
             <h1 className=' text-gray-400'>Name</h1>
-            <TextInput onChange={(event) => setName(event.target.value)} type='text' min={6} max={20} className=''/>
+            <TextInput onChange={(event) => setName(event.target.value)} type='text'/>
           </div>
           <div>
             <h1 className=' text-gray-400'>Username</h1>
-            <TextInput onChange={(event) => setUsername(event.target.value)} type='text' min={6} max={20} className=''/>
+            <TextInput onChange={(event) => setUsername(event.target.value)} type='text'/>
           </div>
           <div>
             <h1 className=' text-gray-400'>Email</h1>
-            <TextInput onChange={(event) => setEmail(event.target.value)} type='text' min={6} max={20} className=''/>
+            <TextInput onChange={(event) => setEmail(event.target.value)} type='text'/>
           </div>
           <div>
             <h1 className=' text-gray-400'>Password</h1>
-            <TextInput onChange={(event) => setPassword(event.target.value)} type='text' min={6} max={20} className=''/>
+            <TextInput onChange={(event) => setPassword(event.target.value)} type='text'/>
           </div>
           <ButtonSignUpGoogle/>
           <ButtonSignUpFB/>
@@ -83,7 +89,7 @@ const SignUpPage1 = () =>
     {/* SignupPageTwo START */}
     <div className={`${switchBool ? "" : "hidden"}`}>
       <div className='justify-items-center'>
-          <Image src={`/assets/4.svg`} alt="logo" width={400} height={400}/>
+        <Image src={`/assets/4.svg`} alt="logo" width={400} height={400}/>
       </div>
       <div className='flex items-center justify-center'>
         <div className='grid gap-3'>
@@ -97,7 +103,7 @@ const SignUpPage1 = () =>
           </div>
           <TermsCheck/>
           <div className='mb-1.5 mt-10'>
-              <Button onClick={handleSubmit} className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer p-0'>Signup and Continue</Button>
+            <Button onClick={handleSubmit} className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer p-0'>Signup and Continue</Button>
           </div>
           <div className='mb-1.5'>
             <Button onClick={handleSwitch} className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer'>Back</Button>
