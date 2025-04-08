@@ -6,7 +6,7 @@ const Premium = () => {
       <div className='border-b-1 border-solid border-slate-300 p-2 text-2xl font-semibold text-center'>
             Premium
         </div>
-        <div>Give Me Money...</div>
+        <div>Give Me Money... Testing</div>
     </div>
   )
 }
