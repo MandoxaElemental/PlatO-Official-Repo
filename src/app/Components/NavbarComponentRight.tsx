@@ -19,19 +19,19 @@ export function NavbarComponentRight() {
             <div className='flex items-center'>
             <div className='rounded-full bg-yellow-500 w-10 h-10 flex justify-center items-center'><img className='' src="./assets/person.svg" alt="profilePic" /></div> <p className='pl-3'>UserName</p>
             </div>
-            <Button className="rounded-full">Follow</Button>
+            <Button className="rounded-full h-8 bg-blue-200 hover:bg-blue-400 text-black cursor-pointer">Follow</Button>
         </div>
         <div className='flex justify-between items-center p-2 my-2 border-solid border-slate-300 border-2 rounded-2xl'>
             <div className='flex items-center'>
             <div className='rounded-full bg-red-500 w-10 h-10 flex justify-center items-center'><img className='' src="./assets/person.svg" alt="profilePic" /></div> <p className='pl-3'>UserName</p>
             </div>
-            <Button className="rounded-full">Follow</Button>
+            <Button className="rounded-full h-8 bg-blue-200 hover:bg-blue-400 text-black cursor-pointer">Follow</Button>
         </div>
         <div className='flex justify-between items-center p-2 my-2 border-solid border-slate-300 border-2 rounded-2xl'>
             <div className='flex items-center'>
             <div className='rounded-full bg-blue-500 w-10 h-10 flex justify-center items-center'><img className='' src="./assets/person.svg" alt="profilePic" /></div> <p className='pl-3'>UserName</p>
             </div>
-            <Button className="rounded-full">Follow</Button>
+            <Button className="rounded-full h-8 bg-blue-200 hover:bg-blue-400 text-black cursor-pointer">Follow</Button>
         </div>
       </SidebarItemGroup>
     </Sidebar>
