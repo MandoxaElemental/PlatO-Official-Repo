@@ -8,7 +8,7 @@ const Post = ({post} : {post: React.ReactNode}) => {
             <div className='flex items-center'>
             <div className='rounded-full bg-green-500 w-10 h-10 flex justify-center items-center'><img className='' src="./assets/person.svg" alt="profilePic" /></div> <p className='pl-3'>UserName</p>
             </div>
-            <Button className="rounded-full">Follow</Button>
+            <Button className="rounded-md bg-blue-200 hover:bg-blue-400 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200">Follow</Button>
         </div>
         {post}
         <div className='flex justify-evenly p-2 pt-5'>
