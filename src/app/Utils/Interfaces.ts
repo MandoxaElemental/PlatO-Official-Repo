@@ -22,3 +22,9 @@ username: string
 export interface IToken {
 token: string
 }
+
+export interface Ingredients {
+    amount: number
+    measurement: string
+    ingredient: string
+}

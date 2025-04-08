@@ -4,6 +4,11 @@ import React, { useState } from 'react'
 
 const Recipe = () => {
 
+    
+    const [image, setImage] = useState('');
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
+    
     const [openModal, setOpenModal] = useState(false);
 
     const [ingredients, setIngredients] = useState<string[]>(['']);
