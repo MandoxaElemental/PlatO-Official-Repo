@@ -22,13 +22,11 @@ const LogInPage = () =>
 
     if (usernameOrEmail.includes("@"))
     {
-      console.log('second')
       email = usernameOrEmail;
     }
 
     if (!usernameOrEmail.includes("@"))
     {
-      console.log('first')
       username = usernameOrEmail;
     }
     
