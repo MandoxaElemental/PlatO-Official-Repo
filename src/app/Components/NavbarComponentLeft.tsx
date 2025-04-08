@@ -45,7 +45,7 @@ export function NavbarComponent() {
             <img className="h-5 w-5 dark:invert" src="../assets/person.svg" alt="profile" /><p className="pl-2">Profile</p>
             </div>
           </SidebarItem>
-          <Button className="w-full text-center" href="/NewPost">Post</Button>
+          <Button className="rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer" href="/NewPost">Post</Button>
         </SidebarItemGroup>
         <SidebarItemGroup>
           <SidebarItem href="#" >
