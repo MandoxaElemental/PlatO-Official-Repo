@@ -5,7 +5,7 @@ import { createAccount } from '@/app/Utils/DataServices'
 import { Button, TextInput } from 'flowbite-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const SignUpPage1 = () =>
 {
@@ -18,6 +18,12 @@ const SignUpPage1 = () =>
   const [dateOfBirth, setDateOfBirth] = useState("");
 
   const [switchBool, setSwitchBool] = useState(false);
+
+  const [badUsername, setBadUsername] = useState(false);
+  const [badEmail, setBadEmail] = useState(false);
+
+  const [noEmptyFieldsPageOne, setNoEmptyFieldsPageOne] = useState(true);
+  const [noEmptyFieldsPageTwo, setNoEmptyFieldsPageTwo] = useState(true);
 
   const router = useRouter();
 
@@ -49,6 +55,56 @@ const SignUpPage1 = () =>
     }
   }
 
+  useEffect(() =>
+  {
+    if (username.includes("@"))
+    {
+      setBadUsername(true);
+    }else
+    {
+      setBadUsername(false);
+    }
+  },[username])
+
+  useEffect(() =>
+  {
+    if (email !== "")
+    {
+      if (!email.includes("@"))
+      {
+        setBadEmail(true);
+      }else
+      {
+        setBadEmail(false);
+      }
+    }else
+    {
+      setBadEmail(false);
+    }
+  },[email])
+
+  useEffect(() =>
+  {
+    if (email == "" || username == "" || password == "" || name == "")
+    {
+      setNoEmptyFieldsPageOne(true);
+    }else
+    {
+      setNoEmptyFieldsPageOne(false);
+    }
+  },[email, username, password, name])
+
+  useEffect(() =>
+  {
+    if (phoneNumber == "" || dateOfBirth == "")
+    {
+      setNoEmptyFieldsPageTwo(true);
+    }else
+    {
+      setNoEmptyFieldsPageTwo(false);
+    }
+  },[phoneNumber, dateOfBirth])
+
   return (
   <>
     {/* SignupPageOne START */}
@@ -59,28 +115,36 @@ const SignUpPage1 = () =>
       <div className='flex items-center justify-center'>
         <div className='grid gap-3'>
           <div>
-            <h1 className=' text-gray-400'>Name</h1>
+            <h1 className='text-gray-400'>Name*</h1>
             <TextInput onChange={(event) => setName(event.target.value)} type='text'/>
           </div>
-          <div>
-            <h1 className=' text-gray-400'>Username</h1>
-            <TextInput onChange={(event) => setUsername(event.target.value)} type='text'/>
+          <div className="min-lg:col-start-2">
+            <div className="flex gap-5">
+              <h1 className='text-gray-400'>Username*</h1>
+              <h1 className={`text-red-500 italic ${badUsername ? "" : "hidden"}`}>Cannot Include "@"</h1>
+            </div>
+            <TextInput onChange={(event) => setUsername(event.target.value)} type='text' className={badUsername ? `outline-red-500 outline-[2px] rounded-[9px]` : ""}/>
           </div>
           <div>
-            <h1 className=' text-gray-400'>Email</h1>
-            <TextInput onChange={(event) => setEmail(event.target.value)} type='text'/>
+            <div className="flex gap-5">
+              <h1 className=' text-gray-400'>Email*</h1>
+              <h1 className={`text-red-500 italic ${badEmail ? "" : "hidden"}`}>Must Include "@"</h1>
+            </div>
+            <TextInput onChange={(event) => setEmail(event.target.value)} type='text' className={badEmail ? `outline-red-500 outline-[2px] rounded-[9px]` : ""}/>
           </div>
           <div>
-            <h1 className=' text-gray-400'>Password</h1>
-            <TextInput onChange={(event) => setPassword(event.target.value)} type='text'/>
+            <h1 className=' text-gray-400'>Password*</h1>
+            <TextInput onChange={(event) => setPassword(event.target.value)} type='password'/>
           </div>
           <ButtonSignUpGoogle/>
           <ButtonSignUpFB/>
           <ButtonSignUpX/>
-          <div className='mb-1.5 mt-10'>
-            <Button onClick={handleSwitch} className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer'>Continue</Button>
+          <div className='max-lg:mb-1.5 mt-10 min-lg:col-start-2 min-lg:row-start-5'>
+            <Button onClick={handleSwitch} className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200' disabled={((badUsername || noEmptyFieldsPageOne) || (badEmail || noEmptyFieldsPageOne)) ? true : false}>Continue</Button>
           </div>
-          <ButtonCancel pageLink=''/>
+          <div className="min-lg:col-start-1 min-lg:mt-10">
+            <ButtonCancel pageLink=''/>
+          </div>
         </div>
       </div>
     </div>
@@ -94,19 +158,19 @@ const SignUpPage1 = () =>
       <div className='flex items-center justify-center'>
         <div className='grid gap-3'>
           <div>
-            <h1 className=' text-gray-400'>Phone Number</h1>
+            <h1 className=' text-gray-400'>Phone Number*</h1>
             <TextInput onChange={(event) => setPhoneNumber(event.target.value)} type='text'/>
           </div>
           <div>
-            <h1 className=' text-gray-400'>Date of Birth</h1>
+            <h1 className=' text-gray-400'>Date of Birth*</h1>
             <TextInput onChange={(event) => setDateOfBirth(event.target.value)} type='date'/>
           </div>
           <TermsCheck/>
           <div className='mb-1.5 mt-10'>
-            <Button onClick={handleSubmit} className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer p-0'>Signup and Continue</Button>
+            <Button onClick={handleSubmit} className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200' disabled={(noEmptyFieldsPageTwo || noEmptyFieldsPageTwo) ? true : false}>Signup and Continue</Button>
           </div>
           <div className='mb-1.5'>
-            <Button onClick={handleSwitch} className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer'>Back</Button>
+            <Button onClick={handleSwitch} className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200'>Back</Button>
           </div>
         </div>
       </div>
