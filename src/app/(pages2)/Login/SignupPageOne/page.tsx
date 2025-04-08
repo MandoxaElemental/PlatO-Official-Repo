@@ -121,14 +121,14 @@ const SignUpPage1 = () =>
           <div className="min-lg:col-start-2">
             <div className="flex gap-5">
               <h1 className='text-gray-400'>Username*</h1>
-              <h1 className={`text-red-500 italic ${badUsername ? "" : "hidden"}`}>Cannot Include "@"</h1>
+              <h1 className={`text-red-500 italic ${badUsername ? "" : "hidden"}`}>Cannot Include &quot;@&quot;</h1>
             </div>
             <TextInput onChange={(event) => setUsername(event.target.value)} type='text' className={badUsername ? `outline-red-500 outline-[2px] rounded-[9px]` : ""}/>
           </div>
           <div>
             <div className="flex gap-5">
               <h1 className=' text-gray-400'>Email*</h1>
-              <h1 className={`text-red-500 italic ${badEmail ? "" : "hidden"}`}>Must Include "@"</h1>
+              <h1 className={`text-red-500 italic ${badEmail ? "" : "hidden"}`}>Must Include &quot;@&quot;</h1>
             </div>
             <TextInput onChange={(event) => setEmail(event.target.value)} type='text' className={badEmail ? `outline-red-500 outline-[2px] rounded-[9px]` : ""}/>
           </div>
