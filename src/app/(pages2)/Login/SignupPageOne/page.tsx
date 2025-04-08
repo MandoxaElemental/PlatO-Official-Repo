@@ -1,9 +1,10 @@
 "use client"
 
-import { ButtonCancel, ButtonSignUpFB, ButtonSignUpGoogle, ButtonSignUpX, TermsCheck } from '@/app/Components/LoginPageComponents'
+import { ButtonCancel, ButtonSignUpFB, ButtonSignUpGoogle, ButtonSignUpX } from '@/app/Components/LoginPageComponents'
 import { createAccount } from '@/app/Utils/DataServices'
-import { Button, TextInput } from 'flowbite-react'
+import { Button, Checkbox, Label, TextInput } from 'flowbite-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
@@ -24,6 +25,8 @@ const SignUpPage1 = () =>
 
   const [noEmptyFieldsPageOne, setNoEmptyFieldsPageOne] = useState(true);
   const [noEmptyFieldsPageTwo, setNoEmptyFieldsPageTwo] = useState(true);
+
+  const [isChecked, setIsChecked] = useState(true);
 
   const router = useRouter();
 
@@ -53,6 +56,11 @@ const SignUpPage1 = () =>
     {
       alert("Username or Email already exists");
     }
+  }
+
+  const handleCheckBox = () =>
+  {
+    setIsChecked(!isChecked);
   }
 
   useEffect(() =>
@@ -165,9 +173,12 @@ const SignUpPage1 = () =>
             <h1 className=' text-gray-400'>Date of Birth*</h1>
             <TextInput onChange={(event) => setDateOfBirth(event.target.value)} type='date'/>
           </div>
-          <TermsCheck/>
+          <div className='flex justify-items-start space-x-2'>
+            <Checkbox onChange={handleCheckBox} checked={!isChecked} id='rememberme'/>
+            <Label htmlFor='rememberme' className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>I have read and agreed to PlatO <Link href='/' className='text-blue-500 hover:text-blue-300 focus:text-purple-500 underline'>Terms and Conditions</Link></Label>
+          </div>
           <div className='mb-1.5 mt-10'>
-            <Button onClick={handleSubmit} className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200' disabled={(noEmptyFieldsPageTwo || noEmptyFieldsPageTwo) ? true : false}>Signup and Continue</Button>
+            <Button onClick={handleSubmit} className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200' disabled={(noEmptyFieldsPageTwo || isChecked) ? true : false}>Signup and Continue</Button>
           </div>
           <div className='mb-1.5'>
             <Button onClick={handleSwitch} className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200'>Back</Button>
