@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 const Recipe = () => {
 
     
-    const [image, setImage] = useState('');
+    // const [image, setImage] = useState('');
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [amount, setAmount] = useState('');
