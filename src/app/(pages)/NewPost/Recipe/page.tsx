@@ -1,8 +1,17 @@
 'use client'
-import { Button, FileInput, TextInput, Modal, ModalBody, ModalFooter, ModalHeader } from 'flowbite-react'
+import { Button, FileInput, TextInput, Modal, ModalBody, ModalFooter, ModalHeader, Dropdown, DropdownItem, DropdownDivider } from 'flowbite-react'
 import React, { useState } from 'react'
 
 const Recipe = () => {
+
+    
+    // const [image, setImage] = useState('');
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
+    const [amount, setAmount] = useState('');
+    const [measurement, setMeasurement] = useState('Measurement');
+    const [ingredient, setIngredient] = useState('');
+    const [step, setStep] = useState('');
 
     const [openModal, setOpenModal] = useState(false);
 
@@ -29,6 +38,13 @@ const Recipe = () => {
       setSteps(newSteps);
     };
 
+    const DisplayItems = () => {
+      console.log(name)
+      console.log(description)
+      console.log(`${amount} ${measurement} ${ingredient}`)
+      console.log(step)
+    }
+
   return (
     <div className='pt-10 px-5 w-full'>
         <Modal show={openModal} onClose={() => setOpenModal(false)}>
@@ -49,9 +65,9 @@ const Recipe = () => {
             <FileInput/>
         </div>
         <div className='border-b-1 border-solid border-slate-300 p-2 flex flex-col items-center'>
-            <TextInput placeholder='[Recipe Name]' className='w-[200px] pb-2'></TextInput>
+            <TextInput placeholder='[Recipe Name]' className='w-[200px] pb-2' onChange={(e) => setName(e.target.value)}></TextInput>
             <p className='text-center text-blue-600'>Description 200/200</p>
-            <TextInput className='w-[400px]'></TextInput>
+            <TextInput onChange={(e) => setDescription(e.target.value)} className='w-[400px]'></TextInput>
         </div>
         <div className='border-b-1 border-solid border-slate-300 p-2'>
             <p className='font-semibold text-xl text-center'>Ingredients</p>
@@ -62,19 +78,35 @@ const Recipe = () => {
         <label className="block text-gray-700 text-sm font-bold mb-2">
             AMOUNT
         </label>
-        <TextInput className='w-[80px]'></TextInput>
+        <TextInput className='w-[80px]' onChange={(e) => setAmount(e.target.value)}></TextInput>
             </div>
                 <div className="mb-4 px-1">
         <label className="block text-gray-700 text-sm font-bold mb-2">
             MEASUREMENT
         </label>
-        <TextInput className='w-[140px]'></TextInput>
-                </div>
+        <Dropdown className='w-[140px]' label={measurement}>
+          <DropdownItem onClick={() => setMeasurement('Measurement')}>Measurement</DropdownItem>
+          <DropdownDivider />
+          <DropdownItem onClick={() => setMeasurement('tsp')}>tsp</DropdownItem>
+          <DropdownItem onClick={() => setMeasurement('tbsp')}>tbsp</DropdownItem>
+          <DropdownItem onClick={() => setMeasurement('c')}>c</DropdownItem>
+          <DropdownItem onClick={() => setMeasurement('qt')}>qt</DropdownItem>
+          <DropdownItem onClick={() => setMeasurement('gal')}>gal</DropdownItem>
+          <DropdownDivider />
+          <DropdownItem onClick={() => setMeasurement('oz')}>oz</DropdownItem>
+          <DropdownItem onClick={() => setMeasurement('lbs')}>lbs</DropdownItem>
+          <DropdownDivider />
+          <DropdownItem onClick={() => setMeasurement('kg')}>kg</DropdownItem>
+          <DropdownItem onClick={() => setMeasurement('g')}>g</DropdownItem>
+          <DropdownItem onClick={() => setMeasurement('ml')}>ml</DropdownItem>
+          <DropdownItem onClick={() => setMeasurement('l')}>l</DropdownItem>
+        </Dropdown>
+                  </div>
                 <div className="mb-4 px-1">
         <label className="block text-gray-700 text-sm font-bold mb-2">
             INGREDIENT
         </label>
-        <TextInput className='w-[300px]'></TextInput>
+        <TextInput className='w-[300px]' onChange={(e) => setIngredient(e.target.value)}></TextInput>
                 </div>
                 </div>
             )
@@ -90,7 +122,7 @@ const Recipe = () => {
         <label className="block text-gray-700 text-sm font-bold mb-2">
             Step {ibx + 1}
         </label>
-        <TextInput className='w-[600px]'></TextInput>
+        <TextInput className='w-[600px]' onChange={(e) => setStep(e.target.value)}></TextInput>
                 </div>
                 </div>
             )
@@ -103,7 +135,7 @@ const Recipe = () => {
         </div>
         <div className='p-2 flex justify-end'>
             <Button outline className='mx-1 w-[100px]'>Draft</Button>
-            <Button className='mx-1 w-[100px]'>Post</Button>
+            <Button onClick={DisplayItems} className='mx-1 w-[100px]'>Post</Button>
         </div>
     </div>
   )

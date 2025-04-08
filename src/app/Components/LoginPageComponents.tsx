@@ -13,7 +13,7 @@ const ButtonLogin = ({ pageLink }: buttonHREF) => {
   return (
     <div className='mb-3'>
         <Link href={`${pageLink}`}>
-            <Button className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer'>
+            <Button className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200'>
                 Login
             </Button>
         </Link>
@@ -25,7 +25,7 @@ const ButtonSignUp = () => {
     return (
         <div className='mb-3'>
             <Link href="/Login/SignupPageOne">
-                <Button className='rounded-md bg-transparent hover:bg-transparent text-blue-200 hover:text-blue-400 border-4 border-blue-200 hover:border-blue-400 w-full cursor-pointer'>
+                <Button className='rounded-md bg-transparent hover:bg-transparent text-blue-200 hover:text-blue-400 border-4 border-blue-200 hover:border-blue-400 w-full cursor-pointer dark:bg-transparent dark:hover:bg-transparent dark:border-blue-100 dark:hover:border-blue-200'>
                     Sign Up
                 </Button>
             </Link>
@@ -47,7 +47,7 @@ const ButtonForgotPassword = () =>
 const ButtonSignUpGoogle = () => {
     return (
         <div className='justify-items-center'>
-            <Button className='bg-red-500 hover:bg-red-600  w-full grid grid-cols-3 my-1.5'>
+            <Button className='bg-red-500 hover:bg-red-600 dark:bg-red-500 dark:hover:bg-red-600 w-full grid grid-cols-3 my-1.5'>
                 <h1 className='col-span-2 text-start'>Sign Up Using Gmail</h1>
                 <Image src={"/assets/google.svg"} alt='icon-google' width={30} height={30} className='justify-self-end invert'/>
             </Button>
@@ -58,7 +58,7 @@ const ButtonSignUpGoogle = () => {
 const ButtonLoginGoogle = () => {
     return (
         <div className='justify-items-center'>
-            <Button className='bg-red-500 hover:bg-red-600  w-full grid grid-cols-3 my-1.5'>
+            <Button className='bg-red-500 hover:bg-red-600 dark:bg-red-500 dark:hover:bg-red-600 w-full grid grid-cols-3 my-1.5'>
                 <h1 className='col-span-2 text-start'>Log In Using Gmail</h1>
                 <Image src={"/assets/google.svg"} alt='icon-google' width={30} height={30} className='justify-self-end'/>
             </Button>
@@ -69,7 +69,7 @@ const ButtonLoginGoogle = () => {
 const ButtonSignUpFB = () => {
     return (
         <div className='justify-items-center'>
-            <Button className='bg-blue-500 hover:bg-blue-600  w-full grid grid-cols-3 my-1.5'>
+            <Button className='bg-blue-500 hover:bg-blue-600 dark:bg-blue-500 dark:hover:bg-blue-600 w-full grid grid-cols-3 my-1.5'>
                 <h1 className='col-span-2 text-start'>Sign Up Using Facebook</h1>
                 <Image src={"/assets/facebook.svg"} alt='icon-google' width={30} height={30} className='justify-self-end invert cursor-pointer'/>
             </Button>
@@ -80,7 +80,7 @@ const ButtonSignUpFB = () => {
 const ButtonLogInFB = () => {
     return (
         <div className='justify-items-center'>
-            <Button className='bg-blue-500 hover:bg-blue-600  w-full grid grid-cols-3 my-1.5'>
+            <Button className='bg-blue-500 hover:bg-blue-600 dark:bg-blue-500 dark:hover:bg-blue-600 w-full grid grid-cols-3 my-1.5'>
                 <h1 className='col-span-2 text-start'>Log In Using Facebook</h1>
                 <Image src={"/assets/facebook.svg"} alt='icon-google' width={30} height={30} className='justify-self-end invert cursor-pointer'/>
             </Button>
@@ -91,9 +91,9 @@ const ButtonLogInFB = () => {
 const ButtonSignUpX = () => {
     return (
         <div className='justify-items-center'>
-            <Button className='bg-black hover:bg-gray-800  w-full grid grid-cols-3 my-1.5'>
-              <h1 className='col-span-2 text-start'>Sign Up Using X</h1>
-              <Image src={"/assets/twitter-x.svg"} alt='icon-google' width={30} height={30} className='justify-self-end invert cursor-pointer'/>
+            <Button className='bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 w-full grid grid-cols-3 my-1.5'>
+              <h1 className='col-span-2 text-start dark:text-black'>Sign Up Using X</h1>
+              <Image src={"/assets/twitter-x.svg"} alt='icon-google' width={30} height={30} className='justify-self-end invert dark:invert-0 cursor-pointer'/>
             </Button>
         </div>
     )
@@ -102,9 +102,9 @@ const ButtonSignUpX = () => {
 const ButtonLogInX = () => {
     return (
         <div className='justify-items-center'>
-            <Button className='bg-black hover:bg-gray-800  w-full grid grid-cols-3 my-1.5'>
-              <h1 className='col-span-2 text-start'>Log In Using X</h1>
-              <Image src={"/assets/twitter-x.svg"} alt='icon-google' width={30} height={30} className='justify-self-end invert cursor-pointer'/>
+            <Button className='bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 w-full grid grid-cols-3 my-1.5'>
+              <h1 className='col-span-2 text-start dark:text-black'>Log In Using X</h1>
+              <Image src={"/assets/twitter-x.svg"} alt='icon-google' width={30} height={30} className='justify-self-end invert dark:invert-0 cursor-pointer'/>
             </Button>
         </div>
     )
@@ -115,7 +115,7 @@ const ButtonContinue = ({ pageLink }: buttonHREF) => {
     return (
         <div className='mb-1.5 mt-10'>
             <Link href={`/${pageLink}`}>
-                <Button className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer'>
+                <Button className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200'>
                 Continue
                 </Button>
             </Link>
@@ -127,7 +127,7 @@ const ButtonCancel = ({ pageLink }: buttonHREF) => {
     return (
         <div className='mb-1.5'>
             <Link href={`/Login/${pageLink}`}>
-                <Button className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer'>
+                <Button className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200'>
                     Cancel
                 </Button>
             </Link>
@@ -139,7 +139,7 @@ const ButtonBack = ({ pageLink }: buttonHREF) => {
     return (
         <div className='mb-1.5'>
         <Link href={`/Login/${pageLink}`}>
-            <Button className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer'>
+            <Button className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200'>
                 Back
             </Button>
         </Link>
