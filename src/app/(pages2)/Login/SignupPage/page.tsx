@@ -51,7 +51,7 @@ const SignUpPage1 = () =>
     if (result)
     {
       alert("Account Created!");
-      router.push("/Login/SignupPageFour");
+      router.push("/Login/PreferencesPage");
     }else
     {
       alert("Username or Email already exists");

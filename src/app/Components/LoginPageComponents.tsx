@@ -24,7 +24,7 @@ const ButtonLogin = ({ pageLink }: buttonHREF) => {
 const ButtonSignUp = () => {
     return (
         <div className='mb-3'>
-            <Link href="/Login/SignupPageOne">
+            <Link href="/Login/SignupPage">
                 <Button className='rounded-md bg-transparent hover:bg-transparent text-blue-200 hover:text-blue-400 border-4 border-blue-200 hover:border-blue-400 w-full cursor-pointer dark:bg-transparent dark:hover:bg-transparent dark:border-blue-100 dark:hover:border-blue-200'>
                     Sign Up
                 </Button>
