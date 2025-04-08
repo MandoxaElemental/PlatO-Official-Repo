@@ -8,9 +8,10 @@ export function NavbarComponentRight() {
     <Sidebar aria-label="Default sidebar example">
       <SidebarItems>
         <TextInput placeholder="Search"></TextInput>
-        <div className="flex justify-evenly py-5">
-            <div className="h-[70px] w-[100px] rounded-2xl bg-blue-400 flex justify-center items-center font-bold text-white">Burgers</div>
-            <div className="h-[70px] w-[100px] rounded-2xl bg-blue-400 flex justify-center items-center font-bold text-white">Vegan</div>
+        <div className="flex justify-evenly py-5 gap-2">
+            <div className="h-[70px] w-[100px] rounded-2xl text-sm bg-blue-400 flex justify-center items-center font-bold text-white">Burgers</div>
+            <div className="h-[70px] w-[100px] rounded-2xl text-sm bg-blue-400 flex justify-center items-center font-bold text-white">Vegan</div>
+            <div className="h-[70px] w-[100px] rounded-2xl text-sm bg-blue-400 flex justify-center items-center font-bold text-white">Chocolate</div>
         </div>
       </SidebarItems>
       <SidebarItemGroup>
