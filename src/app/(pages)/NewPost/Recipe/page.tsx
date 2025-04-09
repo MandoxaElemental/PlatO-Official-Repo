@@ -55,6 +55,7 @@ const Recipe = () => {
       console.log(description)
       console.log(ingredients)
       console.log(steps)
+      console.log(selectedTags)
     }
 
     useEffect(() => {
