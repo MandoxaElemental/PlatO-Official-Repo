@@ -60,7 +60,7 @@ const ButtonLoginGoogle = () => {
         <div className='justify-items-center'>
             <Button className='bg-red-500 hover:bg-red-600 dark:bg-red-500 dark:hover:bg-red-600 w-full grid grid-cols-3 my-1.5'>
                 <h1 className='col-span-2 text-start'>Log In Using Gmail</h1>
-                <Image src={"/assets/google.svg"} alt='icon-google' width={30} height={30} className='justify-self-end'/>
+                <Image src={"/assets/google.svg"} alt='icon-google' width={30} height={30} className='justify-self-end invert'/>
             </Button>
         </div>
     )
