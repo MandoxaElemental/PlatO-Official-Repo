@@ -9,21 +9,31 @@ const Recipe = () => {
     // const [image, setImage] = useState('');
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    const [amount, setAmount] = useState('');
-    const [measurement, setMeasurement] = useState('Measurement');
-    const [ingredient, setIngredient] = useState('');
-    const [step, setStep] = useState('');
+    type Ingredient = {
+      amount: string;
+      measurement: string;
+      name: string;
+    };
+    
+    const [ingredients, setIngredients] = useState<Ingredient[]>([
+      { amount: '', measurement: 'Measurement', name: '' },
+    ]);
     const [length, setLength] = useState(200);
     const [openModal, setOpenModal] = useState(false);
-    const [ingredients, setIngredients] = useState<string[]>(['']);
     const [steps, setSteps] = useState<string[]>(['']);
     const [query, setQuery] = useState<string>('');
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-    const addIngredient = () => {
-      setIngredients([...ingredients, '']);
+    const updateStep = (index: number, value: string) => {
+      const updatedSteps = [...steps];
+      updatedSteps[index] = value;
+      setSteps(updatedSteps);
     };
-  
+
+    const addIngredient = () => {
+      setIngredients([...ingredients, { amount: '', measurement: 'Measurement', name: '' }]);
+    };
+    
     const removeIngredient = (index: number) => {
       const newIngredients = [...ingredients];
       newIngredients.splice(index, 1);
@@ -43,8 +53,8 @@ const Recipe = () => {
     const DisplayItems = () => {
       console.log(name)
       console.log(description)
-      console.log(`${amount} ${measurement} ${ingredient}`)
-      console.log(step)
+      console.log(ingredients)
+      console.log(steps)
     }
 
     useEffect(() => {
@@ -67,6 +77,11 @@ const Recipe = () => {
       );
     };
   
+    const updateIngredient = (index: number, field: keyof Ingredient, value: string) => {
+      const updatedIngredients = [...ingredients];
+      updatedIngredients[index][field] = value;
+      setIngredients(updatedIngredients);
+    };
 
   return (
     <div className='pt-10 px-5 w-full'>
@@ -131,46 +146,57 @@ const Recipe = () => {
         </div>
         <div className='border-b-1 border-solid border-slate-300 p-2'>
             <p className='font-semibold text-xl text-center'>Ingredients</p>
-            {ingredients.map((ingredient: string, ibx: number) => (
-                <div key={ibx} className='flex items-center px-2'>
-            <img className='h-10 w-10 pr-5 hover:opacity-50 dark:invert cursor-pointer' src="../assets/x-lg.svg" alt="remove" onClick={() => removeIngredient(ibx)}/>
-                <div className="mb-4 px-1">
-        <label className="block text-gray-700 text-sm font-bold mb-2">
-            AMOUNT
-        </label>
-        <TextInput className='w-[80px]' onChange={(e) => setAmount(e.target.value)}></TextInput>
-            </div>
-                <div className="mb-4 px-1">
-        <label className="block text-gray-700 text-sm font-bold mb-2">
-            MEASUREMENT
-        </label>
-        <Dropdown className='w-[140px]' label={measurement}>
-          <DropdownItem onClick={() => setMeasurement('Measurement')}>Measurement</DropdownItem>
-          <DropdownDivider />
-          <DropdownItem onClick={() => setMeasurement('tsp')}>tsp</DropdownItem>
-          <DropdownItem onClick={() => setMeasurement('tbsp')}>tbsp</DropdownItem>
-          <DropdownItem onClick={() => setMeasurement('c')}>c</DropdownItem>
-          <DropdownItem onClick={() => setMeasurement('qt')}>qt</DropdownItem>
-          <DropdownItem onClick={() => setMeasurement('gal')}>gal</DropdownItem>
-          <DropdownDivider />
-          <DropdownItem onClick={() => setMeasurement('oz')}>oz</DropdownItem>
-          <DropdownItem onClick={() => setMeasurement('lbs')}>lbs</DropdownItem>
-          <DropdownDivider />
-          <DropdownItem onClick={() => setMeasurement('kg')}>kg</DropdownItem>
-          <DropdownItem onClick={() => setMeasurement('g')}>g</DropdownItem>
-          <DropdownItem onClick={() => setMeasurement('ml')}>ml</DropdownItem>
-          <DropdownItem onClick={() => setMeasurement('l')}>l</DropdownItem>
-        </Dropdown>
-                  </div>
-                <div className="mb-4 px-1">
-        <label className="block text-gray-700 text-sm font-bold mb-2">
-            INGREDIENT
-        </label>
-        <TextInput className='w-[300px]' onChange={(e) => setIngredient(e.target.value)}></TextInput>
-                </div>
-                </div>
-            )
-        )}
+            {ingredients.map((ing, index) => (
+  <div key={index} className="flex items-center px-2">
+    <img
+      className="h-10 w-10 pr-5 hover:opacity-50 dark:invert cursor-pointer"
+      src="../assets/x-lg.svg"
+      alt="remove"
+      onClick={() => removeIngredient(index)}
+    />
+    <div className="mb-4 px-1">
+      <label className="block text-gray-700 text-sm font-bold mb-2">
+        AMOUNT
+      </label>
+      <TextInput
+        className="w-[80px]"
+        value={ing.amount}
+        onChange={(e) =>
+          updateIngredient(index, 'amount', e.target.value)
+        }
+      />
+    </div>
+    <div className="mb-4 px-1">
+      <label className="block text-gray-700 text-sm font-bold mb-2">
+        MEASUREMENT
+      </label>
+      <Dropdown label={ing.measurement} className="w-[140px]">
+        {[
+          'tsp', 'tbsp', 'c', 'qt', 'gal', 'oz', 'lbs', 'kg', 'g', 'ml', 'l',
+        ].map((unit) => (
+          <DropdownItem
+            key={unit}
+            onClick={() => updateIngredient(index, 'measurement', unit)}
+          >
+            {unit}
+          </DropdownItem>
+        ))}
+      </Dropdown>
+    </div>
+    <div className="mb-4 px-1">
+      <label className="block text-gray-700 text-sm font-bold mb-2">
+        INGREDIENT
+      </label>
+      <TextInput
+        className="w-[300px]"
+        value={ing.name}
+        onChange={(e) =>
+          updateIngredient(index, 'name', e.target.value)
+        }
+      />
+    </div>
+  </div>
+))}
             <div className='flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer' onClick={addIngredient}><img className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" /><p>Add Ingredient</p></div>
         </div>
         <div className='border-b-1 border-solid border-slate-300 p-2'>
@@ -182,9 +208,12 @@ const Recipe = () => {
         <label className="block text-gray-700 text-sm font-bold mb-2">
             Step {ibx + 1}
         </label>
-        <TextInput className='w-[600px]' onChange={(e) => setStep(e.target.value)}></TextInput>
-                </div>
-                </div>
+        <TextInput
+            className='w-[600px]'
+            value={steps[ibx]}
+            onChange={(e) => updateStep(ibx, e.target.value)}/>
+            </div>
+            </div>
             )
         )}
             <div className='flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer' onClick={addStep}><img className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" /><p>Add Step</p></div>
