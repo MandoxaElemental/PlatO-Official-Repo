@@ -2,6 +2,7 @@
 
 import { tagArr } from '@/app/Utils/Interfaces';
 import { Button, FileInput, Modal, ModalBody, ModalFooter, ModalHeader, TextInput } from 'flowbite-react'
+import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
 
 const Post = () => {
@@ -110,7 +111,7 @@ const Post = () => {
                 <p className="text-sm text-gray-400">No tags selected</p>
               )}
         </div>
-        <div onClick={() => setOpenModal(true)} className='flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer'><img className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" /><p>Add Tags</p></div>
+        <div onClick={() => setOpenModal(true)} className='flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer'><Image className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" width={100} height={100}/><p>Add Tags</p></div>
         </div>
             <div className='p-2 flex justify-end'>
                 <Button className='mx-1 w-[100px] rounded-md bg-transparent hover:bg-transparent text-blue-200 hover:text-blue-400 border-4 border-blue-200 hover:border-blue-400 cursor-pointer dark:bg-transparent dark:hover:bg-transparent dark:border-blue-100 dark:hover:border-blue-200'>Draft</Button>
