@@ -1,5 +1,5 @@
 'use client'
-import { Button, FileInput, TextInput, Modal, ModalBody, ModalFooter, ModalHeader, Dropdown, DropdownItem, DropdownDivider } from 'flowbite-react'
+import { Button, FileInput, TextInput, Modal, ModalBody, ModalFooter, ModalHeader, Dropdown, DropdownItem } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { tagArr } from '@/app/Utils/Interfaces'
 
