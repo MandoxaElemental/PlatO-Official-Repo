@@ -84,6 +84,7 @@ const Recipe = () => {
     };
 
     const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
+      setBlogId(0)
       const item = {
         id: blogId,
         userId: blogUserId,
@@ -99,8 +100,13 @@ const Recipe = () => {
         isDeleted: false
       }
       let result = false
-        result = await addBlogItem(item, getToken())
-      alert('Post Success!')
+      result = await addBlogItem(item, getToken())
+      if (result)
+      {
+        alert('Post Success!')
+      }else{
+        alert('Post Error')
+      }
     }
 
     useEffect(() => {
