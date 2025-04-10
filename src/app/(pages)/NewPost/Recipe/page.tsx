@@ -1,29 +1,26 @@
 'use client'
 import { Button, FileInput, TextInput, Modal, ModalBody, ModalFooter, ModalHeader, Dropdown, DropdownItem } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
-import { tagArr } from '@/app/Utils/Interfaces'
+import { Ingredient, tagArr } from '@/app/Utils/Interfaces'
 import Image from 'next/image'
+import { addBlogItem, getToken, loggedInData } from '@/app/Utils/DataServices'
+import { format } from 'date-fns'
 
 const Recipe = () => {
 
     
     // const [image, setImage] = useState('');
+    const [blogId, setBlogId] = useState<number>(0);
+    const [blogUserId, setBlogUserId] = useState<number>(0);
+    const [blogPublisherName, setBlogPublisherName] = useState<string>("");
+    const [length, setLength] = useState(200);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    type Ingredient = {
-      amount: string;
-      measurement: string;
-      name: string;
-    };
-    
-    const [ingredients, setIngredients] = useState<Ingredient[]>([
-      { amount: '', measurement: 'Measurement', name: '' },
-    ]);
-    const [length, setLength] = useState(200);
-    const [openModal, setOpenModal] = useState(false);
+    const [ingredients, setIngredients] = useState<Ingredient[]>([{ amount: '', measurement: 'Measurement', ingredient: '' },]);
     const [steps, setSteps] = useState<string[]>(['']);
     const [query, setQuery] = useState<string>('');
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
+    const [openModal, setOpenModal] = useState(false);
 
     const updateStep = (index: number, value: string) => {
       const updatedSteps = [...steps];
@@ -32,7 +29,7 @@ const Recipe = () => {
     };
 
     const addIngredient = () => {
-      setIngredients([...ingredients, { amount: '', measurement: 'Measurement', name: '' }]);
+      setIngredients([...ingredients, { amount: '', measurement: 'Measurement', ingredient: '' }]);
     };
     
     const removeIngredient = (index: number) => {
@@ -51,13 +48,14 @@ const Recipe = () => {
       setSteps(newSteps);
     };
 
-    const DisplayItems = () => {
-      console.log(name)
-      console.log(description)
-      console.log(ingredients)
-      console.log(steps)
-      console.log(selectedTags)
-    }
+    // const DisplayItems = () => {
+    //   console.log(name)
+    //   console.log(description)
+    //   console.log(ingredients)
+    //   console.log(steps)
+    //   console.log(selectedTags)
+      
+    // }
 
     useEffect(() => {
       const num = (200 - description.length)
@@ -84,6 +82,37 @@ const Recipe = () => {
       updatedIngredients[index][field] = value;
       setIngredients(updatedIngredients);
     };
+
+    const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
+      const item = {
+        id: blogId,
+        userId: blogUserId,
+        publisherName: blogPublisherName,
+        image: '',
+        date: format(new Date(), 'MM-dd-yyyy'),
+        recipeName: name,
+        description: description,
+        ingredients: ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`),
+        steps: steps,
+        tags: selectedTags,
+        isPublished: e.currentTarget.textContent === 'Save' ? false : true,
+        isDeleted: false
+      }
+      let result = false
+        result = await addBlogItem(item, getToken())
+      alert('Post Success!')
+    }
+
+    useEffect(() => {
+      const getLoggedInData = async () => {
+        const loggedIn = loggedInData();
+        setBlogUserId(loggedIn.id)
+        setBlogPublisherName(loggedIn.username)
+      }
+      getLoggedInData()
+    }, [])
+  
+  
 
   return (
     <div className='pt-10 px-5 w-full'>
@@ -193,9 +222,9 @@ const Recipe = () => {
       </label>
       <TextInput
         className="w-[300px]"
-        value={ing.name}
+        value={ing.ingredient}
         onChange={(e) =>
-          updateIngredient(index, 'name', e.target.value)
+          updateIngredient(index, 'ingredient', e.target.value)
         }
       />
     </div>
@@ -242,7 +271,7 @@ const Recipe = () => {
         </div>
         <div className='p-2 flex justify-end'>
             <Button outline className='mx-1 w-[100px]'>Draft</Button>
-            <Button onClick={DisplayItems} className='mx-1 w-[100px]'>Post</Button>
+            <Button onClick={handleSave} className='mx-1 w-[100px]'>Post</Button>
         </div>
     </div>
   )

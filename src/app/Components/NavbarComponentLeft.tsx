@@ -3,8 +3,21 @@
 
 import { Button, Sidebar, SidebarItem, SidebarItemGroup, SidebarItems } from "flowbite-react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { loggedInData } from "../Utils/DataServices";
 
 export function NavbarComponent() {
+
+  const [username, setUsername] = useState('');
+
+  useEffect(() => {
+        const getLoggedInData = async () => {
+          const loggedIn = loggedInData();
+          setUsername(loggedIn.username)
+        }
+        getLoggedInData()
+      }, [])
+
   return (
     <Sidebar aria-label="Default sidebar example">
       <SidebarItems>
@@ -51,7 +64,7 @@ export function NavbarComponent() {
         <SidebarItemGroup>
           <SidebarItem href="#" >
           <div className="flex items-center">
-            <Image className="h-5 w-5 dark:invert" src="../assets/person.svg" alt="profile" width={100} height={100} /><p className="pl-2">UserName</p>
+            <Image className="h-5 w-5 dark:invert" src="../assets/person.svg" alt="profile" width={100} height={100} /><p className="pl-2">{username}</p>
             </div>
           </SidebarItem>
           <SidebarItem href="#" >

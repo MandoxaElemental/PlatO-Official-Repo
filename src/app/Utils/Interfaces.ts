@@ -6,9 +6,10 @@ export interface IBlogItems
     date: string,
     image: string,
     recipeName: string,
-    description: string
-    ingredients: string,
-    steps: string,
+    description: string,
+    ingredients: string[],
+    steps: string[],
+    tags: string[],
     isPublished: boolean,
     isDeleted: boolean
 }
@@ -46,8 +47,8 @@ export interface IToken
     token: string
 }
 
-export interface Ingredients {
-    amount: number
+export interface Ingredient {
+    amount: string
     measurement: string
     ingredient: string
 }

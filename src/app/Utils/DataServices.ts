@@ -64,8 +64,21 @@ export const getUserInfoByEmail = async (email: string) =>
     return userData;
 }
 
-export const loggedInData = () =>
-{
+
+export const getLoggedInUserData = async (username:string) => {
+    const res = await fetch(url + `User/GetUserInfoByUsername/${username}`)
+
+    if(!res.ok){
+        const data = await res.json()
+        const message = data.message;
+        console.log(message)
+        return null
+    }
+    userData = await res.json()
+    return userData;
+}
+
+export const loggedInData = () => {
     return userData;
 }
 
@@ -133,7 +146,7 @@ export const getBlogItemsByUserId = async (userId: number, token: string) =>
 
 export const addBlogItem = async (blog: IBlogItems, token: string) =>
 {
-    const response = await fetch(`${url}Blob/AddBlog`,
+    const response = await fetch(`${url}/Blog/AddBlog`,
     {
         method: "POST",
         headers: {
@@ -155,7 +168,7 @@ export const addBlogItem = async (blog: IBlogItems, token: string) =>
 
 export const updateBlogItem = async (blog: IBlogItems, token: string) =>
 {
-    const response = await fetch(`${url}Blob/EditBlog`,
+    const response = await fetch(`${url}/Blog/EditBlog`,
     {
         method: "PUT",
         headers: {
@@ -177,7 +190,7 @@ export const updateBlogItem = async (blog: IBlogItems, token: string) =>
 
 export const deleteBlogItem = async (blog: IBlogItems, token: string) =>
 {
-    const response = await fetch(`${url}Blob/DeleteBlog`,
+    const response = await fetch(`${url}/Blog/DeleteBlog`,
     {
         method: "DELETE",
         headers: {
@@ -195,4 +208,8 @@ export const deleteBlogItem = async (blog: IBlogItems, token: string) =>
     }
     const data = await response.json();
     return data.success;
+}
+
+export const getToken = () => {
+    return localStorage.getItem("Token") ?? '';
 }
