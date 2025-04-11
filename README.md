@@ -17,3 +17,6 @@ PlatO is a social media app designed for food enthusiasts to connect, share, and
 - ### Notifications and Messaging
     - Push notification for likes, comments, and recipe changes
     - In-app messaging between users
+
+# Vercel
+    https://plat-o-official-repo.vercel.app
