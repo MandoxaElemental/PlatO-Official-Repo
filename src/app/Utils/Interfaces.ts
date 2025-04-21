@@ -4,7 +4,7 @@ export interface IBlogItems
     userId: number,
     publisherName: string,
     date: string,
-    image: string,
+    image: string|ArrayBuffer|null,
     recipeName: string,
     description: string,
     ingredients: string[],

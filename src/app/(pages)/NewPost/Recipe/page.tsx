@@ -9,10 +9,10 @@ import { format } from 'date-fns'
 const Recipe = () => {
 
     
-    // const [image, setImage] = useState('');
     const [blogId, setBlogId] = useState<number>(0);
     const [blogUserId, setBlogUserId] = useState<number>(0);
     const [blogPublisherName, setBlogPublisherName] = useState<string>("");
+    const [recipeImage, setImage] = useState<string|ArrayBuffer|null>('');
     const [length, setLength] = useState(200);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
@@ -83,13 +83,25 @@ const Recipe = () => {
       setIngredients(updatedIngredients);
     };
 
+    const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  
+      let reader = new FileReader();
+      let file = e.target.files?.[0]
+  
+      if(file){
+        reader.onload = () => {
+          setImage(reader.result);
+        }
+        reader.readAsDataURL(file);
+      }
+    }
     const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
       setBlogId(0)
       const item = {
         id: blogId,
         userId: blogUserId,
         publisherName: blogPublisherName,
-        image: '',
+        image: recipeImage,
         date: format(new Date(), 'MM-dd-yyyy'),
         recipeName: name,
         description: description,
@@ -174,7 +186,7 @@ const Recipe = () => {
             New Recipe
         </div>
         <div className='border-b-1 border-solid border-slate-300 p-2'>
-            <FileInput/>
+            <FileInput onChange={handleImage} id="Picture" accept="image/png, image/jpg" />
         </div>
         <div className='border-b-1 border-solid border-slate-300 p-2 flex flex-col items-center'>
             <TextInput placeholder='[Recipe Name]' className='w-[200px] pb-2' onChange={(e) => setName(e.target.value)}></TextInput>
