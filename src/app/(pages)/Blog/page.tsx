@@ -1,26 +1,26 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Image from "next/image";
 import Post from '@/app/Components/Post';
-import { IBlogItems } from '@/app/Utils/Interfaces';
-import { getAllBlogs, getToken } from '@/app/Utils/DataServices';
+// import { IBlogItems } from '@/app/Utils/Interfaces';
+// import { getAllBlogs, getToken } from '@/app/Utils/DataServices';
 
 const Blog = () => {
 
-    const [blogItems, setBlogItems] = useState<IBlogItems[]>([])
+    // const [blogItems, setBlogItems] = useState<IBlogItems[]>([])
   
-    useEffect(()=>{
-      const getData = async () => {
-        const data: IBlogItems[] = await getAllBlogs(getToken());
-        console.log(data)
+    // useEffect(()=>{
+    //   const getData = async () => {
+    //     const data: IBlogItems[] = await getAllBlogs(getToken());
+    //     console.log(data)
         
-        const filteredData = data.filter(item => item.isPublished && !item.isDeleted)
-        console.log(filteredData)
-        setBlogItems(filteredData)
-      }
-      getData()
-    }, [])
+    //     const filteredData = data.filter(item => item.isPublished && !item.isDeleted)
+    //     console.log(filteredData)
+    //     setBlogItems(filteredData)
+    //   }
+    //   getData()
+    // }, [])
   
   return (
     <div className="pt-10">

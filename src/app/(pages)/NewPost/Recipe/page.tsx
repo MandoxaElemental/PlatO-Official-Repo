@@ -85,8 +85,8 @@ const Recipe = () => {
 
     const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
   
-      let reader = new FileReader();
-      let file = e.target.files?.[0]
+      const reader = new FileReader();
+      const file = e.target.files?.[0]
   
       if(file){
         reader.onload = () => {
