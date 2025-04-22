@@ -25,8 +25,8 @@ export default function Home() {
 
   return (
     <div className="pt-10">
-      <Post post={<Image src="/assets/burger.png" alt="post" width={500} height={500}/>}/>
-      <Post post={
+      <Post username={"Username"} post={<Image src="/assets/burger.png" alt="post" width={500} height={500}/>}/>
+      <Post username={"UserName"} post={
         <div>
           <div className='font-semibold text-2xl pb-2'>- Recipe -</div>
         <Image className='object-cover h-[200px] w-full' src="/assets/chocolate-cake.png" alt="post" width={50} height={20}/>
@@ -43,7 +43,7 @@ export default function Home() {
         <Recommended/>
         {blogItems.map((item:IBlogItems, idx: number) => {
               return(
-                <Post key={idx} post={
+                <Post key={idx} username={item.publisherName} post={
                   <div>
                     <div className='font-semibold text-2xl pb-2'>- Recipe -</div>
                   {}

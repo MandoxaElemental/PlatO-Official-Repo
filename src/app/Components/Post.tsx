@@ -1,12 +1,12 @@
 import { Button } from 'flowbite-react'
 import React from 'react'
 
-const Post = ({post} : {post: React.ReactNode}) => {
+const Post = ({post, username} : {post: React.ReactNode; username: string}) => {
   return (
     <div className='text-center max-w-[500px] border-t-1 border-solid border-slate-300'>
         <div className='flex justify-between items-center py-2 px-5'>
             <div className='flex items-center'>
-            <div className='rounded-full bg-green-500 w-10 h-10 flex justify-center items-center'><img className='' src="./assets/person.svg" alt="profilePic" /></div> <p className='pl-3'>UserName</p>
+            <div className='rounded-full bg-green-500 w-10 h-10 flex justify-center items-center'><img className='' src="./assets/person.svg" alt="profilePic" /></div> <p className='pl-3'>{username}</p>
             </div>
             <Button className="rounded-md bg-blue-200 hover:bg-blue-400 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200">Follow</Button>
         </div>

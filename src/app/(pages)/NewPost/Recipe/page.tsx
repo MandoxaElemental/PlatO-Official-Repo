@@ -3,15 +3,14 @@ import { Button, FileInput, TextInput, Modal, ModalBody, ModalFooter, ModalHeade
 import React, { useEffect, useState } from 'react'
 import { Ingredient, tagArr } from '@/app/Utils/Interfaces'
 import Image from 'next/image'
-import { addBlogItem, getToken, loggedInData } from '@/app/Utils/DataServices'
+import { addBlogItem, getToken } from '@/app/Utils/DataServices'
 import { format } from 'date-fns'
+import { useRouter } from 'next/navigation'
 
 const Recipe = () => {
-
-    
     const [blogId, setBlogId] = useState<number>(0);
-    const [blogUserId, setBlogUserId] = useState<number>(0);
-    const [blogPublisherName, setBlogPublisherName] = useState<string>("");
+    const [id, setId] = useState<number>(0);
+    const [username, setUsername] = useState<string>("");
     const [recipeImage, setImage] = useState<string|ArrayBuffer|null>('');
     const [length, setLength] = useState(200);
     const [name, setName] = useState('');
@@ -21,6 +20,15 @@ const Recipe = () => {
     const [query, setQuery] = useState<string>('');
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [openModal, setOpenModal] = useState(false);
+    const router = useRouter();
+  
+    useEffect(() => {
+      const storedUsername = localStorage.getItem("Username");
+      const storedId = localStorage.getItem("UserID");
+    
+      if (storedUsername) setUsername(storedUsername);
+      if (storedId) setId(Number(storedId));
+    }, []);
 
     const updateStep = (index: number, value: string) => {
       const updatedSteps = [...steps];
@@ -47,15 +55,6 @@ const Recipe = () => {
       newSteps.splice(index, 1);
       setSteps(newSteps);
     };
-
-    // const DisplayItems = () => {
-    //   console.log(name)
-    //   console.log(description)
-    //   console.log(ingredients)
-    //   console.log(steps)
-    //   console.log(selectedTags)
-      
-    // }
 
     useEffect(() => {
       const num = (200 - description.length)
@@ -99,8 +98,8 @@ const Recipe = () => {
       setBlogId(0)
       const item = {
         id: blogId,
-        userId: blogUserId,
-        publisherName: blogPublisherName,
+        userId: id,
+        publisherName: username,
         image: recipeImage,
         date: format(new Date(), 'MM-dd-yyyy'),
         recipeName: name,
@@ -116,19 +115,11 @@ const Recipe = () => {
       if (result)
       {
         alert('Post Success!')
+        router.push("/Home");
       }else{
         alert('Post Error')
       }
     }
-
-    useEffect(() => {
-      const getLoggedInData = async () => {
-        const loggedIn = loggedInData();
-        setBlogUserId(loggedIn.id)
-        setBlogPublisherName(loggedIn.username)
-      }
-      getLoggedInData()
-    }, [])
   
   
 
