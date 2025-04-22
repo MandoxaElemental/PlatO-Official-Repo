@@ -166,7 +166,6 @@ type InputBoxesProps = {
 }
 
 const InputBoxes = ({ setFormtype }: InputBoxesProps) => {
-    //setVar can be used to set the variable for usernames, passwords, etc, to be salt and hash'd
     return(
         <div>
             <h1 className=' text-gray-400'>{setFormtype}</h1>

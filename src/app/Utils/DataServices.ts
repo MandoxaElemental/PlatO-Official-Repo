@@ -143,6 +143,27 @@ export const getBlogItemsByUserId = async (userId: number, token: string) =>
     const data = await response.json();
     return data;
 }
+export const getBlogbyId = async (blogId: number, token: string) =>
+{
+    const response = await fetch(`${url}/Blog/GetBlogById/${blogId}`,
+    {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        }
+    });
+    if (!response.ok)
+    {
+        const errorData = await response.json();
+        const message = errorData.message;
+        console.log(message);
+        return [];
+    }
+    
+    const data = await response.json();
+    return data;
+}
 
 export const addBlogItem = async (blog: IBlogItems, token: string) =>
 {

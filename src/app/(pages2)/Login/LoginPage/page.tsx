@@ -17,6 +17,8 @@ const LogInPage = () =>
 
   const handleSubmit = async () =>
   {
+
+    const isEmail = usernameOrEmail.includes("@");
     let email = "";
     let username = "";
 
@@ -45,15 +47,15 @@ const LogInPage = () =>
       {
         localStorage.setItem("Token", token.token);
 
-        if (username != "")
-        {
-          await getUserInfoByUsername(username);
-        }else
-        {
-          await getUserInfoByEmail(email);
-        }
-        alert("Log In Successful!");
+        const userInfo = isEmail
+        ? await getUserInfoByEmail(email)
+        : await getUserInfoByUsername(username);
 
+        localStorage.setItem("UserID", userInfo.id.toString());
+        localStorage.setItem("Username", userInfo.username);
+        
+        alert("Log In Successful!");
+        
         router.push("/Home");
       }
     }else

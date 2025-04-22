@@ -4,19 +4,20 @@
 import { Button, Sidebar, SidebarItem, SidebarItemGroup, SidebarItems } from "flowbite-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { loggedInData } from "../Utils/DataServices";
+
 
 export function NavbarComponent() {
 
   const [username, setUsername] = useState('');
+  // const [id, setId] = useState(0);
 
   useEffect(() => {
-        const getLoggedInData = async () => {
-          const loggedIn = loggedInData();
-          setUsername(loggedIn.username)
-        }
-        getLoggedInData()
-      }, [])
+    const storedUsername = localStorage.getItem("Username");
+    // const storedId = localStorage.getItem("UserID");
+  
+    if (storedUsername) setUsername(storedUsername);
+    // if (storedId) setId(Number(storedId));
+  }, []);
 
   return (
     <Sidebar aria-label="Default sidebar example">
@@ -72,7 +73,12 @@ export function NavbarComponent() {
             <Image className="h-5 w-5 dark:invert" src="../assets/gear.svg" alt="profile" width={100} height={100} /><p className="pl-2">Settings and Privacy</p>
             </div>
           </SidebarItem>
-          <SidebarItem href="/" >
+          <SidebarItem href="/"
+            onClick={() => {
+              localStorage.removeItem("Token");
+              localStorage.removeItem("UserID");
+              localStorage.removeItem("Username");
+            }}>
             Log Out
           </SidebarItem>
         </SidebarItemGroup>

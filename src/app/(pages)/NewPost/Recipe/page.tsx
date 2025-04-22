@@ -223,7 +223,7 @@ const Recipe = () => {
       </label>
       <Dropdown label={ing.measurement} className="w-[140px]">
         {[
-          'tsp', 'tbsp', 'c', 'qt', 'gal', 'oz', 'lbs', 'kg', 'g', 'ml', 'l',
+          'tsp', 'tbsp', 'c', 'qt', 'gal', 'oz', 'lbs', 'kg', 'g', 'ml', 'l', 'sm', 'md', 'lg'
         ].map((unit) => (
           <DropdownItem
             key={unit}
