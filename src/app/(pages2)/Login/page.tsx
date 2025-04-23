@@ -1,9 +1,23 @@
+'use client'
+
 import { ButtonLogin, ButtonSignUp } from '@/app/Components/LoginPageComponents';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 
 
 const LoginPage = () => {
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const tokenCheck = localStorage.getItem("Token")
+
+    if (tokenCheck) {
+      router.push('/Home');
+    }
+  }, []);
   return (
     <>
     <div className='h-screen flex items-center justify-center'> 

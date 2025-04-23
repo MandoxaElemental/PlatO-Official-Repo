@@ -10,6 +10,10 @@ export interface IBlogItems
     ingredients: string[],
     steps: string[],
     tags: string[],
+    rating: number,
+    numberOfRatings: number,
+    averageRating: number,
+    numberOfLikes: number,
     isPublished: boolean,
     isDeleted: boolean
 }

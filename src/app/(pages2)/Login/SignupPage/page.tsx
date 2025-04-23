@@ -50,6 +50,7 @@ const SignUpPage1 = () =>
 
     if (result)
     {
+      localStorage.setItem("Username", username);
       alert("Account Created!");
       router.push("/Login/PreferencesPage");
     }else

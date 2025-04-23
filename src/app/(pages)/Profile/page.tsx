@@ -2,18 +2,33 @@
 import React, { useEffect, useState } from 'react'
 import { TabItem, Tabs } from "flowbite-react";
 import Image from 'next/image';
+import { checkToken, getBlogItemsByUserId, getToken } from '@/app/Utils/DataServices';
+import { IBlogItems } from '@/app/Utils/Interfaces';
 
 const Profile = () => {
     const [username, setUsername] = useState('');
-    // const [id, setId] = useState(0);
+    const [id, setId] = useState(0);
+    const [blogItems, setBlogItems] = useState<IBlogItems[]>([])
   
     useEffect(() => {
+      
+      const userPosts = async () => {
       const storedUsername = localStorage.getItem("Username");
-      // const storedId = localStorage.getItem("UserID");
-    
+      const storedId = localStorage.getItem("UserID");
       if (storedUsername) setUsername(storedUsername);
-      // if (storedId) setId(Number(storedId));
+      if (storedId) setId(Number(storedId));
+      
+      const userBlogItems = await getBlogItemsByUserId(1, getToken())
+      setBlogItems(userBlogItems)
+      console.log(blogItems)
+      }
+      if(!checkToken()){
+        alert('error')
+      } else {
+        userPosts()
+      }
     }, []);
+
   return (
     <div className='pt-10 px-5 w-min-full'>
       <div className='flex flex-grid gap-5 border-b-1 border-solid border-slate-300 pb-2'>
