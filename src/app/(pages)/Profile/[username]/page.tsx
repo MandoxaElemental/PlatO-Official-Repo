@@ -10,7 +10,6 @@ import { Button, TabItem, Tabs } from 'flowbite-react';
 const ProfilePage = () => {
   const { username } = useParams();
   const [blogItems, setBlogItems] = useState<IBlogItems[]>([]);
-  const [userId, setUserId] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -23,8 +22,6 @@ const ProfilePage = () => {
 
       try {
         const user = await getUserInfoByUsername(username);
-        setUserId(user.id);
-
         const userBlogItems = await getBlogItemsByUserId(user.id, getToken());
         setBlogItems(userBlogItems);
       } catch (error) {
