@@ -107,6 +107,10 @@ const Recipe = () => {
         ingredients: ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`),
         steps: steps,
         tags: selectedTags,
+        rating: 0,
+        numberOfRatings: 0,
+        averageRating: 5,
+        numberOfLikes: 0,
         isPublished: e.currentTarget.textContent === 'Save' ? false : true,
         isDeleted: false
       }
