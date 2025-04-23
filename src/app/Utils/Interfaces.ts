@@ -57,13 +57,11 @@ export interface Ingredient {
     ingredient: string
 }
 
-// export interface RecipeIngredients{
-//     ingredient: string
-// }
-// export interface RecipeSteps{
-//     steps: string
-// }
-
+export interface ProfileProps {
+    params: {
+      username: string;
+    };
+  }
 export const tagArr: Array<string> = [
     'Fruits',
     'Meat',

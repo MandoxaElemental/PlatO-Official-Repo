@@ -55,7 +55,7 @@ export function NavbarComponent() {
             <Image className="h-5 w-5 dark:invert" src="../assets/book.svg" alt="book" width={100} height={100} /><p className="pl-2">Recipe Book</p>
             </div>
           </SidebarItem>
-          <SidebarItem href="/Profile" >
+          <SidebarItem href={`/Profile/${username}`} >
           <div className="flex items-center">
             <Image className="h-5 w-5 dark:invert" src="../assets/person.svg" alt="profile" width={100} height={100} /><p className="pl-2">Profile</p>
             </div>

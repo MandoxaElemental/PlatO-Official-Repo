@@ -2,20 +2,11 @@
 import React, { useEffect, useState } from 'react'
 import { TabItem, Tabs } from "flowbite-react";
 import Image from 'next/image';
-import { checkToken, getBlogItemsByUserId, getToken, getUserInfoByUsername } from '@/app/Utils/DataServices';
-import { IBlogItems, ProfileProps } from '@/app/Utils/Interfaces';
-import { notFound } from 'next/navigation';
+import { checkToken, getBlogItemsByUserId, getToken } from '@/app/Utils/DataServices';
+import { IBlogItems } from '@/app/Utils/Interfaces';
 
-const Profile = async ({ params }: ProfileProps) => {
-
-  const { username } = params;
-
-  const user = await getUserInfoByUsername(username);
-
-  if (!user) {
-    return notFound();
-  }
-    // const [username, setUsername] = useState('');
+const Account = () => {
+    const [username, setUsername] = useState('');
     const [id, setId] = useState(0);
     const [blogItems, setBlogItems] = useState<IBlogItems[]>([])
   
@@ -24,11 +15,11 @@ const Profile = async ({ params }: ProfileProps) => {
       const userPosts = async () => {
       const storedUsername = localStorage.getItem("Username");
       const storedId = localStorage.getItem("UserID");
-      // if (storedUsername) setUsername(storedUsername);
+      if (storedUsername) setUsername(storedUsername);
       if (storedId) setId(Number(storedId));
       console.log(storedId)
       console.log(storedUsername)
-      const userBlogItems = await getBlogItemsByUserId(2, getToken())
+      const userBlogItems = await getBlogItemsByUserId(id, getToken())
       setBlogItems(userBlogItems)
       console.log(userBlogItems)
       }
@@ -37,15 +28,14 @@ const Profile = async ({ params }: ProfileProps) => {
       } else {
         userPosts()
       }
-      console.log(username)
     }, []);
 
   return (
     <div className='pt-10 px-5 w-min-full'>
       <div className='flex flex-grid gap-5 border-b-1 border-solid border-slate-300 pb-2'>
-      <div className='border-solid border-4 border-black rounded-full bg-slate-500 w-30 h-30 flex justify-center items-center'><Image className='h-20 w-20' src="./assets/person.svg" alt="profilePic" width={100} height={100}/></div>
+      <div className='border-solid border-4 border-black rounded-full bg-slate-500 w-30 h-30 flex justify-center items-center'><Image className='h-20 w-20' src="../assets/person.svg" alt="profilePic" width={100} height={100}/></div>
       <div className='p-5'>
-        <h1 className='text-3xl font-bold'>Placeholder</h1>
+        <h1 className='text-3xl font-bold'>{username}</h1>
         <div className='flex text-center flex-grid gap-3'>
           <div>
             <p className='font-semibold'>Following</p>
@@ -65,7 +55,7 @@ const Profile = async ({ params }: ProfileProps) => {
           {blogItems.map((item, ibx) => {
             return(
               <div key={ibx} className=''>
-                <Image className='object-cover h-[200px] w-[200px]' src={`${item.image}`} alt="post" width={50} height={50}/>
+                <Image className='object-cover h-[200px] w-[200px]' src={item.image === null ? "/assets/Placeholder.png" : `${item.image}`} alt="post" width={50} height={20}/>
               </div>
               
             )
@@ -88,4 +78,4 @@ const Profile = async ({ params }: ProfileProps) => {
   )
 }
 
-export default Profile
+export default Account

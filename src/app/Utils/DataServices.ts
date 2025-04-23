@@ -57,6 +57,13 @@ export const getUserInfoByUsername = async (username: string) =>
     return userData;
 }
 
+export const getUserInfoById = async (userId: string) =>
+{
+    const response = await fetch(`${url}/User/GetUserById/${userId}`);
+    userData = await response.json();
+    return userData;
+}
+
 export const getUserInfoByEmail = async (email: string) =>
 {
     const response = await fetch(`${url}/User/GetUserByEmail/${email}`)
