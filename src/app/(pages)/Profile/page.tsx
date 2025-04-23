@@ -18,7 +18,7 @@ const Profile = () => {
       if (storedUsername) setUsername(storedUsername);
       if (storedId) setId(Number(storedId));
       
-      const userBlogItems = await getBlogItemsByUserId(1, getToken())
+      const userBlogItems = await getBlogItemsByUserId(id, getToken())
       setBlogItems(userBlogItems)
       console.log(blogItems)
       }
