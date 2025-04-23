@@ -32,11 +32,11 @@ export default function Home() {
         <Image className='object-cover h-[200px] w-full' src="/assets/chocolate-cake.png" alt="post" width={50} height={20}/>
         <p className='font-semibold text-2xl p-2'>Moist Chocolate Cake</p>
         <div className='flex items-center justify-center'>
-            <Image className='h-8 w-8 px-1' src="./assets/star.svg" alt="star"  width={500} height={500}/>
-            <Image className='h-8 w-8 px-1' src="./assets/star.svg" alt="star"  width={500} height={500}/>
-            <Image className='h-8 w-8 px-1' src="./assets/star.svg" alt="star"  width={500} height={500}/>
-            <Image className='h-8 w-8 px-1' src="./assets/star.svg" alt="star"  width={500} height={500}/>
-            <Image className='h-8 w-8 px-1' src="./assets/star.svg" alt="star"  width={500} height={500}/>
+            <Image className='h-8 w-8 px-1' src="/assets/star.svg" alt="star"  width={500} height={500}/>
+            <Image className='h-8 w-8 px-1' src="/assets/star.svg" alt="star"  width={500} height={500}/>
+            <Image className='h-8 w-8 px-1' src="/assets/star.svg" alt="star"  width={500} height={500}/>
+            <Image className='h-8 w-8 px-1' src="/assets/star.svg" alt="star"  width={500} height={500}/>
+            <Image className='h-8 w-8 px-1' src="/assets/star.svg" alt="star"  width={500} height={500}/>
         </div>
         <div className='p-2 text-left'>Indulge in the rich, velvety goodness of our homemade chocolate cake recipe, perfect for any occasion. This delightful treat features layers of moist chocolate sponge, complemented by a luscious chocolate frosting that melts in your mouth.</div>
         <Link className='text-blue-600 text-xl underline pb-2' href={"#"}>Read Full Recipe</Link></div>}/>
@@ -50,14 +50,14 @@ export default function Home() {
                   <Image className='object-cover h-[200px] w-full' src={item.image === null ? "/assets/Placeholder.png" : `${item.image}`} alt="post" width={50} height={20}/>
                   <p className='font-semibold text-2xl p-2'>{item.recipeName}</p>
                   <div className='flex items-center justify-center'>
-                      <Image className='h-8 w-8 px-1' src="./assets/star.svg" alt="star"  width={500} height={500}/>
-                      <Image className='h-8 w-8 px-1' src="./assets/star.svg" alt="star"  width={500} height={500}/>
-                      <Image className='h-8 w-8 px-1' src="./assets/star.svg" alt="star"  width={500} height={500}/>
-                      <Image className='h-8 w-8 px-1' src="./assets/star.svg" alt="star"  width={500} height={500}/>
-                      <Image className='h-8 w-8 px-1' src="./assets/star.svg" alt="star"  width={500} height={500}/>
+                      <Image className='h-8 w-8 px-1' src="/assets/star.svg" alt="star"  width={500} height={500}/>
+                      <Image className='h-8 w-8 px-1' src="/assets/star.svg" alt="star"  width={500} height={500}/>
+                      <Image className='h-8 w-8 px-1' src="/assets/star.svg" alt="star"  width={500} height={500}/>
+                      <Image className='h-8 w-8 px-1' src="/assets/star.svg" alt="star"  width={500} height={500}/>
+                      <Image className='h-8 w-8 px-1' src="/assets/star.svg" alt="star"  width={500} height={500}/>
                   </div>
                   <div className='p-2 text-left'>{item.description}</div>
-                  <Link className='text-blue-600 text-xl underline pb-2' href={"/Blog"}>Read Full Recipe</Link>
+                  <Link className='text-blue-600 text-xl underline pb-2' href={`/Blog/${item.id}`}>Read Full Recipe</Link>
                   <div className='p-2 text-left text-sm'>{item.date}</div>
                   </div>
                 }/>

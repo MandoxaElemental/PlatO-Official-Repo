@@ -4,24 +4,23 @@ import React, { useEffect, useState } from 'react'
 import Image from "next/image";
 import Post from '@/app/Components/Post';
 import { getBlogbyId, getToken } from '@/app/Utils/DataServices';
+import { useParams } from 'next/navigation';
 
 const Blog = () => {
-    const [blogId, setBlogId] = useState<number>(2);
-    const [name, setName] = useState<string>('')
-    const [user, setUser] = useState<string>('')
-    const [image, setImage] = useState<string>('')
-    const [description, setDescription] = useState<string>('')
-    const [ingredients, setIngredients] = useState<string[]>([])
-    const [steps, setSteps] = useState<string[]>([])
-    const [tags, setTags] = useState<string[]>([])
+    const { postId } = useParams();
+    const [name, setName] = useState<string>('');
+    const [user, setUser] = useState<string>('');
+    const [image, setImage] = useState<string>('');
+    const [description, setDescription] = useState<string>('');
+    const [ingredients, setIngredients] = useState<string[]>([]);
+    const [steps, setSteps] = useState<string[]>([]);
+    const [tags, setTags] = useState<string[]>([]);
 
-    useEffect(()=>{
-      setBlogId(1)
-    }, [])
-
-    useEffect(()=>{
+    useEffect(() => {
       const getData = async () => {
-        const data = await getBlogbyId(blogId, getToken());
+        if (!postId) return;
+
+        const data = await getBlogbyId(Number(postId), getToken());
         console.log(data);
         setName(data.recipeName);
         setUser(data.publisherName);
@@ -31,22 +30,22 @@ const Blog = () => {
         setSteps(data.steps);
         setTags(data.tags);
       };
-      getData()
-    }, [blogId])
-  
-  return (
-    <div className="pt-10 w-min-full">
+      getData();
+    }, [postId]);
+
+    return (
+        <div className="pt-10 w-min-full">
         <Post username={user} post={
           <div>
             <div className='font-semibold text-2xl pb-2'>- Recipe -</div>
-          <Image className='h-48 w-full object-cover' src={image} alt="post" width={500} height={500}/>
+          <Image className='h-48 w-full object-cover' src={`${image}`} alt="post" width={500} height={500}/>
           <p className='font-semibold text-2xl p-2'>{name}</p>
           <div className='flex items-center justify-center'>
-              <Image className='h-8 w-8 px-1' src="./assets/star.svg" alt="star"  width={500} height={500}/>
-              <Image className='h-8 w-8 px-1' src="./assets/star.svg" alt="star"  width={500} height={500}/>
-              <Image className='h-8 w-8 px-1' src="./assets/star.svg" alt="star"  width={500} height={500}/>
-              <Image className='h-8 w-8 px-1' src="./assets/star.svg" alt="star"  width={500} height={500}/>
-              <Image className='h-8 w-8 px-1' src="./assets/star.svg" alt="star"  width={500} height={500}/>
+              <Image className='h-8 w-8 px-1' src="../assets/star.svg" alt="star"  width={500} height={500}/>
+              <Image className='h-8 w-8 px-1' src="../assets/star.svg" alt="star"  width={500} height={500}/>
+              <Image className='h-8 w-8 px-1' src="../assets/star.svg" alt="star"  width={500} height={500}/>
+              <Image className='h-8 w-8 px-1' src="../assets/star.svg" alt="star"  width={500} height={500}/>
+              <Image className='h-8 w-8 px-1' src="../assets/star.svg" alt="star"  width={500} height={500}/>
           </div>
           <div className='p-2 text-left'>{description}</div>
           <div className='border-t-1 border-solid border-slate-300 py-2'>
@@ -78,8 +77,7 @@ const Blog = () => {
           </div>
           </div>}/>
     </div>
-
-  )
+    )
 }
 
-export default Blog
+export default Blog;
