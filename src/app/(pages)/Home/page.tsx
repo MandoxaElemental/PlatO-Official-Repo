@@ -47,7 +47,7 @@ export default function Home() {
                   <div>
                     <div className='font-semibold text-2xl pb-2'>- Recipe -</div>
                   {}
-                  <Image className='object-cover h-[200px] w-full' src={item.image === null ? "/assets/Placeholder.png" : `${item.image}`} alt="post" width={50} height={20}/>
+                  <Image className='object-cover h-[200px] w-full' src={`${item.image}`} alt="post" width={50} height={20}/>
                   <p className='font-semibold text-2xl p-2'>{item.recipeName}</p>
                   <div className='flex items-center justify-center'>
                       <Image className='h-8 w-8 px-1' src="/assets/star.svg" alt="star"  width={500} height={500}/>

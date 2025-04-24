@@ -2,13 +2,14 @@
 
 import React, { useEffect, useState } from 'react'
 import Image from "next/image";
-import Post from '@/app/Components/Post';
+import BlogPost from '@/app/Components/Blog';
 import { getBlogbyId, getToken } from '@/app/Utils/DataServices';
 import { useParams } from 'next/navigation';
 
 const Blog = () => {
     const { postId } = useParams();
     const [name, setName] = useState<string>('');
+    const [id, setId] = useState<string>('');
     const [user, setUser] = useState<string>('');
     const [image, setImage] = useState<string>('');
     const [description, setDescription] = useState<string>('');
@@ -19,10 +20,10 @@ const Blog = () => {
     useEffect(() => {
       const getData = async () => {
         if (!postId) return;
-
         const data = await getBlogbyId(Number(postId), getToken());
         console.log(data);
         setName(data.recipeName);
+        setId(data.id);
         setUser(data.publisherName);
         setImage(data.image ?? "/assets/Placeholder.png");
         setDescription(data.description);
@@ -35,7 +36,7 @@ const Blog = () => {
 
     return (
         <div className="pt-10 w-min-full">
-        <Post username={user} post={
+        <BlogPost username={user} id={id} post={
           <div>
             <div className='font-semibold text-2xl pb-2'>- Recipe -</div>
           <Image className='h-48 w-full object-cover' src={`${image}`} alt="post" width={500} height={500}/>

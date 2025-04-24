@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { checkToken, getBlogItemsByUserId, getUserInfoByUsername, getToken } from '@/app/Utils/DataServices';
 import { IBlogItems } from '@/app/Utils/Interfaces';
 import { Button, TabItem, Tabs } from 'flowbite-react';
+import Link from 'next/link';
 
 const ProfilePage = () => {
   const { username } = useParams();
@@ -41,7 +42,6 @@ const ProfilePage = () => {
         <div className='p-5'>
             <div className='flex gap-4'>
                   <h1 className='text-3xl font-bold'>{username}</h1> {username === localStorage.getItem("Username") ? '' : <Button className="rounded-full h-8 bg-blue-200 hover:bg-blue-400 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200">Follow</Button>
-
                   }
             </div>
           <div className='flex text-center flex-grid gap-3'>
@@ -62,10 +62,11 @@ const ProfilePage = () => {
         <div className='grid grid-cols-3 gap-2'>
           {blogItems.map((item, ibx) => {
             return(
+              <Link href={`/Blog/${item.id}`}>
               <div key={ibx} className=''>
                 <Image className='object-cover h-[200px] w-[200px]' src={item.image === null ? "/assets/Placeholder.png" : `${item.image}`} alt="post" width={50} height={20}/>
               </div>
-              
+              </Link>
             )
           }
           )}

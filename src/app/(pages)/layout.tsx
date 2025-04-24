@@ -12,7 +12,7 @@ const layout = ({
               <div className="max-h-screen overflow-y-auto scrollbar-hide">
             <NavbarComponent/>
               </div>
-              <div className="w-min-screenmax-h-screen overflow-y-auto scrollbar-hide">
+              <div className="w-min-screen max-h-screen overflow-y-auto scrollbar-hide">
             {children}
               </div>
               <div className="max-h-screen overflow-y-auto scrollbar-hide">
