@@ -3,12 +3,11 @@ import { Button, FileInput, TextInput, Modal, ModalBody, ModalFooter, ModalHeade
 import React, { useEffect, useState } from 'react'
 import { Ingredient, tagArr } from '@/app/Utils/Interfaces'
 import Image from 'next/image'
-import {getBlogbyId, getBlogItemsByUserId, getToken, updateBlogItem } from '@/app/Utils/DataServices'
+import {getBlogbyId, getToken, updateBlogItem } from '@/app/Utils/DataServices'
 import { format } from 'date-fns'
 import { useParams, useRouter } from 'next/navigation'
 
 const Recipe = () => {
-    const [blogId, setBlogId] = useState<number>(0);
     const [id, setId] = useState<number>(0);
     const [username, setUsername] = useState<string>("");
     const [recipeImage, setImage] = useState<string|ArrayBuffer|null>('');
@@ -44,7 +43,7 @@ const Recipe = () => {
               let measurement = 'Measurement';
               let ingredient = parts.slice(1).join(' ');
       
-              for (let m of measurements) {
+              for (const m of measurements) {
                 if (ingredient.startsWith(m + ' ')) {
                   measurement = m;
                   ingredient = ingredient.slice(m.length + 1);
@@ -62,7 +61,7 @@ const Recipe = () => {
       
           setName(data.recipeName);
           setId(data.id);
-          setImage(data.image ?? "/assets/Placeholder.png");
+          setImage(data.image);
           setDescription(data.description);
           setIngredients(parseIngredients(data.ingredients));
           setSteps(data.steps);
@@ -239,7 +238,7 @@ const Recipe = () => {
         </div>
         <div className='border-b-1 border-solid border-slate-300 p-2'>
             <FileInput onChange={handleImage} id="Picture" accept="image/png, image/jpg" />
-                            {recipeImage && (
+                            {/* {recipeImage && (
                 <div className="flex justify-center py-4">
                     <Image
                     src={typeof recipeImage === 'string' ? recipeImage : ''}
@@ -249,7 +248,7 @@ const Recipe = () => {
                     className="shadow"
                     />
                 </div>
-                )}
+                )} */}
         </div>
         <div className='border-b-1 border-solid border-slate-300 p-2 flex flex-col items-center'>
             <TextInput value={name} placeholder='[Recipe Name]' className='w-[200px] pb-2' onChange={(e) => setName(e.target.value)}></TextInput>

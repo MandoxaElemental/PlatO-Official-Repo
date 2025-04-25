@@ -62,11 +62,11 @@ const ProfilePage = () => {
         <div className='grid grid-cols-3 gap-2'>
           {blogItems.map((item, ibx) => {
             return(
-              <Link href={`/Blog/${item.id}`}>
               <div key={ibx} className=''>
+                <Link href={`/Blog/${item.id}`}>
                 <Image className='object-cover h-[200px] w-[200px]' src={item.image === null ? "/assets/Placeholder.png" : `${item.image}`} alt="post" width={50} height={20}/>
-              </div>
               </Link>
+              </div>
             )
           }
           )}
