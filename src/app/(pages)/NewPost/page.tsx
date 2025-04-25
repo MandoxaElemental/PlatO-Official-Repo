@@ -19,7 +19,7 @@ const Post = () => {
         <Link href={"/NewPost/Recipe"}>
         <div className='hover:opacity-50 border-1 border-slate-300 h-[100px] flex items-center rounded-xl mb-2'>
         <div className="flex justify-center items-center w-[100px] h-[100px] bg-slate-300 rounded-xl">
-            <Image width={50} height={50} className='h-[70px] opacity-50' src="./assets/pot.svg" alt="pot" />
+            <Image width={70} height={70} className='h-[70px] opacity-50' src="./assets/pot.svg" alt="pot" />
         </div>
         <div className='p-5'>Recipe</div>
         </div>
