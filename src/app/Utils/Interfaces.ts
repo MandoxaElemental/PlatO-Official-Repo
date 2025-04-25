@@ -51,7 +51,7 @@ export interface ICommentItems
     id: number,
     blogId: number,
     userId: number,
-    username: string,
+    publisherName: string,
     date: string,
     comment: string,
     isPublished: boolean,

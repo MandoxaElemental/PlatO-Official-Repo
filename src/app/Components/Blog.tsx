@@ -1,4 +1,4 @@
-import { Button, Popover, TextInput } from 'flowbite-react'
+import { Button, Popover } from 'flowbite-react'
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react'
@@ -8,7 +8,7 @@ const BlogPost = ({post, username, id, comments} : {post: React.ReactNode; usern
     <div className='text-center max-w-[500px] border-t-1 border-solid border-slate-300'>
         <div className='flex justify-between items-center py-2 px-5'>
             <div className='flex items-center'>
-            <div className='rounded-full bg-green-500 w-10 h-10 flex justify-center items-center'><img className='' src="../assets/person.svg" alt="profilePic" /></div> <Link href={`/Profile/${username}`} className='pl-3 cursor-pointer'>{username}</Link>
+            <div className='rounded-full bg-green-500 w-10 h-10 flex justify-center items-center'><Image width={50} height={50} className='' src="../assets/person.svg" alt="profilePic" /></div> <Link href={`/Profile/${username}`} className='pl-3 cursor-pointer'>{username}</Link>
             </div>
             {username === localStorage.getItem("Username") ? 
             <div className='pl-5 grid grid-cols-2 gap-3'>
@@ -45,13 +45,13 @@ const BlogPost = ({post, username, id, comments} : {post: React.ReactNode; usern
         </div>
         <div className='flex justify-evenly p-2 pt-5 border-t-1 border-solid border-slate-300'>
         <div className="flex items-center">
-            <img className="h-5 w-5" src="../assets/heart.svg" alt="like" /><p className="pl-2">Like</p>
+            <Image width={50} height={50} className="h-5 w-5" src="../assets/heart.svg" alt="like" /><p className="pl-2">Like</p>
         </div>
         <div className="flex items-center">
-            <img className="h-5 w-5" src="../assets/chat-left.svg" alt="comment" /><p className="pl-2">Comment</p>
+            <Image width={50} height={50} className="h-5 w-5" src="../assets/chat-left.svg" alt="comment" /><p className="pl-2">Comment</p>
         </div>
         <div className="flex items-center">
-            <img className="h-5 w-5" src="../assets/repeat.svg" alt="share" /><p className="pl-2">Share</p>
+            <Image width={50} height={50} className="h-5 w-5" src="../assets/repeat.svg" alt="share" /><p className="pl-2">Share</p>
         </div>
         </div>
             {comments}

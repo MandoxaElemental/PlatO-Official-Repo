@@ -308,7 +308,7 @@ export const getAllComments = async (token: string) =>
         return data;
     }
     
-    export const addCommentItem = async (Comment: ICommentItems, token: string) =>
+    export const addCommentItem = async (comment: ICommentItems, token: string) =>
     {
         const response = await fetch(`${url}/Comments/AddComment`,
         {
@@ -317,7 +317,7 @@ export const getAllComments = async (token: string) =>
                 "Content-Type": "application/json",
                 "Authorization": "Bearer " + token
             },
-            body: JSON.stringify(Comment)
+            body: JSON.stringify(comment)
         });
         if (!response.ok)
         {
@@ -373,3 +373,25 @@ export const getAllComments = async (token: string) =>
         const data = await response.json();
         return data.success;
     }
+
+    export const getCommentItemsByBlogId = async (id: number, token: string) =>
+        {
+            const response = await fetch(`${url}/Comments/GetCommentsByBlogId/${id}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                }
+            });
+            if (!response.ok)
+            {
+                const errorData = await response.json();
+                const message = errorData.message;
+                console.log(message);
+                return [];
+            }
+            
+            const data = await response.json();
+            return data;
+        }

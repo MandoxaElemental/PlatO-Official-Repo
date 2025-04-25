@@ -67,7 +67,7 @@ const Post = () => {
                         onClick={() => toggleTag(tag)}
                         className={`px-3 py-1 rounded-full text-sm border cursor-pointer ${
                           isSelected
-                            ? 'bg-blue-600 text-white border-blue-600'
+                            ? 'bg-blue-400 text-white border-blue-600'
                             : 'bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200'
                         }`}
                       >
@@ -102,7 +102,7 @@ const Post = () => {
                 selectedTags.map((tag, i) => (
                   <span
                     key={i} onClick={() => toggleTag(tag)}
-                    className="px-3 py-1 bg-blue-200 text-blue-900 rounded-full text-sm cursor-pointer hover:bg-blue-600"
+                    className="px-3 py-1 bg-blue-200 text-blue-900 rounded-full text-sm cursor-pointer hover:bg-blue-400"
                   >
                     {tag}
                   </span>
