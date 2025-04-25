@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+import Image from 'next/image'
 
 const Post = () => {
 
@@ -10,7 +11,7 @@ const Post = () => {
         <Link href={"/NewPost/Default"}>
         <div className='hover:opacity-50 border-1 border-slate-300 h-[100px] flex items-center rounded-xl mb-2'>
         <div className="flex justify-center items-center w-[100px] h-[100px] bg-slate-300 rounded-xl">
-            <img className='h-[50px] opacity-50' src="./assets/camera.svg" alt="camera" />
+            <Image width={50} height={50} className='h-[50px] opacity-50' src="./assets/camera.svg" alt="camera" />
         </div>
         <div className='p-5'>Image/Video</div>
         </div>
@@ -18,7 +19,7 @@ const Post = () => {
         <Link href={"/NewPost/Recipe"}>
         <div className='hover:opacity-50 border-1 border-slate-300 h-[100px] flex items-center rounded-xl mb-2'>
         <div className="flex justify-center items-center w-[100px] h-[100px] bg-slate-300 rounded-xl">
-            <img className='h-[70px] opacity-50' src="./assets/pot.svg" alt="pot" />
+            <Image width={50} height={50} className='h-[70px] opacity-50' src="./assets/pot.svg" alt="pot" />
         </div>
         <div className='p-5'>Recipe</div>
         </div>
@@ -26,7 +27,7 @@ const Post = () => {
         <Link href={"/NewPost/Drafts"}>
         <div className='hover:opacity-50 border-1 border-slate-300 h-[100px] flex items-center rounded-xl mb-2'>
         <div className="flex justify-center items-center w-[100px] h-[100px] bg-slate-300 rounded-xl">
-            <img className='h-[50px] opacity-50' src="./assets/file-earmark-plus.svg" alt="draft" />
+            <Image width={50} height={50} className='h-[50px] opacity-50' src="./assets/file-earmark-plus.svg" alt="draft" />
         </div>
         <div className='p-5'>Drafts</div>
         </div>

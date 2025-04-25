@@ -1,5 +1,6 @@
 import { Button } from 'flowbite-react'
 import React from 'react'
+import Image from 'next/image'
 
 const Recommended = () => {
   return (
@@ -9,19 +10,19 @@ const Recommended = () => {
         </p>
         <div className='grid grid-cols-3 gap-3'>
         <div className='border-1 border-slate-300 border-solid rounded-xl flex flex-col items-center'>
-            <img className='w-[120px] h-[120px] object-cover object-center rounded-full p-2' src="./assets/burger.png" alt="profile" />
+            <Image width={50} height={50} className='w-[120px] h-[120px] object-cover object-center rounded-full p-2' src="../assets/person.svg" alt="profile" />
             <p className='font-semibold'>UserName</p>
             <p>[Title]</p>
             <Button className="rounded-full m-4">Follow</Button>
         </div>
         <div className='border-1 border-slate-300 border-solid rounded-xl flex flex-col items-center'>
-            <img className='w-[120px] h-[120px] object-cover object-center rounded-full p-2' src="./assets/burger.png" alt="profile" />
+            <Image width={50} height={50} className='w-[120px] h-[120px] object-cover object-center rounded-full p-2' src="../assets/person.svg" alt="profile" />
             <p className='font-semibold'>UserName</p>
             <p>[Title]</p>
             <Button className="rounded-full m-4">Follow</Button>
         </div>
         <div className='border-1 border-slate-300 border-solid rounded-xl flex flex-col items-center'>
-            <img className='w-[120px] h-[120px] object-cover object-center rounded-full p-2' src="./assets/burger.png" alt="profile" />
+            <Image width={50} height={50} className='w-[120px] h-[120px] object-cover object-center rounded-full p-2' src="../assets/person.svg" alt="profile" />
             <p className='font-semibold'>UserName</p>
             <p>[Title]</p>
             <Button className="rounded-full m-4">Follow</Button>
