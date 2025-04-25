@@ -30,7 +30,6 @@ const Recipe = () => {
         const getData = async () => {
           if (!postId) return;
           const data = await getBlogbyId(Number(postId), getToken());
-          console.log(data);
       
           const parseIngredients = (rawIngredients: string[]): Ingredient[] => {
             const measurements = [
@@ -165,12 +164,11 @@ const Recipe = () => {
           numberOfRatings: ratingNumber,
           averageRating: ratingAverage,
           numberOfLikes: likes,
+          postType: 'recipe',
           isPublished: e.currentTarget.textContent === 'Save' ? false : true,
           isDeleted: false
         };
-      
-        console.log("Sending item:", item);
-      
+            
         const result = await updateBlogItem(item, getToken());
       
         if (result) {

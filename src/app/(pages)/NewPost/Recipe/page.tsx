@@ -111,6 +111,7 @@ const Recipe = () => {
         numberOfRatings: 0,
         averageRating: 5,
         numberOfLikes: 0,
+        postType: 'recipe',
         isPublished: e.currentTarget.textContent === 'Save' ? false : true,
         isDeleted: false
       }

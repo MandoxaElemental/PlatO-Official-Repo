@@ -1,4 +1,4 @@
-import { IBlogItems, IUserData, IUserInfoCreate, IUserInfoLogin } from "./Interfaces"
+import { IBlogItems, ICommentItems, IUserData, IUserInfoCreate, IUserInfoLogin } from "./Interfaces"
 
 const url = "https://platobackend-a7hagaahdvdfesgm.westus-01.azurewebsites.net"
 
@@ -241,3 +241,135 @@ export const deleteBlogItem = async (blog: IBlogItems, token: string) =>
 export const getToken = () => {
     return localStorage.getItem("Token") ?? '';
 }
+
+//----------COMMENT ENDPOINTS----------//
+export const getAllComments = async (token: string) =>
+    {
+        const response = await fetch(`${url}/Comments/GetAllComments`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            }
+        });
+        if (!response.ok)
+        {
+            const errorData = await response.json();
+            const message = errorData.message;
+            console.log(message);
+            return [];
+        }
+    
+        const data = await response.json();
+        return data;
+    }
+    
+    export const getCommentItemsByUserId = async (userId: number, token: string) =>
+    {
+        const response = await fetch(`${url}/Comments/GetCommentsByUserId/${userId}`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            }
+        });
+        if (!response.ok)
+        {
+            const errorData = await response.json();
+            const message = errorData.message;
+            console.log(message);
+            return [];
+        }
+        
+        const data = await response.json();
+        return data;
+    }
+    export const getCommentbyId = async (CommentId: number, token: string) =>
+    {
+        const response = await fetch(`${url}/Comments/GetCommentById/${CommentId}`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            }
+        });
+        if (!response.ok)
+        {
+            const errorData = await response.json();
+            const message = errorData.message;
+            console.log(message);
+            return [];
+        }
+        
+        const data = await response.json();
+        return data;
+    }
+    
+    export const addCommentItem = async (Comment: ICommentItems, token: string) =>
+    {
+        const response = await fetch(`${url}/Comments/AddComment`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify(Comment)
+        });
+        if (!response.ok)
+        {
+            const errorData = await response.json();
+            const message = errorData.message;
+            console.log(message);
+            return false;
+        }
+        const data = await response.json();
+        return data.success;
+    }
+    
+    export const updateCommentItem = async (Comment: ICommentItems, token: string) =>
+    {
+        const response = await fetch(`${url}/Comments/EditComment`,
+        {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify(Comment)
+        });
+        if (!response.ok)
+        {
+            const errorData = await response.json();
+            const message = errorData.message;
+            console.log(message);
+            return false;
+        }
+        const data = await response.json();
+        return data.success;
+    }
+    
+    export const deleteCommentItem = async (Comment: ICommentItems, token: string) =>
+    {
+        const response = await fetch(`${url}/Comments/DeleteComment`,
+        {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify(Comment)
+        });
+        if (!response.ok)
+        {
+            const errorData = await response.json();
+            const message = errorData.message;
+            console.log(message);
+            return false;
+        }
+        const data = await response.json();
+        return data.success;
+    }

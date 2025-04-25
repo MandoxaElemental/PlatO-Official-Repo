@@ -14,6 +14,7 @@ export interface IBlogItems
     numberOfRatings: number,
     averageRating: number,
     numberOfLikes: number,
+    postType: string,
     isPublished: boolean,
     isDeleted: boolean
 }
@@ -44,6 +45,18 @@ export interface IUserData
     phoneNumber: string,
     dateOfBirth: string,
     profilePicture: string
+}
+export interface ICommentItems
+{
+    id: number,
+    blogId: number,
+    userId: number,
+    username: string,
+    date: string,
+    comment: string,
+    isPublished: boolean,
+    isDeleted: boolean
+
 }
 
 export interface IToken

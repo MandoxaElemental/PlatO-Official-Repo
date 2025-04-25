@@ -5,6 +5,7 @@ import Image from "next/image";
 import BlogPost from '@/app/Components/Blog';
 import { getBlogbyId, getToken } from '@/app/Utils/DataServices';
 import { useParams } from 'next/navigation';
+import { Button, TextInput } from 'flowbite-react';
 
 const Blog = () => {
     const { postId } = useParams();
@@ -16,6 +17,7 @@ const Blog = () => {
     const [ingredients, setIngredients] = useState<string[]>([]);
     const [steps, setSteps] = useState<string[]>([]);
     const [tags, setTags] = useState<string[]>([]);
+    const [comment, setComment] = useState<string>('')
 
     useEffect(() => {
       const getData = async () => {
@@ -76,7 +78,18 @@ const Blog = () => {
             )
           })}
           </div>
-          </div>}/>
+          </div>}
+          comments={
+            <div>
+              <div className='p-5 border-t-1 border-solid border-slate-300 flex items-center justify-between'>
+                <div className='rounded-full bg-green-500 w-10 h-10 flex justify-center items-center'><img className='' src="../assets/person.svg" alt="profilePic" /></div>
+                  <TextInput onChange={(e) => setComment(e.target.value)} className='w-[320px]'></TextInput>
+                  <Button className="rounded-full h-8 bg-blue-200 hover:bg-blue-400 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200">Post</Button>
+                </div>
+                <div className='p-5 border-t-1 border-solid border-slate-300'>
+              </div>
+            </div>
+          }/>
     </div>
     )
 }

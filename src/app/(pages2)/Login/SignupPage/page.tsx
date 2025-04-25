@@ -27,6 +27,7 @@ const SignUpPage1 = () =>
   const [noEmptyFieldsPageTwo, setNoEmptyFieldsPageTwo] = useState(true);
 
   const [isChecked, setIsChecked] = useState(true);
+  
 
   const router = useRouter();
 
