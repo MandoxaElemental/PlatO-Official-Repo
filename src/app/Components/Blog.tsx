@@ -48,9 +48,6 @@ const BlogPost = ({post, username, id, comments} : {post: React.ReactNode; usern
             <Image width={50} height={50} className="h-5 w-5" src="../assets/heart.svg" alt="like" /><p className="pl-2">Like</p>
         </div>
         <div className="flex items-center">
-            <Image width={50} height={50} className="h-5 w-5" src="../assets/chat-left.svg" alt="comment" /><p className="pl-2">Comment</p>
-        </div>
-        <div className="flex items-center">
             <Image width={50} height={50} className="h-5 w-5" src="../assets/repeat.svg" alt="share" /><p className="pl-2">Share</p>
         </div>
         </div>
