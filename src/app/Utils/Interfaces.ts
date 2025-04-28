@@ -75,6 +75,8 @@ export interface ProfileProps {
       username: string;
     };
   }
+
+  
 export const tagArr: Array<string> = [
     'Fruits',
     'Meat',

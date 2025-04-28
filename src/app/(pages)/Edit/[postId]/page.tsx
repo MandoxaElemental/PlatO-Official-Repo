@@ -35,28 +35,34 @@ const Recipe = () => {
             const measurements = [
               'tsp', 'tbsp', 'c', 'qt', 'gal', 'oz', 'lbs', 'kg', 'g', 'ml', 'l', 'sm', 'md', 'lg'
             ];
-      
+          
             return rawIngredients.map((item) => {
               const parts = item.trim().split(' ');
-              const amount = parts[0];
+          
+              let amountParts: string[] = [];
               let measurement = 'Measurement';
-              let ingredient = parts.slice(1).join(' ');
-      
-              for (const m of measurements) {
-                if (ingredient.startsWith(m + ' ')) {
-                  measurement = m;
-                  ingredient = ingredient.slice(m.length + 1);
+              let ingredient = '';
+          
+              for (let i = 0; i < parts.length; i++) {
+                const part = parts[i];
+          
+                if (measurements.includes(part)) {
+                  measurement = part;
+                  ingredient = parts.slice(i + 1).join(' ');
                   break;
+                } else {
+                  amountParts.push(part);
                 }
               }
-      
+          
               return {
-                amount,
+                amount: amountParts.join(' '),
                 measurement,
                 ingredient
               };
             });
           };
+          
       
           setName(data.recipeName);
           setId(data.id);
