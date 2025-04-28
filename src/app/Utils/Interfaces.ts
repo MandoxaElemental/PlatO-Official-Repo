@@ -76,6 +76,16 @@ export interface ProfileProps {
     };
   }
 
+  export interface IngredientGroup {
+    title: string;
+    ingredients: Ingredient[];
+  }
+  
+  export interface StepGroup {
+    title: string;
+    steps: string[];
+  }
+
   
 export const tagArr: Array<string> = [
     'Fruits',

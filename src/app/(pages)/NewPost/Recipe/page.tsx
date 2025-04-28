@@ -1,7 +1,7 @@
 'use client'
 import { Button, FileInput, TextInput, Modal, ModalBody, ModalFooter, ModalHeader, Dropdown, DropdownItem } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
-import { Ingredient, tagArr } from '@/app/Utils/Interfaces'
+import { Ingredient, IngredientGroup, StepGroup, tagArr } from '@/app/Utils/Interfaces'
 import Image from 'next/image'
 import { addBlogItem, getToken } from '@/app/Utils/DataServices'
 import { format } from 'date-fns'
@@ -15,8 +15,12 @@ const Recipe = () => {
     const [length, setLength] = useState(200);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    const [ingredients, setIngredients] = useState<Ingredient[]>([{ amount: '', measurement: 'Measurement', ingredient: '' },]);
-    const [steps, setSteps] = useState<string[]>(['']);
+    const [ingredientGroups, setIngredientGroups] = useState<IngredientGroup[]>([
+      { title: "", ingredients: [{ amount: '', measurement: 'Measurement', ingredient: '' }] }
+    ]);
+    const [stepGroups, setStepGroups] = useState<StepGroup[]>([
+      { title: "", steps: [''] }
+    ]);
     const [query, setQuery] = useState<string>('');
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [openModal, setOpenModal] = useState(false);
@@ -30,31 +34,49 @@ const Recipe = () => {
       if (storedId) setId(Number(storedId));
     }, []);
 
-    const updateStep = (index: number, value: string) => {
-      const updatedSteps = [...steps];
-      updatedSteps[index] = value;
-      setSteps(updatedSteps);
+    const addIngredient = (groupIndex: number) => {
+      const newGroups = [...ingredientGroups];
+      newGroups[groupIndex].ingredients.push({ amount: '', measurement: 'Measurement', ingredient: '' });
+      setIngredientGroups(newGroups);
+    };
+    
+    const removeIngredient = (groupIndex: number, ingredientIndex: number) => {
+      const newGroups = [...ingredientGroups];
+      newGroups[groupIndex].ingredients.splice(ingredientIndex, 1);
+      setIngredientGroups(newGroups);
     };
 
-    const addIngredient = () => {
-      setIngredients([...ingredients, { amount: '', measurement: 'Measurement', ingredient: '' }]);
+    const updateIngredient = (groupIndex: number, ingredientIndex: number, field: keyof Ingredient, value: string) => {
+      const newGroups = [...ingredientGroups];
+      newGroups[groupIndex].ingredients[ingredientIndex][field] = value;
+      setIngredientGroups(newGroups);
     };
     
-    const removeIngredient = (index: number) => {
-      const newIngredients = [...ingredients];
-      newIngredients.splice(index, 1);
-      setIngredients(newIngredients);
-    };
-    
-    const addStep = () => {
-      setSteps([...steps, '']);
+    const addStep = (groupIndex: number) => {
+      const newGroups = [...stepGroups];
+      newGroups[groupIndex].steps.push('');
+      setStepGroups(newGroups);
     };
   
-    const removeStep = (index: number) => {
-      const newSteps = [...steps];
-      newSteps.splice(index, 1);
-      setSteps(newSteps);
+    const removeStep = (groupIndex: number, stepIndex: number) => {
+      const newGroups = [...stepGroups];
+      newGroups[groupIndex].steps.splice(stepIndex, 1);
+      setStepGroups(newGroups);
     };
+
+    const updateStep = (groupIndex: number, stepIndex: number, value: string) => {
+      const newGroups = [...stepGroups];
+      newGroups[groupIndex].steps[stepIndex] = value;
+      setStepGroups(newGroups);
+    };
+
+          const addIngredientGroup = () => {
+        setIngredientGroups([...ingredientGroups, { title: 'New Section', ingredients: [{ amount: '', measurement: 'Measurement', ingredient: '' }] }]);
+      };
+
+      const addStepGroup = () => {
+        setStepGroups([...stepGroups, { title: 'New Section', steps: [''] }]);
+      };
 
     useEffect(() => {
       const num = (200 - description.length)
@@ -76,12 +98,6 @@ const Recipe = () => {
       );
     };
   
-    const updateIngredient = (index: number, field: keyof Ingredient, value: string) => {
-      const updatedIngredients = [...ingredients];
-      updatedIngredients[index][field] = value;
-      setIngredients(updatedIngredients);
-    };
-
     const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
   
       const reader = new FileReader();
@@ -104,8 +120,8 @@ const Recipe = () => {
         date: format(new Date(), 'MM-dd-yyyy'),
         recipeName: name,
         description: description,
-        ingredients: ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`),
-        steps: steps,
+        ingredients: ingredientGroups.flatMap(group => group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)),
+        steps: stepGroups.flatMap(group => group.steps),
         tags: selectedTags,
         rating: 0,
         numberOfRatings: 0,
@@ -191,80 +207,119 @@ const Recipe = () => {
         </div>
         <div className='border-b-1 border-solid border-slate-300 p-2'>
             <p className='font-semibold text-xl text-center'>Ingredients</p>
-            {ingredients.map((ing, index) => (
-  <div key={index} className="flex items-center px-2">
-    <Image
-      className="h-10 w-10 pr-5 hover:opacity-50 dark:invert cursor-pointer"
-      src="../assets/x-lg.svg"
-      alt="remove"
-      onClick={() => removeIngredient(index)}
-      width={100}
-      height={100}
+            {ingredientGroups.map((group, groupIndex) => (
+  <div key={groupIndex}>
+    <div className='my-2 flex flex-col items-center'>
+    <TextInput
+      className="w-[400px] font-bold"
+      value={group.title}
+      onChange={(e) => {
+        const newGroups = [...ingredientGroups];
+        newGroups[groupIndex].title = e.target.value;
+        setIngredientGroups(newGroups);
+      }}
     />
-    <div className="mb-4 px-1">
-      <label className="block text-gray-700 text-sm font-bold mb-2">
-        AMOUNT
-      </label>
-      <TextInput
-        className="w-[80px]"
-        value={ing.amount}
-        onChange={(e) =>
-          updateIngredient(index, 'amount', e.target.value)
-        }
-      />
     </div>
-    <div className="mb-4 px-1">
-      <label className="block text-gray-700 text-sm font-bold mb-2">
-        MEASUREMENT
-      </label>
-      <Dropdown label={ing.measurement} className="w-[140px]">
-        {[
-          'tsp', 'tbsp', 'c', 'qt', 'gal', 'oz', 'lbs', 'kg', 'g', 'ml', 'l', 'sm', 'md', 'lg'
-        ].map((unit) => (
-          <DropdownItem
-            key={unit}
-            onClick={() => updateIngredient(index, 'measurement', unit)}
-          >
-            {unit}
-          </DropdownItem>
-        ))}
-      </Dropdown>
-    </div>
-    <div className="mb-4 px-1">
-      <label className="block text-gray-700 text-sm font-bold mb-2">
-        INGREDIENT
-      </label>
-      <TextInput
-        className="w-[300px]"
-        value={ing.ingredient}
-        onChange={(e) =>
-          updateIngredient(index, 'ingredient', e.target.value)
-        }
-      />
-    </div>
+    {group.ingredients.map((ing, index) => (
+        <div key={index} className="flex items-center px-2">
+          <Image
+            className="h-10 w-10 pr-5 hover:opacity-50 dark:invert cursor-pointer"
+            src="../assets/x-lg.svg"
+            alt="remove"
+            onClick={() => removeIngredient(groupIndex, index)}
+            width={100}
+            height={100}
+          />
+          <div className="mb-4 px-1">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              AMOUNT
+            </label>
+            <TextInput
+              className="w-[80px]"
+              value={ing.amount}
+              onChange={(e) => updateIngredient(groupIndex, index, 'amount', e.target.value)}
+            />
+          </div>
+          <div className="mb-4 px-1">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              MEASUREMENT
+            </label>
+            <Dropdown label={ing.measurement} className="w-[140px]">
+              {[
+                'tsp', 'tbsp', 'c', 'qt', 'gal', 'oz', 'lbs', 'kg', 'g', 'ml', 'l', 'sm', 'md', 'lg'
+              ].map((unit) => (
+                <DropdownItem
+                  key={unit}
+                  onClick={() => updateIngredient(groupIndex, index, 'measurement', unit)}
+                >
+                  {unit}
+                </DropdownItem>
+              ))}
+            </Dropdown>
+          </div>
+          <div className="mb-4 px-1">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              INGREDIENT
+            </label>
+            <TextInput
+              className="w-[300px]"
+              value={ing.ingredient}
+              onChange={(e) =>
+                updateIngredient(groupIndex, index, 'ingredient', e.target.value)
+              }
+            />
+          </div>
+        </div>
+    ))}
+    <div className='p-2 flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer' onClick={() => addIngredient(groupIndex)}><Image className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" width={100} height={100}/><p>Add Ingredient</p></div>
   </div>
 ))}
-            <div className='flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer' onClick={addIngredient}><Image className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" width={100} height={100}/><p>Add Ingredient</p></div>
+  <div className='p-2 flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer' onClick={addIngredientGroup}><Image className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" width={100} height={100}/><p>Add Ingredient Group</p></div>
         </div>
         <div className='border-b-1 border-solid border-slate-300 p-2'>
-        <p className='font-semibold text-xl text-center'>Instructions</p>
-            {steps.map((step: string, ibx: number) => (
-                <div key={ibx} className='flex items-center px-2'>
-            <Image className='h-10 w-10 pr-5 hover:opacity-50 dark:invert cursor-pointer' src="../assets/x-lg.svg" alt="remove" onClick={() => removeStep(ibx)} width={100} height={100}/>
-                <div className="mb-4 px-1">
-        <label className="block text-gray-700 text-sm font-bold mb-2">
-            Step {ibx + 1}
-        </label>
+  <p className='font-semibold text-xl text-center'>Instructions</p>
+  {stepGroups.map((group, groupIndex) => (
+    <div key={groupIndex}>
+      <div className='my-2 flex flex-col items-center'>
         <TextInput
-            className='w-[600px]'
-            value={steps[ibx]}
-            onChange={(e) => updateStep(ibx, e.target.value)}/>
-            </div>
-            </div>
-            )
-        )}
-            <div className='flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer' onClick={addStep}><Image className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" width={100} height={100}/><p>Add Step</p></div>
+          className="w-[400px] font-bold"
+          value={group.title}
+          onChange={(e) => {
+            const newGroups = [...stepGroups];
+            newGroups[groupIndex].title = e.target.value;
+            setStepGroups(newGroups);
+          }}
+        />
+      </div>
+      {group.steps.map((step, stepIndex) => (
+        <div key={stepIndex} className="flex items-center px-2">
+          <Image
+            className="h-10 w-10 pr-5 hover:opacity-50 dark:invert cursor-pointer"
+            src="../assets/x-lg.svg"
+            alt="remove"
+            onClick={() => removeStep(groupIndex, stepIndex)}
+            width={100}
+            height={100}
+          />
+          <div className="mb-4 px-1">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              Step {stepIndex + 1}
+            </label>
+            <TextInput
+              className="w-[550px]"
+              value={step}
+              onChange={(e) => updateStep(groupIndex, stepIndex, e.target.value)}
+            />
+          </div>
         </div>
+      ))}
+      <div className='p-2 flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer' onClick={() => addStep(groupIndex)}><Image className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" width={100} height={100}/><p>Add</p></div>
+    </div>
+  ))}
+  <div className='p-2 flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer' onClick={addStepGroup}><Image className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" width={100} height={100}/><p>Add Step Group</p></div>
+  </div>
+
+
         <div className='border-b-1 border-solid border-slate-300 p-2'>
         <p className='font-semibold text-xl text-center'>Tags</p>
         <div className='flex flex-wrap gap-2 p-2'>
