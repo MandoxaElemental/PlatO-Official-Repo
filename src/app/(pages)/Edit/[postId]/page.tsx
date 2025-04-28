@@ -179,8 +179,14 @@ const Recipe = () => {
           date: `${format(new Date(), 'MM-dd-yyyy')} (edited)`,
           recipeName: name,
           description: description,
-          ingredients: ingredientGroups.flatMap(group => group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)),
-          steps: stepGroups.flatMap(group => group.steps),
+          ingredients: ingredientGroups.map(group => ({
+            title: group.title,
+            ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
+          })),
+          steps: stepGroups.map(group => ({
+            title: group.title,
+            steps: group.steps
+          })),
           tags: selectedTags,
           rating: rating,
           numberOfRatings: ratingNumber,

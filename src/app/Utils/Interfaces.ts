@@ -7,8 +7,14 @@ export interface IBlogItems
     image: string|ArrayBuffer|null,
     recipeName: string,
     description: string,
-    ingredients: string[],
-    steps: string[],
+    ingredients: {
+        title: string,
+        ingredients: string[]
+    }[],
+    steps: {
+        title: string,
+        steps: string[]
+    }[],
     tags: string[],
     rating: number,
     numberOfRatings: number,
