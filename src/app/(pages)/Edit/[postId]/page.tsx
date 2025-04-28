@@ -39,7 +39,7 @@ const Recipe = () => {
             return rawIngredients.map((item) => {
               const parts = item.trim().split(' ');
           
-              let amountParts: string[] = [];
+              const amountParts: string[] = [];
               let measurement = 'Measurement';
               let ingredient = '';
           
