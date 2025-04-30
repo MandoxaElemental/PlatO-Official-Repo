@@ -133,14 +133,14 @@ const Recipe = () => {
         date: format(new Date(), 'MM-dd-yyyy'),
         recipeName: name,
         description: description,
-        ingredients: ingredientGroups.map(group => ({
-          title: group.title,
-          ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
-        })),
-        steps: stepGroups.map(group => ({
-          title: group.title,
-          steps: group.steps
-        })),
+        // ingredients: ingredientGroups.map(group => ({
+        //   title: group.title,
+        //   ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
+        // })),
+        // steps: stepGroups.map(group => ({
+        //   title: group.title,
+        //   steps: group.steps
+        // })),
         tags: selectedTags,
         rating: 0,
         numberOfRatings: 0,
@@ -150,6 +150,7 @@ const Recipe = () => {
         isPublished: e.currentTarget.textContent === 'Save' ? false : true,
         isDeleted: false
       }
+      
       let result = false
       result = await addBlogItem(item, getToken())
       if (result)

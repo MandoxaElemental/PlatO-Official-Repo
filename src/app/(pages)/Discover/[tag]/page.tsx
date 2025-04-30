@@ -1,18 +1,19 @@
 'use client'
 
-import { getAllBlogs, getToken } from '@/app/Utils/DataServices';
+import { getBlogbyTag, getToken } from '@/app/Utils/DataServices';
 import { IBlogItems } from '@/app/Utils/Interfaces';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 
 const Discover = () => {
-  
+    const { tag } = useParams();
     const [blogItems, setBlogItems] = useState<IBlogItems[]>([])
   
     useEffect(() => {
       const getData = async () => {
-        const data: IBlogItems[] = await getAllBlogs(getToken());
+        const data: IBlogItems[] = await getBlogbyTag(String(tag), getToken());
         const shuffleArray = (array: IBlogItems[]) => array.sort(() => Math.random() - 0.5);
         
         const filteredData = shuffleArray(

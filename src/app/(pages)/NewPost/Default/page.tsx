@@ -101,8 +101,6 @@ const Post = () => {
                       date: format(new Date(), 'MM-dd-yyyy'),
                       recipeName: '',
                       description: description,
-                      ingredients: [],
-                      steps: [],
                       tags: selectedTags,
                       rating: 0,
                       numberOfRatings: 0,

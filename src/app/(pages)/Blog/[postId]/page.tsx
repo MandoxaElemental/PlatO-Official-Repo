@@ -9,6 +9,7 @@ import { Button, TextInput } from 'flowbite-react';
 import { ICommentItems } from '@/app/Utils/Interfaces';
 import { format } from 'date-fns';
 import Comment from '@/app/Components/Comment';
+import Link from 'next/link';
 
 const Blog = () => {
     const { postId } = useParams();
@@ -18,6 +19,7 @@ const Blog = () => {
     const [username, setUsername] = useState<string>("");
     const [user, setUser] = useState<string>('');
     const [image, setImage] = useState<string>('');
+    const [postType, setPostType] = useState<string>('');
     const [description, setDescription] = useState<string>('');
     const [ingredients, setIngredients] = useState<string[]>([]);
     const [steps, setSteps] = useState<string[]>([]);
@@ -45,6 +47,7 @@ const Blog = () => {
         setIngredients(data.ingredients);
         setSteps(data.steps);
         setTags(data.tags);
+        setPostType(data.postType);
       };
       getData();
     }, [postId]);
@@ -88,7 +91,22 @@ const Blog = () => {
         <div className="pt-10 w-min-full">
         <BlogPost username={user} id={id} post={
           <div>
-            <div className='font-semibold text-2xl pb-2'>- Recipe -</div>
+            {postType != 'recipe' ? (
+              <div>
+                <div className='p-2 text-left'>{description}</div>
+                <Image src={`${image}`} alt="post" className="aspect-square object-cover object-center" width={500} height={500}/>
+                <div className='flex flex-wrap justify-center gap-2 p-2 border-t-1 border-solid border-slate-300'>
+                {tags.map((tag, i) => {
+                  return(
+                    <Link href={`/Discover/${tag}`}>
+                    <span key={i} className="px-3 py-1 bg-blue-200 text-blue-900 rounded-full text-sm cursor-pointer hover:bg-blue-400">{tag}</span>
+                    </Link>
+                  )
+                })}
+                </div>
+              </div>) : (
+              <div>
+                <div className='font-semibold text-2xl pb-2'>- Recipe -</div>
           <Image className='h-48 w-full object-cover' src={`${image}`} alt="post" width={500} height={500}/>
           <p className='font-semibold text-2xl p-2'>{name}</p>
           <div className='flex items-center justify-center'>
@@ -122,10 +140,13 @@ const Blog = () => {
           <div className='flex flex-wrap justify-center gap-2 p-2 border-t-1 border-solid border-slate-300'>
           {tags.map((tag, i) => {
             return(
-              <span key={i} className="px-3 py-1 bg-blue-200 text-blue-900 rounded-full text-sm cursor-pointer hover:bg-blue-400">{tag}</span>
-            )
+                <Link href={`/Discover/${tag}`}>
+                    <span key={i} className="px-3 py-1 bg-blue-200 text-blue-900 rounded-full text-sm cursor-pointer hover:bg-blue-400">{tag}</span>
+                </Link>            )
           })}
           </div>
+              </div>
+            )}
           </div>}
           comments={
             <div>

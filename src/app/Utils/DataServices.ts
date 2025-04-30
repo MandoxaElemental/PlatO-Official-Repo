@@ -1,4 +1,4 @@
-import { IBlogItems, ICommentItems, IUserData, IUserInfoCreate, IUserInfoLogin } from "./Interfaces"
+import { IBlogItems, ICommentItems, IIngredientItems, IStepItems, IUserData, IUserInfoCreate, IUserInfoLogin } from "./Interfaces"
 
 const url = "https://platobackend-a7hagaahdvdfesgm.westus-01.azurewebsites.net"
 
@@ -153,6 +153,27 @@ export const getBlogItemsByUserId = async (userId: number, token: string) =>
 export const getBlogbyId = async (blogId: number, token: string) =>
 {
     const response = await fetch(`${url}/Blog/GetBlogById/${blogId}`,
+    {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        }
+    });
+    if (!response.ok)
+    {
+        const errorData = await response.json();
+        const message = errorData.message;
+        console.log(message);
+        return [];
+    }
+    
+    const data = await response.json();
+    return data;
+}
+export const getBlogbyTag = async (tag: string, token: string) =>
+{
+    const response = await fetch(`${url}/Blog/GetBlogsByTag/${tag}`,
     {
         method: "GET",
         headers: {
@@ -395,3 +416,51 @@ export const getAllComments = async (token: string) =>
             const data = await response.json();
             return data;
         }
+
+//----------INGREDIENT ENDPOINTS----------//
+
+export const AddIngredientItem = async (blog: IIngredientItems, token: string) =>
+    {
+        const response = await fetch(`${url}/Ingredients/AddIngredients`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify(blog)
+        });
+        if (!response.ok)
+        {
+            const errorData = await response.json();
+            const message = errorData.message;
+            console.log(message);
+            return false;
+        }
+        const data = await response.json();
+        return data.success;
+    }
+
+//----------STEP ENDPOINTS----------//
+
+export const AddStepItem = async (blog: IStepItems, token: string) =>
+    {
+        const response = await fetch(`${url}/Ingredients/AddIngredients`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify(blog)
+        });
+        if (!response.ok)
+        {
+            const errorData = await response.json();
+            const message = errorData.message;
+            console.log(message);
+            return false;
+        }
+        const data = await response.json();
+        return data.success;
+    }

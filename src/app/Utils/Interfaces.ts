@@ -7,14 +7,14 @@ export interface IBlogItems
     image: string|ArrayBuffer|null,
     recipeName: string,
     description: string,
-    ingredients: {
-        title: string,
-        ingredients: string[]
-    }[],
-    steps: {
-        title: string,
-        steps: string[]
-    }[],
+    // ingredients: {
+    //     title: string,
+    //     ingredients: string[]
+    // }[],
+    // steps: {
+    //     title: string,
+    //     steps: string[]
+    // }[],
     tags: string[],
     rating: number,
     numberOfRatings: number,
@@ -30,6 +30,20 @@ export interface IUserInfoLogin
     username: string,
     email: string,
     password: string
+}
+
+export interface IIngredientItems
+{
+    blogId: number,
+    title: string,
+    ingredients: string[]
+}
+
+export interface IStepItems
+{
+    blogId: number,
+    title: string,
+    steps: string[]
 }
 
 export interface IUserInfoCreate
@@ -133,3 +147,8 @@ export const tagArr: Array<string> = [
     'Greek',
     'Nigerian'
 ];
+
+export interface StarRatingProps {
+    currentRating: number;
+    onRate: (rating: number) => void;
+  }
