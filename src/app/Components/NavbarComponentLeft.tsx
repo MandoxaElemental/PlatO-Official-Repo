@@ -22,8 +22,8 @@ export function NavbarComponent() {
   return (
     <Sidebar aria-label="Default sidebar example">
       <SidebarItems>
-      <Image src="../assets/4.svg" alt="plato" className="block dark:hidden h-[60px]" width={100} height={100}/>
-      <Image src="../assets/1.svg" alt="plato" className="hidden dark:block h-[60px]" width={100} height={100}/>
+      <Image src="../assets/4.svg" alt="plato" className="block dark:hidden h-[80px]" width={100} height={100}/>
+      <Image src="../assets/1.svg" alt="plato" className="hidden dark:block h-[80px]" width={100} height={100}/>
         <SidebarItemGroup>
           <SidebarItem href="/Home" >
             <div className="flex items-center">
@@ -68,7 +68,7 @@ export function NavbarComponent() {
             <Image className="h-5 w-5 dark:invert" src="../assets/person.svg" alt="profile" width={100} height={100} /><p className="pl-2">{username}</p>
             </div>
           </SidebarItem>
-          <SidebarItem href="#" >
+          <SidebarItem href="/Settings" >
           <div className="flex items-center">
             <Image className="h-5 w-5 dark:invert" src="../assets/gear.svg" alt="profile" width={100} height={100} /><p className="pl-2">Settings and Privacy</p>
             </div>

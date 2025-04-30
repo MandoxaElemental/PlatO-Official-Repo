@@ -1,11 +1,12 @@
 'use client'
-import { Button, FileInput, TextInput, Modal, ModalBody, ModalFooter, ModalHeader, Dropdown, DropdownItem } from 'flowbite-react'
+import { Button, FileInput, TextInput, Modal, ModalBody, ModalFooter, ModalHeader} from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { Ingredient, IngredientGroup, StepGroup, tagArr } from '@/app/Utils/Interfaces'
 import Image from 'next/image'
 import { addBlogItem, getToken } from '@/app/Utils/DataServices'
 import { format } from 'date-fns'
 import { useRouter } from 'next/navigation'
+import MeasurementDropdown from '@/app/Components/MeasurementDropdown'
 
 const Recipe = () => {
     const [blogId, setBlogId] = useState<number>(0);
@@ -71,11 +72,23 @@ const Recipe = () => {
     };
 
           const addIngredientGroup = () => {
-        setIngredientGroups([...ingredientGroups, { title: 'New Section', ingredients: [{ amount: '', measurement: 'Measurement', ingredient: '' }] }]);
+        setIngredientGroups([...ingredientGroups, { title: '', ingredients: [{ amount: '', measurement: 'Measurement', ingredient: '' }] }]);
       };
 
       const addStepGroup = () => {
-        setStepGroups([...stepGroups, { title: 'New Section', steps: [''] }]);
+        setStepGroups([...stepGroups, { title: '', steps: [''] }]);
+      };
+
+      const removeIngredientGroup = (groupIndex: number) => {
+        const newGroups = [...ingredientGroups];
+        newGroups.splice(groupIndex, 1);
+        setIngredientGroups(newGroups);
+      };
+      
+      const removeStepGroup = (groupIndex: number) => {
+        const newGroups = [...stepGroups];
+        newGroups.splice(groupIndex, 1);
+        setStepGroups(newGroups);
       };
 
     useEffect(() => {
@@ -142,6 +155,43 @@ const Recipe = () => {
       if (result)
       {
         alert('Post Success!')
+        router.push("/Home");
+      }else{
+        alert('Post Error')
+      }
+    }
+    const handleDraft = async (e: React.MouseEvent<HTMLButtonElement>) => {
+      setBlogId(0)
+      const item = {
+        id: blogId,
+        userId: id,
+        publisherName: username,
+        image: recipeImage,
+        date: format(new Date(), 'MM-dd-yyyy'),
+        recipeName: name,
+        description: description,
+        ingredients: ingredientGroups.map(group => ({
+          title: group.title,
+          ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
+        })),
+        steps: stepGroups.map(group => ({
+          title: group.title,
+          steps: group.steps
+        })),
+        tags: selectedTags,
+        rating: 0,
+        numberOfRatings: 0,
+        averageRating: 5,
+        numberOfLikes: 0,
+        postType: 'recipe',
+        isPublished: false,
+        isDeleted: false
+      }
+      let result = false
+      result = await addBlogItem(item, getToken())
+      if (result)
+      {
+        alert('Draft Saved!')
         router.push("/Home");
       }else{
         alert('Post Error')
@@ -215,16 +265,24 @@ const Recipe = () => {
             <p className='font-semibold text-xl text-center'>Ingredients</p>
             {ingredientGroups.map((group, groupIndex) => (
   <div key={groupIndex}>
-    <div className='my-2 flex flex-col items-center'>
-    <TextInput
-      className="w-[400px] font-bold"
-      value={group.title}
-      onChange={(e) => {
-        const newGroups = [...ingredientGroups];
-        newGroups[groupIndex].title = e.target.value;
-        setIngredientGroups(newGroups);
-      }}
-    />
+    <div className='my-2 flex items-center px-2'>
+        <Image
+            className="h-10 w-10 pr-5 hover:opacity-50 dark:invert cursor-pointer"
+            src="../assets/x-lg.svg"
+            alt="remove"
+            onClick={() => removeIngredientGroup(groupIndex)}
+            width={100}
+            height={100}
+        />
+      <TextInput
+        className="w-[550px] font-bold"
+        value={group.title}
+        onChange={(e) => {
+          const newGroups = [...ingredientGroups];
+          newGroups[groupIndex].title = e.target.value;
+          setIngredientGroups(newGroups);
+        }}
+      />
     </div>
     {group.ingredients.map((ing, index) => (
         <div key={index} className="flex items-center px-2">
@@ -250,18 +308,10 @@ const Recipe = () => {
             <label className="block text-gray-700 text-sm font-bold mb-2">
               MEASUREMENT
             </label>
-            <Dropdown label={ing.measurement} className="w-[140px]">
-              {[
-                'tsp', 'tbsp', 'c', 'qt', 'gal', 'oz', 'lbs', 'kg', 'g', 'ml', 'l', 'sm', 'md', 'lg'
-              ].map((unit) => (
-                <DropdownItem
-                  key={unit}
-                  onClick={() => updateIngredient(groupIndex, index, 'measurement', unit)}
-                >
-                  {unit}
-                </DropdownItem>
-              ))}
-            </Dropdown>
+            <MeasurementDropdown
+              selected={ing.measurement}
+              onSelect={(val) => updateIngredient(groupIndex, index, 'measurement', val)}
+            />
           </div>
           <div className="mb-4 px-1">
             <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -286,9 +336,17 @@ const Recipe = () => {
   <p className='font-semibold text-xl text-center'>Instructions</p>
   {stepGroups.map((group, groupIndex) => (
     <div key={groupIndex}>
-      <div className='my-2 flex flex-col items-center'>
+      <div className='my-2 flex items-center px-2'>
+      <Image
+            className="h-10 w-10 pr-5 hover:opacity-50 dark:invert cursor-pointer"
+            src="../assets/x-lg.svg"
+            alt="remove"
+            onClick={() => removeStepGroup(groupIndex)}
+            width={100}
+            height={100}
+        />
         <TextInput
-          className="w-[400px] font-bold"
+          className="w-[550px] font-bold"
           value={group.title}
           onChange={(e) => {
             const newGroups = [...stepGroups];
@@ -345,7 +403,7 @@ const Recipe = () => {
         <div onClick={() => setOpenModal(true)} className='flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer'><Image className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" width={100} height={100}/><p>Add Tags</p></div>
         </div>
         <div className='p-2 flex justify-end'>
-            <Button outline className='mx-1 w-[100px]'>Draft</Button>
+            <Button onClick={handleDraft} outline className='mx-1 w-[100px]'>Draft</Button>
             <Button onClick={handleSave} className='mx-1 w-[100px]'>Post</Button>
         </div>
     </div>

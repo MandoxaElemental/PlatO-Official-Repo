@@ -63,9 +63,13 @@ const ProfilePage = () => {
           {blogItems.map((item, ibx) => {
             return(
               <div key={ibx} className=''>
-                <Link href={`/Blog/${item.id}`}>
-                <Image className='object-cover h-[200px] w-[200px]' src={item.image === null ? "/assets/Placeholder.png" : `${item.image}`} alt="post" width={50} height={20}/>
-              </Link>
+                {
+                  item.isPublished && !item.isDeleted && (
+                    <Link href={`/Blog/${item.id}`}>
+                    <Image className='object-cover h-[200px] w-[200px]' src={item.image === null ? "/assets/Placeholder.png" : `${item.image}`} alt="post" width={50} height={20}/>
+                    </Link>
+                  )
+                }
               </div>
             )
           }

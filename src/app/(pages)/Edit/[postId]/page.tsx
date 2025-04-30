@@ -1,11 +1,12 @@
 'use client'
-import { Button, FileInput, TextInput, Modal, ModalBody, ModalFooter, ModalHeader, Dropdown, DropdownItem } from 'flowbite-react'
+import { Button, FileInput, TextInput, Modal, ModalBody, ModalFooter, ModalHeader} from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { Ingredient, IngredientGroup, StepGroup, tagArr } from '@/app/Utils/Interfaces'
 import Image from 'next/image'
 import {getBlogbyId, getToken, updateBlogItem } from '@/app/Utils/DataServices'
 import { format } from 'date-fns'
 import { useParams, useRouter } from 'next/navigation'
+import MeasurementDropdown from '@/app/Components/MeasurementDropdown'
 
 const Recipe = () => {
     const [id, setId] = useState<number>(0);
@@ -309,18 +310,10 @@ const Recipe = () => {
                         <label className="block text-gray-700 text-sm font-bold mb-2">
                           MEASUREMENT
                         </label>
-                        <Dropdown label={ing.measurement} className="w-[140px]">
-                          {[
-                            'tsp', 'tbsp', 'c', 'qt', 'gal', 'oz', 'lbs', 'kg', 'g', 'ml', 'l', 'sm', 'md', 'lg'
-                          ].map((unit) => (
-                            <DropdownItem
-                              key={unit}
-                              onClick={() => updateIngredient(groupIndex, index, 'measurement', unit)}
-                            >
-                              {unit}
-                            </DropdownItem>
-                          ))}
-                        </Dropdown>
+                        <MeasurementDropdown
+                          selected={ing.measurement}
+                          onSelect={(val) => updateIngredient(groupIndex, index, 'measurement', val)}
+                        />
                       </div>
                       <div className="mb-4 px-1">
                         <label className="block text-gray-700 text-sm font-bold mb-2">

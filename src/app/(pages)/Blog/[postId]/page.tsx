@@ -101,7 +101,7 @@ const Blog = () => {
           <div className='p-2 text-left'>{description}</div>
           <div className='border-t-1 border-solid border-slate-300 py-2'>
             <p className='font-semibold'>Ingredients</p>
-            <ul className='list-disc text-left pl-5'>
+            <ul className='list-disc text-left pl-10'>
             {ingredients.map((item, i) => {
                 return (
                   <li key={i}>{item}</li>
