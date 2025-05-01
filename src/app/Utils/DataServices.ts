@@ -463,11 +463,33 @@ export const AddIngredientItem = async (blog: IIngredientItems, token: string) =
             return data.success;
         }
 
+        export const getIngredientsByBlogId = async (blogId: number, token: string) =>
+            {
+                const response = await fetch(`${url}/Ingredients/GetIngredientsByBlogId/${blogId}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token
+                    }
+                });
+                if (!response.ok)
+                {
+                    const errorData = await response.json();
+                    const message = errorData.message;
+                    console.log(message);
+                    return [];
+                }
+                
+                const data = await response.json();
+                return data;
+            }
+
 //----------STEP ENDPOINTS----------//
 
 export const AddStepItem = async (blog: IStepItems, token: string) =>
     {
-        const response = await fetch(`${url}/Steps/GetAllSteps`,
+        const response = await fetch(`${url}/Steps/AddSteps`,
         {
             method: "POST",
             headers: {
@@ -486,3 +508,25 @@ export const AddStepItem = async (blog: IStepItems, token: string) =>
         const data = await response.json();
         return data.success;
     }
+
+    export const getStepsByBlogId = async (blogId: number, token: string) =>
+        {
+            const response = await fetch(`${url}/Steps/GetStepsByBlogId/${blogId}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                }
+            });
+            if (!response.ok)
+            {
+                const errorData = await response.json();
+                const message = errorData.message;
+                console.log(message);
+                return [];
+            }
+            
+            const data = await response.json();
+            return data;
+        }

@@ -3,10 +3,10 @@
 import React, { useEffect, useState } from 'react'
 import Image from "next/image";
 import BlogPost from '@/app/Components/Blog';
-import { addCommentItem, getBlogbyId, getCommentItemsByBlogId, getToken } from '@/app/Utils/DataServices';
+import { addCommentItem, getBlogbyId, getCommentItemsByBlogId, getIngredientsByBlogId, getStepsByBlogId, getToken } from '@/app/Utils/DataServices';
 import { useParams } from 'next/navigation';
 import { Button, TextInput } from 'flowbite-react';
-import { ICommentItems } from '@/app/Utils/Interfaces';
+import { ICommentItems, IIngredientItems, IStepItems } from '@/app/Utils/Interfaces';
 import { format } from 'date-fns';
 import Comment from '@/app/Components/Comment';
 import Link from 'next/link';
@@ -21,8 +21,8 @@ const Blog = () => {
     const [image, setImage] = useState<string>('');
     const [postType, setPostType] = useState<string>('');
     const [description, setDescription] = useState<string>('');
-    const [ingredients, setIngredients] = useState<string[]>([]);
-    const [steps, setSteps] = useState<string[]>([]);
+    const [ingredients, setIngredients] = useState<IIngredientItems[]>([]);
+    const [steps, setSteps] = useState<IStepItems[]>([]);
     const [tags, setTags] = useState<string[]>([]);
     const [comment, setComment] = useState<string>('');
     const [commentSection, setCommentSection] = useState<ICommentItems[]>([]);
@@ -39,18 +39,24 @@ const Blog = () => {
       const getData = async () => {
         if (!postId) return;
         const data = await getBlogbyId(Number(postId), getToken());
+        const ingredientData = await getIngredientsByBlogId(Number(postId), getToken());
+        const stepData = await getStepsByBlogId(Number(postId), getToken());
         setName(data.recipeName);
         setId(data.id);
         setUser(data.publisherName);
         setImage(data.image ?? "/assets/Placeholder.png");
         setDescription(data.description);
-        setIngredients(data.ingredients);
-        setSteps(data.steps);
+        setIngredients(ingredientData);
+        setSteps(stepData);
         setTags(data.tags);
         setPostType(data.postType);
       };
       getData();
     }, [postId]);
+
+    useEffect(() => {
+      console.log(ingredients)
+    }, [ingredients])
 
     const handleSave = async () => {
       const item = {
@@ -119,30 +125,40 @@ const Blog = () => {
           <div className='p-2 text-left'>{description}</div>
           <div className='border-t-1 border-solid border-slate-300 py-2'>
             <p className='font-semibold'>Ingredients</p>
-            <ul className='list-disc text-left pl-10'>
             {ingredients.map((item, i) => {
-                return (
-                  <li key={i}>{item}</li>
+              return (
+                  <div key={i}>
+                    <h1>{item.title}</h1>
+                    <ul className='list-disc text-left pl-10'>
+                      {item.ingredients.map((ingredient, j) => (
+                        <li key={j}>{ingredient}</li>
+                      ))}
+                    </ul>
+                  </div>
                 )
               })}
-            </ul>
           </div>
           <div className='border-t-1 border-solid border-slate-300 py-2'>
             <p className='font-semibold'>Steps</p>
-            <ol className="list-decimal text-left pl-5">
             {steps.map((item, i) => {
-                return (
-                  <li key={i}>{item}</li>
+              return (
+                <div key={i}>
+                  <h1>{item.title}</h1>
+                  <ol className="list-decimal text-left pl-5">
+                    {item.steps.map((steps, j) => (
+                          <li key={j}>{steps}</li>
+                    ))}
+                  </ol>
+                </div>
                 )
               })}
-            </ol>
           </div>
           <div className='flex flex-wrap justify-center gap-2 p-2 border-t-1 border-solid border-slate-300'>
           {tags.map((tag, i) => {
             return(
                 <Link key={i} href={`/Discover/${tag}`}>
                     <span className="px-3 py-1 bg-blue-200 text-blue-900 rounded-full text-sm cursor-pointer hover:bg-blue-400">{tag}</span>
-                </Link>            )
+                </Link>)
           })}
           </div>
               </div>

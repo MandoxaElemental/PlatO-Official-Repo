@@ -3,7 +3,7 @@ import { Button, FileInput, TextInput, Modal, ModalBody, ModalFooter, ModalHeade
 import React, { useEffect, useState } from 'react'
 import { Ingredient, IngredientGroup, StepGroup, tagArr } from '@/app/Utils/Interfaces'
 import Image from 'next/image'
-import {getBlogbyId, getToken, updateBlogItem } from '@/app/Utils/DataServices'
+import {getBlogbyId, getIngredientsByBlogId, getToken, updateBlogItem } from '@/app/Utils/DataServices'
 import { format } from 'date-fns'
 import { useParams, useRouter } from 'next/navigation'
 import MeasurementDropdown from '@/app/Components/MeasurementDropdown'
@@ -35,6 +35,7 @@ const Recipe = () => {
         const getData = async () => {
           if (!postId) return;
           const data = await getBlogbyId(Number(postId), getToken());
+          const ingredientData = await getIngredientsByBlogId(Number(postId), getToken());
       
           const parseIngredients = (rawIngredients: string[]): Ingredient[] => {
             const measurements = [
@@ -73,8 +74,9 @@ const Recipe = () => {
           setId(data.id);
           setImage(data.image);
           setDescription(data.description);
-          setIngredientGroups([{ title: "", ingredients: parseIngredients(data.ingredients) }]);
-          setStepGroups([{ title: "", steps: data.steps }]);          setSelectedTags(data.tags || []);
+          setIngredientGroups([{ title: "", ingredients: parseIngredients(ingredientData.ingredients) }]);
+          setStepGroups([{ title: "", steps: data.steps }]);
+          setSelectedTags(data.tags || []);
             setRating(data.rating)
             setRatingNumber(data.numberOfRatings)
             setRatingAverage(data.averageRating)

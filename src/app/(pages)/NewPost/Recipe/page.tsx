@@ -150,7 +150,7 @@ const Recipe = () => {
 
     for (const group of ingredientGroups) {
       const ingredientItem = {
-        blogId: id,
+        blogId: blogId,
         title: group.title,
         ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
       };
@@ -160,7 +160,7 @@ const Recipe = () => {
 
     for (const group of stepGroups) {
       const stepItem = {
-        blogId: id,
+        blogId: blogId,
         title: group.title,
         steps: group.steps
       };
