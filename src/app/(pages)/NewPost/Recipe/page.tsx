@@ -122,8 +122,8 @@ const Recipe = () => {
         reader.readAsDataURL(file);
       }
     }
-    const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
-      const item = {
+    const handleSave = async () => {
+      const blogItem = {
         id: 0,
         userId: id,
         publisherName: username,
@@ -137,45 +137,41 @@ const Recipe = () => {
         averageRating: 5,
         numberOfLikes: 0,
         postType: 'recipe',
-        isPublished: e.currentTarget.textContent === 'Save' ? false : true,
+        isPublished: true,
         isDeleted: false
-      }
-      
-      let result = false
-      result = await addBlogItem(item, getToken());
-      if (result)
-      {
-
-        const newBlogId = await addBlogItem(item, getToken());
-
-        if (newBlogId) {
-          for (const group of ingredientGroups) {
-            const ingredientItem = {
-              blogId: newBlogId.blogId,
-              title: group.title,
-              ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
-            };
-            await AddIngredientItem(ingredientItem, getToken());
-          }
-      
-          for (const group of stepGroups) {
-            const stepItem = {
-              blogId: newBlogId.blogId,
-              title: group.title,
-              steps: group.steps
-            };
-            await AddStepItem(stepItem, getToken());
-          }
+      };
+    
+      const newBlogId = await addBlogItem(blogItem, getToken());
+    
+      if (newBlogId) {
+        for (const group of ingredientGroups) {
+          const ingredientItem = {
+            blogId: newBlogId,
+            title: group.title,
+            ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
+          };
+          await AddIngredientItem(ingredientItem, getToken());
         }
-        alert('Post Success!')
+    
+        for (const group of stepGroups) {
+          const stepItem = {
+            blogId: newBlogId,
+            title: group.title,
+            steps: group.steps
+          };
+          await AddStepItem(stepItem, getToken());
+        }
+    
+        alert('Post Success!');
         router.push("/Home");
-      }else{
-        alert('Post Error')
+      } else {
+        alert('Post Error');
       }
-    }
+    };
+    
     const handleDraft = async () => {
-      const item = {
-        id: 0,
+      const blogItem = {
+        id: 0, 
         userId: id,
         publisherName: username,
         image: recipeImage,
@@ -190,42 +186,36 @@ const Recipe = () => {
         postType: 'recipe',
         isPublished: false,
         isDeleted: false
-      }
-      let result = false
-      result = await addBlogItem(item, getToken());
-      if (result)
-      {
-
-        const newBlogId = await addBlogItem(item, getToken());
-
-        if (newBlogId) {
-          for (const group of ingredientGroups) {
-            const ingredientItem = {
-              blogId: newBlogId.blogId,
-              title: group.title,
-              ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
-            };
-            await AddIngredientItem(ingredientItem, getToken());
-          }
-      
-          for (const group of stepGroups) {
-            const stepItem = {
-              blogId: newBlogId.blogId,
-              title: group.title,
-              steps: group.steps
-            };
-            await AddStepItem(stepItem, getToken());
-          }
+      };
+    
+      const newBlogId = await addBlogItem(blogItem, getToken());
+    
+      if (newBlogId) {
+        for (const group of ingredientGroups) {
+          const ingredientItem = {
+            blogId: newBlogId,
+            title: group.title,
+            ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
+          };
+          await AddIngredientItem(ingredientItem, getToken());
         }
-
-
-        alert('Draft Saved!')
+    
+        for (const group of stepGroups) {
+          const stepItem = {
+            blogId: newBlogId,
+            title: group.title,
+            steps: group.steps
+          };
+          await AddStepItem(stepItem, getToken());
+        }
+    
+        alert('Draft Saved!');
         router.push("/Home");
-      }else{
-        alert('Post Error')
+      } else {
+        alert('Error');
       }
-    }
-  
+    };
+    
   
 
   return (
