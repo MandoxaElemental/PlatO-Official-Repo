@@ -15,10 +15,7 @@ export default function Home() {
   useEffect(()=>{
     const getData = async () => {
       const data: IBlogItems[] = await getAllBlogs(getToken());
-      console.log(data)
-      
       const filteredData = data.filter(item => item.isPublished && !item.isDeleted)
-      console.log(filteredData)
       setBlogItems(filteredData)
     }
     getData()

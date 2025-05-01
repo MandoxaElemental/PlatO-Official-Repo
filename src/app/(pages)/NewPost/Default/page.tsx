@@ -60,7 +60,7 @@ const Post = () => {
                       reader.readAsDataURL(file);
                     }
                   }
-                  const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
+                  const handleSave = async () => {
                     setBlogId(0)
                     const item = {
                       id: blogId,
@@ -91,7 +91,7 @@ const Post = () => {
                       alert('Post Error')
                     }
                   }
-                  const handleDraft = async (e: React.MouseEvent<HTMLButtonElement>) => {
+                  const handleDraft = async () => {
                     setBlogId(0)
                     const item = {
                       id: blogId,

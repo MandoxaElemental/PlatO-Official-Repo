@@ -98,8 +98,8 @@ const Blog = () => {
                 <div className='flex flex-wrap justify-center gap-2 p-2 border-t-1 border-solid border-slate-300'>
                 {tags.map((tag, i) => {
                   return(
-                    <Link href={`/Discover/${tag}`}>
-                    <span key={i} className="px-3 py-1 bg-blue-200 text-blue-900 rounded-full text-sm cursor-pointer hover:bg-blue-400">{tag}</span>
+                    <Link key={i} href={`/Discover/${tag}`}>
+                    <span className="px-3 py-1 bg-blue-200 text-blue-900 rounded-full text-sm cursor-pointer hover:bg-blue-400">{tag}</span>
                     </Link>
                   )
                 })}
@@ -140,8 +140,8 @@ const Blog = () => {
           <div className='flex flex-wrap justify-center gap-2 p-2 border-t-1 border-solid border-slate-300'>
           {tags.map((tag, i) => {
             return(
-                <Link href={`/Discover/${tag}`}>
-                    <span key={i} className="px-3 py-1 bg-blue-200 text-blue-900 rounded-full text-sm cursor-pointer hover:bg-blue-400">{tag}</span>
+                <Link key={i} href={`/Discover/${tag}`}>
+                    <span className="px-3 py-1 bg-blue-200 text-blue-900 rounded-full text-sm cursor-pointer hover:bg-blue-400">{tag}</span>
                 </Link>            )
           })}
           </div>

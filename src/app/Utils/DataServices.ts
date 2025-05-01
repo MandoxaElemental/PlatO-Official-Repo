@@ -441,11 +441,33 @@ export const AddIngredientItem = async (blog: IIngredientItems, token: string) =
         return data.success;
     }
 
+    export const updateIngredientItem = async (ingredient: IIngredientItems, token: string) =>
+        {
+            const response = await fetch(`${url}/Ingredients/EditIngredients`,
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify(ingredient)
+            });
+            if (!response.ok)
+            {
+                const errorData = await response.json();
+                const message = errorData.message;
+                console.log(message);
+                return false;
+            }
+            const data = await response.json();
+            return data.success;
+        }
+
 //----------STEP ENDPOINTS----------//
 
 export const AddStepItem = async (blog: IStepItems, token: string) =>
     {
-        const response = await fetch(`${url}/Ingredients/AddIngredients`,
+        const response = await fetch(`${url}/Steps/GetAllSteps`,
         {
             method: "POST",
             headers: {

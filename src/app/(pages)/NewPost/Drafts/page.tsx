@@ -1,10 +1,9 @@
 'use client'
 
-import { checkToken, getBlogItemsByUserId, getToken, getUserInfoByUsername } from '@/app/Utils/DataServices';
+import { checkToken, getBlogItemsByUserId, getToken } from '@/app/Utils/DataServices';
 import { IBlogItems } from '@/app/Utils/Interfaces';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 
 const Drafts = () => {

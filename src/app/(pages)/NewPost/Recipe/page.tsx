@@ -3,7 +3,7 @@ import { Button, FileInput, TextInput, Modal, ModalBody, ModalFooter, ModalHeade
 import React, { useEffect, useState } from 'react'
 import { Ingredient, IngredientGroup, StepGroup, tagArr } from '@/app/Utils/Interfaces'
 import Image from 'next/image'
-import { addBlogItem, getToken } from '@/app/Utils/DataServices'
+import { addBlogItem, AddIngredientItem, AddStepItem, getToken } from '@/app/Utils/DataServices'
 import { format } from 'date-fns'
 import { useRouter } from 'next/navigation'
 import MeasurementDropdown from '@/app/Components/MeasurementDropdown'
@@ -133,14 +133,6 @@ const Recipe = () => {
         date: format(new Date(), 'MM-dd-yyyy'),
         recipeName: name,
         description: description,
-        // ingredients: ingredientGroups.map(group => ({
-        //   title: group.title,
-        //   ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
-        // })),
-        // steps: stepGroups.map(group => ({
-        //   title: group.title,
-        //   steps: group.steps
-        // })),
         tags: selectedTags,
         rating: 0,
         numberOfRatings: 0,
@@ -152,16 +144,35 @@ const Recipe = () => {
       }
       
       let result = false
-      result = await addBlogItem(item, getToken())
+      result = await addBlogItem(item, getToken());
       if (result)
       {
+
+    for (const group of ingredientGroups) {
+      const ingredientItem = {
+        blogId: id,
+        title: group.title,
+        ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
+      };
+
+      await AddIngredientItem(ingredientItem, getToken());
+    }
+
+    for (const group of stepGroups) {
+      const stepItem = {
+        blogId: id,
+        title: group.title,
+        steps: group.steps
+      };
+      await AddStepItem(stepItem, getToken());
+    }
         alert('Post Success!')
         router.push("/Home");
       }else{
         alert('Post Error')
       }
     }
-    const handleDraft = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handleDraft = async () => {
       setBlogId(0)
       const item = {
         id: blogId,
@@ -171,14 +182,6 @@ const Recipe = () => {
         date: format(new Date(), 'MM-dd-yyyy'),
         recipeName: name,
         description: description,
-        ingredients: ingredientGroups.map(group => ({
-          title: group.title,
-          ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
-        })),
-        steps: stepGroups.map(group => ({
-          title: group.title,
-          steps: group.steps
-        })),
         tags: selectedTags,
         rating: 0,
         numberOfRatings: 0,
@@ -189,9 +192,30 @@ const Recipe = () => {
         isDeleted: false
       }
       let result = false
-      result = await addBlogItem(item, getToken())
+      result = await addBlogItem(item, getToken());
       if (result)
       {
+
+    for (const group of ingredientGroups) {
+      const ingredientItem = {
+        blogId: blogId,
+        title: group.title,
+        ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
+      };
+
+      await AddIngredientItem(ingredientItem, getToken());
+    }
+
+    for (const group of stepGroups) {
+      const stepItem = {
+        blogId: blogId,
+        title: group.title,
+        steps: group.steps
+      };
+      await AddStepItem(stepItem, getToken());
+    }
+
+
         alert('Draft Saved!')
         router.push("/Home");
       }else{
