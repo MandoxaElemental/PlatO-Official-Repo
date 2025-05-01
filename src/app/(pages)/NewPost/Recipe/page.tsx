@@ -143,28 +143,30 @@ const Recipe = () => {
       
       let result = false
       result = await addBlogItem(item, getToken());
-      const newBlogId = await addBlogItem(item, getToken());
       if (result)
       {
 
-    for (const group of ingredientGroups) {
-      const ingredientItem = {
-        blogId: newBlogId.blogId,
-        title: group.title,
-        ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
-      };
+        const newBlogId = await addBlogItem(item, getToken());
 
-      await AddIngredientItem(ingredientItem, getToken());
-    }
-
-    for (const group of stepGroups) {
-      const stepItem = {
-        blogId: newBlogId.blogId,
-        title: group.title,
-        steps: group.steps
-      };
-      await AddStepItem(stepItem, getToken());
-    }
+        if (newBlogId) {
+          for (const group of ingredientGroups) {
+            const ingredientItem = {
+              blogId: newBlogId.blogId,
+              title: group.title,
+              ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
+            };
+            await AddIngredientItem(ingredientItem, getToken());
+          }
+      
+          for (const group of stepGroups) {
+            const stepItem = {
+              blogId: newBlogId.blogId,
+              title: group.title,
+              steps: group.steps
+            };
+            await AddStepItem(stepItem, getToken());
+          }
+        }
         alert('Post Success!')
         router.push("/Home");
       }else{
@@ -191,29 +193,30 @@ const Recipe = () => {
       }
       let result = false
       result = await addBlogItem(item, getToken());
-      const newBlogId = await addBlogItem(item, getToken());
-
       if (result)
       {
 
-    for (const group of ingredientGroups) {
-      const ingredientItem = {
-        blogId: newBlogId.blogId,
-        title: group.title,
-        ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
-      };
+        const newBlogId = await addBlogItem(item, getToken());
 
-      await AddIngredientItem(ingredientItem, getToken());
-    }
-
-    for (const group of stepGroups) {
-      const stepItem = {
-        blogId: newBlogId.blogId,
-        title: group.title,
-        steps: group.steps
-      };
-      await AddStepItem(stepItem, getToken());
-    }
+        if (newBlogId) {
+          for (const group of ingredientGroups) {
+            const ingredientItem = {
+              blogId: newBlogId.blogId,
+              title: group.title,
+              ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
+            };
+            await AddIngredientItem(ingredientItem, getToken());
+          }
+      
+          for (const group of stepGroups) {
+            const stepItem = {
+              blogId: newBlogId.blogId,
+              title: group.title,
+              steps: group.steps
+            };
+            await AddStepItem(stepItem, getToken());
+          }
+        }
 
 
         alert('Draft Saved!')
