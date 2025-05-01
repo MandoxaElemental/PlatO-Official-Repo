@@ -9,7 +9,6 @@ import { useRouter } from 'next/navigation'
 import MeasurementDropdown from '@/app/Components/MeasurementDropdown'
 
 const Recipe = () => {
-    const [blogId, setBlogId] = useState<number>(0);
     const [id, setId] = useState<number>(0);
     const [username, setUsername] = useState<string>("");
     const [recipeImage, setImage] = useState<string|ArrayBuffer|null>('');
@@ -124,9 +123,8 @@ const Recipe = () => {
       }
     }
     const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
-      setBlogId(0)
       const item = {
-        id: blogId,
+        id: 0,
         userId: id,
         publisherName: username,
         image: recipeImage,
@@ -145,12 +143,13 @@ const Recipe = () => {
       
       let result = false
       result = await addBlogItem(item, getToken());
+      const newBlogId = await addBlogItem(item, getToken());
       if (result)
       {
 
     for (const group of ingredientGroups) {
       const ingredientItem = {
-        blogId: blogId,
+        blogId: newBlogId.blogId,
         title: group.title,
         ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
       };
@@ -160,7 +159,7 @@ const Recipe = () => {
 
     for (const group of stepGroups) {
       const stepItem = {
-        blogId: blogId,
+        blogId: newBlogId.blogId,
         title: group.title,
         steps: group.steps
       };
@@ -173,9 +172,8 @@ const Recipe = () => {
       }
     }
     const handleDraft = async () => {
-      setBlogId(0)
       const item = {
-        id: blogId,
+        id: 0,
         userId: id,
         publisherName: username,
         image: recipeImage,
@@ -193,12 +191,14 @@ const Recipe = () => {
       }
       let result = false
       result = await addBlogItem(item, getToken());
+      const newBlogId = await addBlogItem(item, getToken());
+
       if (result)
       {
 
     for (const group of ingredientGroups) {
       const ingredientItem = {
-        blogId: blogId,
+        blogId: newBlogId.blogId,
         title: group.title,
         ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
       };
@@ -208,7 +208,7 @@ const Recipe = () => {
 
     for (const group of stepGroups) {
       const stepItem = {
-        blogId: blogId,
+        blogId: newBlogId.blogId,
         title: group.title,
         steps: group.steps
       };
