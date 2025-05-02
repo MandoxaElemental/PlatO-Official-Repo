@@ -78,6 +78,18 @@ export interface ICommentItems
     isDeleted: boolean
 
 }
+export interface IReplyItems
+{
+    id: number,
+    blogId: number,
+    userId: number,
+    publisherName: string,
+    date: string,
+    reply: string,
+    isPublished: boolean,
+    isDeleted: boolean
+
+}
 
 export interface IToken
 {

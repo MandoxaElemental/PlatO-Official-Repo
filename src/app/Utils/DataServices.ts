@@ -1,4 +1,4 @@
-import { IBlogItems, ICommentItems, IIngredientItems, IStepItems, IUserData, IUserInfoCreate, IUserInfoLogin } from "./Interfaces"
+import { IBlogItems, ICommentItems, IIngredientItems, IReplyItems, IStepItems, IUserData, IUserInfoCreate, IUserInfoLogin } from "./Interfaces"
 
 const url = "https://platobackend-a7hagaahdvdfesgm.westus-01.azurewebsites.net"
 
@@ -512,6 +512,160 @@ export const AddStepItem = async (blog: IStepItems, token: string) =>
     export const getStepsByBlogId = async (blogId: number, token: string) =>
         {
             const response = await fetch(`${url}/Steps/GetStepsByBlogId/${blogId}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                }
+            });
+            if (!response.ok)
+            {
+                const errorData = await response.json();
+                const message = errorData.message;
+                console.log(message);
+                return [];
+            }
+            
+            const data = await response.json();
+            return data;
+        }
+
+//----------REPLY ENDPOINTS----------//
+export const getAllReplies = async (token: string) =>
+    {
+        const response = await fetch(`${url}/Replys/GetAllReplies`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            }
+        });
+        if (!response.ok)
+        {
+            const errorData = await response.json();
+            const message = errorData.message;
+            console.log(message);
+            return [];
+        }
+    
+        const data = await response.json();
+        return data;
+    }
+    
+    export const getReplyItemsByUserId = async (userId: number, token: string) =>
+    {
+        const response = await fetch(`${url}/Replys/GetReplyByUserId/${userId}`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            }
+        });
+        if (!response.ok)
+        {
+            const errorData = await response.json();
+            const message = errorData.message;
+            console.log(message);
+            return [];
+        }
+        
+        const data = await response.json();
+        return data;
+    }
+    export const getReplybyId = async (replyId: number, token: string) =>
+    {
+        const response = await fetch(`${url}/Replys/GetReplyById/${replyId}`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            }
+        });
+        if (!response.ok)
+        {
+            const errorData = await response.json();
+            const message = errorData.message;
+            console.log(message);
+            return [];
+        }
+        
+        const data = await response.json();
+        return data;
+    }
+    
+    export const addReplyItem = async (comment: IReplyItems, token: string) =>
+    {
+        const response = await fetch(`${url}/Replys/AddReply`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify(comment)
+        });
+        if (!response.ok)
+        {
+            const errorData = await response.json();
+            const message = errorData.message;
+            console.log(message);
+            return false;
+        }
+        const data = await response.json();
+        return data.success;
+    }
+    
+    export const updateReplyItem = async (reply: IReplyItems, token: string) =>
+    {
+        const response = await fetch(`${url}/Replys/EditReply`,
+        {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify(reply)
+        });
+        if (!response.ok)
+        {
+            const errorData = await response.json();
+            const message = errorData.message;
+            console.log(message);
+            return false;
+        }
+        const data = await response.json();
+        return data.success;
+    }
+    
+    export const deleteReplyItem = async (reply: IReplyItems, token: string) =>
+    {
+        const response = await fetch(`${url}/Replys/DeleteReply`,
+        {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify(reply)
+        });
+        if (!response.ok)
+        {
+            const errorData = await response.json();
+            const message = errorData.message;
+            console.log(message);
+            return false;
+        }
+        const data = await response.json();
+        return data.success;
+    }
+
+    export const getReplyItemsByBlogId = async (id: number, token: string) =>
+        {
+            const response = await fetch(`${url}/Replys/GetReplyByBlogId/${id}`,
             {
                 method: "GET",
                 headers: {

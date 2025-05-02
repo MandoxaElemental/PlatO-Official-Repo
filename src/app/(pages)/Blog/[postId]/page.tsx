@@ -58,7 +58,7 @@ const Blog = () => {
       console.log(ingredients)
     }, [ingredients])
 
-    const handleSave = async () => {
+    const handleComment = async () => {
       const item = {
         id: 0,
         blogId: Number(postId),
@@ -169,7 +169,7 @@ const Blog = () => {
               <div className='p-5 border-t-1 border-solid border-slate-300 flex items-center justify-between'>
                 <div className='rounded-full bg-green-500 w-10 h-10 flex justify-center items-center'><Image width={50} height={50} className='' src="../assets/person.svg" alt="profilePic" /></div>
                   <TextInput value={comment} onChange={(e) => setComment(e.target.value)} className='w-[320px]'></TextInput>
-                  <Button onClick={handleSave} className="rounded-full h-8 bg-blue-200 hover:bg-blue-400 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200">Post</Button>
+                  <Button onClick={handleComment} className="rounded-full h-8 bg-blue-200 hover:bg-blue-400 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200">Post</Button>
                 </div>
                 <div className='p-5 border-t-1 border-solid border-slate-300'>
                 {

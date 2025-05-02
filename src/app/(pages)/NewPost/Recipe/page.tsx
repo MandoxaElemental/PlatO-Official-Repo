@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation'
 import MeasurementDropdown from '@/app/Components/MeasurementDropdown'
 
 const Recipe = () => {
+    const [blogId, setBlogId] = useState<number>(0);
     const [id, setId] = useState<number>(0);
     const [username, setUsername] = useState<string>("");
     const [recipeImage, setImage] = useState<string|ArrayBuffer|null>('');
@@ -29,7 +30,7 @@ const Recipe = () => {
     useEffect(() => {
       const storedUsername = localStorage.getItem("Username");
       const storedId = localStorage.getItem("UserID");
-    
+      setBlogId(0)
       if (storedUsername) setUsername(storedUsername);
       if (storedId) setId(Number(storedId));
     }, []);
@@ -122,9 +123,9 @@ const Recipe = () => {
         reader.readAsDataURL(file);
       }
     }
-    const handleSave = async () => {
+    const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
       const blogItem = {
-        id: 0,
+        id: blogId,
         userId: id,
         publisherName: username,
         image: recipeImage,
@@ -137,16 +138,19 @@ const Recipe = () => {
         averageRating: 5,
         numberOfLikes: 0,
         postType: 'recipe',
-        isPublished: true,
+        isPublished: e.currentTarget.textContent === 'Draft' ? false : true,
         isDeleted: false
       };
-    
-      const newBlogId = await addBlogItem(blogItem, getToken());
-    
-      if (newBlogId) {
+  
+
+      let result = false
+      result = await addBlogItem(blogItem, getToken());
+
+      if (result) {
+          
         for (const group of ingredientGroups) {
           const ingredientItem = {
-            blogId: newBlogId,
+            blogId: blogId,
             title: group.title,
             ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
           };
@@ -155,68 +159,18 @@ const Recipe = () => {
     
         for (const group of stepGroups) {
           const stepItem = {
-            blogId: newBlogId,
+            blogId: blogId,
             title: group.title,
             steps: group.steps
           };
           await AddStepItem(stepItem, getToken());
         }
-    
-        alert('Post Success!');
+        alert('Success!');
         router.push("/Home");
       } else {
         alert('Post Error');
       }
     };
-    
-    const handleDraft = async () => {
-      const blogItem = {
-        id: 0, 
-        userId: id,
-        publisherName: username,
-        image: recipeImage,
-        date: format(new Date(), 'MM-dd-yyyy'),
-        recipeName: name,
-        description: description,
-        tags: selectedTags,
-        rating: 0,
-        numberOfRatings: 0,
-        averageRating: 5,
-        numberOfLikes: 0,
-        postType: 'recipe',
-        isPublished: false,
-        isDeleted: false
-      };
-    
-      const newBlogId = await addBlogItem(blogItem, getToken());
-    
-      if (newBlogId) {
-        for (const group of ingredientGroups) {
-          const ingredientItem = {
-            blogId: newBlogId,
-            title: group.title,
-            ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
-          };
-          await AddIngredientItem(ingredientItem, getToken());
-        }
-    
-        for (const group of stepGroups) {
-          const stepItem = {
-            blogId: newBlogId,
-            title: group.title,
-            steps: group.steps
-          };
-          await AddStepItem(stepItem, getToken());
-        }
-    
-        alert('Draft Saved!');
-        router.push("/Home");
-      } else {
-        alert('Error');
-      }
-    };
-    
-  
 
   return (
     <div className='pt-10 px-5 w-full'>
@@ -421,7 +375,7 @@ const Recipe = () => {
         <div onClick={() => setOpenModal(true)} className='flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer'><Image className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" width={100} height={100}/><p>Add Tags</p></div>
         </div>
         <div className='p-2 flex justify-end'>
-            <Button onClick={handleDraft} outline className='mx-1 w-[100px]'>Draft</Button>
+            <Button onClick={handleSave} outline className='mx-1 w-[100px]'>Draft</Button>
             <Button onClick={handleSave} className='mx-1 w-[100px]'>Post</Button>
         </div>
     </div>
