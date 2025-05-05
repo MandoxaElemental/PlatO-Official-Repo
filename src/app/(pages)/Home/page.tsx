@@ -1,12 +1,9 @@
 'use client'
-import Link from "next/link";
 import Post from "@/app/Components/Post";
 import Recommended from "@/app/Components/Recommended";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { IBlogItems } from "@/app/Utils/Interfaces";
-import { getAllBlogs, getToken, updateBlogItem } from "@/app/Utils/DataServices";
-import StarRating from "@/app/Components/Rating";
+import { getAllBlogs, getToken } from "@/app/Utils/DataServices";
 
 export default function Home() {
 

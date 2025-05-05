@@ -1,8 +1,6 @@
 import Image from 'next/image'
 import React from 'react'
 
-
-
 const Reply = ({username, date, comment} : {username: string; date: string; comment: string;}) => {
   return (
     <div className='text-left border-b-1 border-solid border-slate-300 pt-2'>
@@ -17,7 +15,7 @@ const Reply = ({username, date, comment} : {username: string; date: string; comm
             <Image width={50} height={50} className="h-4 w-4" src="../assets/heart.svg" alt="like" /><p className="pl-2">Like</p>
         </div>
         <div className="flex items-center">
-            <Image width={50} height={50} className="h-4 w-4" src="../assets/chat-left.svg" alt="comment" /><p className="pl-2">Comment</p>
+            <Image width={50} height={50} className="h-4 w-4" src="../assets/chat-left.svg" alt="comment" /><p className="pl-2">Reply</p>
         </div>
         <div className="flex items-center">
             <Image width={50} height={50} className="h-4 w-4" src="../assets/repeat.svg" alt="share" /><p className="pl-2">Share</p>

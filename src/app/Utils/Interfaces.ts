@@ -81,14 +81,13 @@ export interface ICommentItems
 export interface IReplyItems
 {
     id: number,
-    blogId: number,
-    userId: number,
-    publisherName: string,
-    date: string,
-    reply: string,
-    isPublished: boolean,
-    isDeleted: boolean
-
+  commentId: number,
+  userId: number,
+  publisherName: string,
+  date: string,
+  reply: string,
+  isPublished: boolean,
+  isDeleted: boolean
 }
 
 export interface IToken
@@ -118,46 +117,194 @@ export interface ProfileProps {
     steps: string[];
   }
 
+  export interface TagCategory {
+    category: string;
+    tags: string[];
+  }
   
-export const tagArr: Array<string> = [
-    'Fruits',
-    'Meat',
-    'Chicken',
-    'Beef',
-    'Pork',
-    'Sheep',
-    'Goat',
-    'Turkey',
-    'Seafood',
-    'Fish',
-    'Lobster',
-    'Crab',
-    'Vegetables',
-    'Baked',
-    'Muffins',
-    'Cookies',
-    'Cake',
-    'Bread',
-    'Cupcakes',
-    'Brownies',
-    'Gluten Free',
-    'Vegan',
-    'Paleo',
-    'Drinks',
-    'Homemade',
-    'Breakfast',
-    'Lunch',
-    'Dinner',
-    'Snack',
-    'Dessert',
-    'Foreign',
-    'Eggs',
-    'Filipino',
-    'Spanish',
-    'Mexican',
-    'Japanese',
-    'Greek',
-    'Nigerian'
+export const tagArr: TagCategory[] = [
+    {
+        category: "Meal Type",
+        tags: [
+          "Breakfast",
+          "Brunch",
+          "Lunch",
+          "Dinner",
+          "Snack",
+          "Dessert",
+          "Appetizer",
+          "Side Dish",
+          "Main Course",
+          "Baked",
+          "Homemade",
+          "Street Food",
+          "Comfort Food",
+          "Holiday Food",
+          "Party Food"
+        ],
+    },
+    {
+        category: "Cuisine",
+        tags: [
+          "Filipino",
+          "Spanish",
+          "Mexican",
+          "Japanese",
+          "Greek",
+          "Nigerian",
+          "Chinese",
+          "Italian",
+          "Indian",
+          "Thai",
+          "Korean",
+          "Vietnamese",
+          "French",
+          "American",
+          "Middle Eastern",
+          "Mediterranean",
+          "Brazilian",
+          "Caribbean",
+          "German",
+          "Ethiopian",
+          "Russian",
+          "Turkish",
+          "International"
+        ]
+    },
+    {
+      category: "Ingredients",
+      tags: [
+        "Meat", "Beef", "Chicken", "Pork", "Turkey", "Lamb", "Goat", "Sheep", "Duck", "Veal", "Game Meat",
+        "Seafood", "Fish", "Salmon", "Tuna", "Lobster", "Crab", "Shrimp", "Oysters", "Scallops", "Clams", "Squid",
+        "Vegetables", "Leafy Greens", "Root Vegetables", "Fruits", "Berries", "Tropical Fruits", "Citrus", "Tomatoes", "Onions", "Garlic", "Mushrooms",
+        "Eggs", "Cheese", "Tofu", "Tempeh", "Legumes", "Beans", "Lentils", "Nuts", "Seeds", "Rice", "Pasta", "Potatoes", "Grains", "Corn", "Quinoa", "Oats", "Bread"
+      ]
+    },
+        {
+            category: "Dietary", 
+            tags: [
+              "Vegan",
+              "Vegetarian",
+              "Pescatarian",
+              "Gluten Free",
+              "Dairy Free",
+              "Nut Free",
+              "Soy Free",
+              "Low Carb",
+              "Low Fat",
+              "High Protein",
+              "Paleo",
+              "Keto",
+              "Whole30",
+              "Diabetic Friendly",
+              "Heart Healthy"
+            ],
+        },
+        {
+            category: "Cooking Method",
+            tags: [
+            "Grilled",
+          "Roasted",
+          "Baked",
+          "Fried",
+          "Deep Fried",
+          "Steamed",
+          "Boiled",
+          "Blanched",
+          "Poached",
+          "Slow Cooked",
+          "Pressure Cooked",
+          "Instant Pot",
+          "Air Fried",
+          "Raw",
+          "Sous Vide",
+          "Stir Fried",
+          "Smoked"
+        ]
+    }, 
+    {
+       category: "Dish Type", 
+       tags: [
+          "Soup",
+          "Stew",
+          "Casserole",
+          "Salad",
+          "Sandwich",
+          "Wrap",
+          "Pizza",
+          "Pasta",
+          "Noodles",
+          "Rice Dish",
+          "Grain Bowl",
+          "Skewers",
+          "Tacos",
+          "Burrito",
+          "Curry",
+          "Dip",
+          "Smoothie",
+          "Juice"
+        ]
+    },
+    {
+      category: "Baked Goods",
+      tags: [
+        "Cake",
+        "Cookies",
+        "Brownies",
+        "Cupcakes",
+        "Muffins",
+        "Bread",
+        "Scones",
+        "Biscuits",
+        "Pies",
+        "Tarts",
+        "Pastries",
+        "Donuts",
+        "Bagels",
+        "Rolls",
+        "Croissants"
+      ],
+    },
+    {
+      category: "Drinks",
+      tags: [
+        "Drinks",
+        "Smoothie",
+        "Milkshake",
+        "Juice",
+        "Iced Tea",
+        "Lemonade",
+        "Cocktails",
+        "Mocktails",
+        "Coffee",
+        "Tea",
+        "Hot Chocolate",
+        "Infused Water",
+        "Soda",
+        "Alcoholic",
+        "Non-Alcoholic"
+      ]
+    },
+    {
+      category: "Occasion", 
+      tags: [
+        "Christmas",
+        "Thanksgiving",
+        "Easter",
+        "New Year",
+        "Valentine's Day",
+        "Halloween",
+        "Birthday",
+        "Ramadan",
+        "Hanukkah",
+        "Weekend",
+        "Weeknight",
+        "Picnic",
+        "BBQ",
+        "Potluck"
+      ]
+    }
+     
 ];
 
 export interface StarRatingProps {

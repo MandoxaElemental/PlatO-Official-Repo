@@ -597,7 +597,7 @@ export const getAllReplies = async (token: string) =>
         return data;
     }
     
-    export const addReplyItem = async (comment: IReplyItems, token: string) =>
+    export const addReplyItem = async (reply: IReplyItems, token: string) =>
     {
         const response = await fetch(`${url}/Replys/AddReply`,
         {
@@ -606,7 +606,7 @@ export const getAllReplies = async (token: string) =>
                 "Content-Type": "application/json",
                 "Authorization": "Bearer " + token
             },
-            body: JSON.stringify(comment)
+            body: JSON.stringify(reply)
         });
         if (!response.ok)
         {
@@ -663,9 +663,9 @@ export const getAllReplies = async (token: string) =>
         return data.success;
     }
 
-    export const getReplyItemsByBlogId = async (id: number, token: string) =>
+    export const getReplyItemsByCommentId = async (id: number, token: string) =>
         {
-            const response = await fetch(`${url}/Replys/GetReplyByBlogId/${id}`,
+            const response = await fetch(`${url}/Replys/GetReplyByCommentId/${id}`,
             {
                 method: "GET",
                 headers: {

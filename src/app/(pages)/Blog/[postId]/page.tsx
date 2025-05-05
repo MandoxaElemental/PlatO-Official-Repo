@@ -182,6 +182,7 @@ const Blog = () => {
                             username={item.publisherName}
                             date={item.date}
                             comment={item.comment}
+                            commentId={item.id}
                           />
                         )
                       }
