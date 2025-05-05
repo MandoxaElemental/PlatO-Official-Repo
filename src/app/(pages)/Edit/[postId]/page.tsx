@@ -149,9 +149,14 @@ const Recipe = () => {
       }
     }, [description])
 
-    const filteredTags = tagArr.filter((tag) =>
-      tag.toLowerCase().includes(query.toLowerCase())
-    );
+        const filteredCategories = tagArr
+      .map((cat) => ({
+        ...cat,
+        tags: cat.tags.filter((tag) =>
+          tag.toLowerCase().includes(query.toLowerCase())
+        )
+      }))
+      .filter((cat) => cat.tags.length > 0);
 
     const toggleTag = (tag: string) => {
       setSelectedTags((prevSelected) =>
@@ -234,27 +239,33 @@ const Recipe = () => {
                 <p className="text-sm text-gray-400">No tags selected</p>
               )}
             </div>
-              <div className='w-screen-min grid grid-cols-5 gap-3'>                
-              {filteredTags.length > 0 ? (
-          filteredTags.map((tag, index) => {
-            const isSelected = selectedTags.includes(tag);
-            return (
-              <button
-                key={index}
-                onClick={() => toggleTag(tag)}
-                className={`px-3 py-1 rounded-full text-sm border cursor-pointer ${
-                  isSelected
-                    ? 'bg-blue-400 text-white border-blue-600'
-                    : 'bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200'
-                }`}
-              >
-                {tag}
-              </button>
-            );
-          })
-        ) : (
-          <p className="text-gray-500 italic">No tags found.</p>
-        )}
+            <div className='w-screen-min'>                
+              <div className="space-y-4">
+              {filteredCategories.map((cat, i) => (
+                <div key={i}>
+                  <h3 className="text-md font-bold text-gray-700 mb-2">{cat.category}</h3>
+                  <div className="grid grid-cols-4 gap-3">
+                    {cat.tags.map((tag, j) => {
+                      const isSelected = selectedTags.includes(tag);
+                      return (
+                        <button
+                          key={j}
+                          onClick={() => toggleTag(tag)}
+                          className={`px-3 py-1 rounded-full text-sm border cursor-pointer ${
+                            isSelected
+                              ? 'bg-blue-400 text-white border-blue-600'
+                              : 'bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200'
+                          }`}
+                        >
+                          {tag}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+
               </div>
           </div>
         </ModalBody>
