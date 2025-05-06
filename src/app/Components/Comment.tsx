@@ -84,7 +84,7 @@ const Comment = ({ username, date, comment, commentId}: { username: string; date
           <p>
             {username} - {date}
           </p>
-          <p>{comment}</p>
+          <p className='w-max-4'>{comment}</p>
         </div>
       </div>
 

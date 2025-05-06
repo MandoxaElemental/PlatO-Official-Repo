@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import Image from "next/image";
 import BlogPost from '@/app/Components/Blog';
-import { addCommentItem, getBlogbyId, getCommentItemsByBlogId, getIngredientsByBlogId, getStepsByBlogId, getToken } from '@/app/Utils/DataServices';
+import { addCommentItem, getBlogbyId, getCommentItemsByBlogId, getToken } from '@/app/Utils/DataServices';
 import { useParams } from 'next/navigation';
 import { Button, TextInput } from 'flowbite-react';
 import { ICommentItems, IIngredientItems, IStepItems } from '@/app/Utils/Interfaces';
@@ -39,15 +39,14 @@ const Blog = () => {
       const getData = async () => {
         if (!postId) return;
         const data = await getBlogbyId(Number(postId), getToken());
-        const ingredientData = await getIngredientsByBlogId(Number(postId), getToken());
-        const stepData = await getStepsByBlogId(Number(postId), getToken());
+        console.log(data)
         setName(data.recipeName);
-        setId(data.id);
+        setId(String(data.id));
         setUser(data.publisherName);
         setImage(data.image ?? "/assets/Placeholder.png");
         setDescription(data.description);
-        setIngredients(ingredientData);
-        setSteps(stepData);
+        setIngredients(data.ingredients === null ? [] : JSON.parse(data.ingredients));
+        setSteps(data.steps === null ? [] : JSON.parse(data.steps));
         setTags(data.tags);
         setPostType(data.postType);
       };
@@ -55,8 +54,10 @@ const Blog = () => {
     }, [postId]);
 
     useEffect(() => {
-      console.log(ingredients)
-    }, [ingredients])
+      console.log(description)
+      console.log(typeof ingredients);
+      console.log(typeof steps);
+    }, [ingredients, steps]);
 
     const handleComment = async () => {
       const item = {

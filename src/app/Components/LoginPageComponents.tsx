@@ -154,10 +154,10 @@ type ButtonPreferencesProps = {
 
 const ButtonPreferences = ({ imageDescription, imageSrc }: ButtonPreferencesProps) => {
     return (
-        <Button href='/' className='h-25 w-28 p-0 rounded-3xl bg-transparent hover:bg-transparent hover:border-8 border-blue-200'>
-            <h1 className=' text-white absolute font-extrabold text-2xl'>{imageDescription}</h1>
-            <Image src={imageSrc} alt={`icon${imageDescription}`} width={200} height={200} />
-        </Button>
+        <div className='flex justify-center items-center h-25 w-28 rounded-3xl bg-transparent '>
+            <h1 className=' text-white absolute font-extrabold text-lg'>{imageDescription}</h1>
+            <Image className='rounded-3xl' src={imageSrc} alt={`icon${imageDescription}`} width={200} height={200} />
+        </div>
     )
 }
 

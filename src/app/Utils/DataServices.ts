@@ -50,6 +50,28 @@ export const login = async (user: IUserInfoLogin) =>
     return data;
 }
 
+export const updateUserItem = async (user: IUserData, token: string) =>
+    {
+        const response = await fetch(`${url}/User/EditUser`,
+        {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify(user)
+        });
+        if (!response.ok)
+        {
+            const errorData = await response.json();
+            const message = errorData.message;
+            console.log(message);
+            return false;
+        }
+        const data = await response.json();
+        return data.success;
+    }
+
 export const getUserInfoByUsername = async (username: string) =>
 {
     const response = await fetch(`${url}/User/GetUserByUsername/${username}`);

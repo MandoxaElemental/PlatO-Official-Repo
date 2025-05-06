@@ -138,6 +138,14 @@ const Recipe = () => {
         date: format(new Date(), 'MM-dd-yyyy'),
         recipeName: name,
         description: description,
+        ingredients: ingredientGroups.map(group => ({
+          title: group.title,
+          ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
+        })),
+        steps: stepGroups.map(group => ({
+          title: group.title,
+          steps: group.steps
+        })),
         tags: selectedTags,
         rating: 0,
         numberOfRatings: 0,
@@ -149,28 +157,26 @@ const Recipe = () => {
       };
   
 
-      let result = false
-      result = await addBlogItem(blogItem, getToken());
-
+      let result = await addBlogItem(blogItem, getToken());
       if (result) {
-          
-        for (const group of ingredientGroups) {
-          const ingredientItem = {
-            blogId: blogId,
-            title: group.title,
-            ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
-          };
-          await AddIngredientItem(ingredientItem, getToken());
-        }
+      
+        // for (const group of ingredientGroups) {
+        //   const ingredientItem = {
+        //     blogId: blogId,
+        //     title: group.title,
+        //     ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
+        //   };
+        //   await AddIngredientItem(ingredientItem, getToken());
+        // }
     
-        for (const group of stepGroups) {
-          const stepItem = {
-            blogId: blogId,
-            title: group.title,
-            steps: group.steps
-          };
-          await AddStepItem(stepItem, getToken());
-        }
+        // for (const group of stepGroups) {
+        //   const stepItem = {
+        //     blogId: blogId,
+        //     title: group.title,
+        //     steps: group.steps
+        //   };
+        //   await AddStepItem(stepItem, getToken());
+        // }
         alert('Success!');
         router.push("/Home");
       } else {

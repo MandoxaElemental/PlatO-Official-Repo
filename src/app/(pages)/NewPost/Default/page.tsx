@@ -36,15 +36,7 @@ const Post = () => {
             }
           }, [description])
 
-          const filteredCategories = tagArr
-  .map((cat) => ({
-    ...cat,
-    tags: cat.tags.filter((tag) =>
-      tag.toLowerCase().includes(query.toLowerCase())
-    )
-  }))
-  .filter((cat) => cat.tags.length > 0);
-
+s
           
               const toggleTag = (tag: string) => {
                 setSelectedTags((prevSelected) =>

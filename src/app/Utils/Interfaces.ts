@@ -7,14 +7,14 @@ export interface IBlogItems
     image: string|ArrayBuffer|null,
     recipeName: string,
     description: string,
-    // ingredients: {
-    //     title: string,
-    //     ingredients: string[]
-    // }[],
-    // steps: {
-    //     title: string,
-    //     steps: string[]
-    // }[],
+    ingredients: {
+        title: string,
+        ingredients: string[]
+    }[],
+    steps: {
+        title: string,
+        steps: string[]
+    }[],
     tags: string[],
     rating: number,
     numberOfRatings: number,
@@ -32,18 +32,18 @@ export interface IUserInfoLogin
     password: string
 }
 
-export interface IIngredientItems
-{
-    blogId: number,
-    title: string,
-    ingredients: string[]
+export interface IIngredientItems {
+  id: number;
+  blogId: number;
+  title: string;
+  ingredients: string[];
 }
 
-export interface IStepItems
-{
-    blogId: number,
-    title: string,
-    steps: string[]
+export interface IStepItems {
+  id: number;
+  blogId: number;
+  title: string;
+  steps: string[];
 }
 
 export interface IUserInfoCreate
@@ -64,7 +64,16 @@ export interface IUserData
     email: string,
     phoneNumber: string,
     dateOfBirth: string,
-    profilePicture: string
+    profilePicture: string,
+    likedBlogs: string[],
+    ratedBlogs: string[],
+    dateCreated: string,
+    incomingFriendRequest: string[],
+    outgoingFriendRequest: string[],
+    friends: string[],
+    premiumMember: boolean,
+    interests: string[],
+    savedRecipes: string[]
 }
 export interface ICommentItems
 {
