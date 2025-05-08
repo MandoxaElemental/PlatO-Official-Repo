@@ -1,7 +1,8 @@
 "use client"
 
-import { ButtonCancel, ButtonSignUpFB, ButtonSignUpGoogle, ButtonSignUpX } from '@/app/Components/LoginPageComponents'
+import { ButtonCancel, ButtonPreferences, ButtonSignUpFB, ButtonSignUpGoogle, ButtonSignUpX } from '@/app/Components/LoginPageComponents'
 import { createAccount } from '@/app/Utils/DataServices'
+import { tagArr } from '@/app/Utils/Interfaces'
 import { Button, Checkbox, Label, TextInput } from 'flowbite-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -19,21 +20,35 @@ const SignUpPage1 = () =>
   const [dateOfBirth, setDateOfBirth] = useState("");
 
   const [switchBool, setSwitchBool] = useState(false);
+  const [switchBool2, setSwitchBool2] = useState(false);
 
   const [badUsername, setBadUsername] = useState(false);
   const [badEmail, setBadEmail] = useState(false);
 
   const [noEmptyFieldsPageOne, setNoEmptyFieldsPageOne] = useState(true);
   const [noEmptyFieldsPageTwo, setNoEmptyFieldsPageTwo] = useState(true);
-
   const [isChecked, setIsChecked] = useState(true);
-  
+
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const filteredCategories = tagArr;
+    
+  const toggleTag = (tag: string) => {
+    setSelectedTags((prevSelected) =>
+      prevSelected.includes(tag)
+        ? prevSelected.filter((t) => t !== tag)
+        : [...prevSelected, tag]
+    );
+  };
 
   const router = useRouter();
 
   const handleSwitch = () =>
   {
     setSwitchBool(!switchBool);
+  }
+  const handleSwitch2 = () =>
+  {
+    setSwitchBool2(!switchBool2);
   }
 
   const handleSubmit = async () =>
@@ -44,7 +59,8 @@ const SignUpPage1 = () =>
       password: password,
       name: name,
       phoneNumber: phoneNumber,
-      dateOfBirth: dateOfBirth
+      dateOfBirth: dateOfBirth,
+      interests: selectedTags
     }
 
     const result = await createAccount(userData);
@@ -161,7 +177,7 @@ const SignUpPage1 = () =>
     {/* SignupPageOne END */}
 
     {/* SignupPageTwo START */}
-    <div className={`${switchBool ? "" : "hidden"}`}>
+    <div className={`${switchBool && !switchBool2 ? "" : "hidden"}`}>
       <div className='justify-items-center'>
         <Image src={`/assets/4.svg`} alt="logo" width={400} height={400}/>
       </div>
@@ -180,7 +196,7 @@ const SignUpPage1 = () =>
             <Label htmlFor='rememberme' className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>I have read and agreed to PlatO <Link href='/' className='text-blue-500 hover:text-blue-300 focus:text-purple-500 underline'>Terms and Conditions</Link></Label>
           </div>
           <div className='mb-1.5 mt-10'>
-            <Button onClick={handleSubmit} className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200' disabled={(noEmptyFieldsPageTwo || isChecked) ? true : false}>Signup and Continue</Button>
+            <Button onClick={handleSwitch2} className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200' disabled={(noEmptyFieldsPageTwo || isChecked) ? true : false}>Signup and Continue</Button>
           </div>
           <div className='mb-1.5'>
             <Button onClick={handleSwitch} className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200'>Back</Button>
@@ -189,6 +205,48 @@ const SignUpPage1 = () =>
       </div>
     </div>
     {/* SignupPageTwo END */}
+    {/* SignupPageThree Start */}
+    <div className={`${switchBool && switchBool2 ? "" : "hidden"}`}>
+      <div className='justify-items-center'>
+        <Image src={`/assets/4.svg`} alt="logo" width={400} height={400}/>
+      </div>
+      <div className='text-center text-lg font-semibold p-2'>Pick up to three Interests:</div>
+      <div className='h-screen flex items-center flex-col'>
+        <div className='w-screen-min'>                
+          <div className="space-y-4">
+            {filteredCategories.map((cat, i) => (
+              <div key={i}>
+                <div className="grid md:grid-cols-5 grid-cols-3 gap-3">
+                  {cat.tags.map((tag, j) => {
+                    const isSelected = selectedTags.includes(tag);
+                    return (
+                      <button
+                        key={j}
+                        onClick={() => toggleTag(tag)}
+                        className={`rounded-3xl border cursor-pointer h-25 w-28 ${
+                          isSelected
+                            ? 'bg-blue-400 text-white border-blue-600'
+                            : 'bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200'
+                        }`}
+                      >
+                        <ButtonPreferences imageDescription={tag} imageSrc='/assets/burger.png'/>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+          <Button
+            onClick={handleSubmit}
+            className='my-5 rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200'
+            disabled={selectedTags.length < 3}
+          >
+            Continue
+          </Button>
+        </div>
+      </div>
+    </div>
   </>
   )
 }

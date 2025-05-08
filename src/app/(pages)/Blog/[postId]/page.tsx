@@ -45,8 +45,8 @@ const Blog = () => {
         setUser(data.publisherName);
         setImage(data.image ?? "/assets/Placeholder.png");
         setDescription(data.description);
-        setIngredients(data.ingredients === null ? [] : JSON.parse(data.ingredients));
-        setSteps(data.steps === null ? [] : JSON.parse(data.steps));
+        setIngredients(data.ingredients === null ? [] : data.ingredients);
+        setSteps(data.steps === null ? [] : data.steps);
         setTags(data.tags);
         setPostType(data.postType);
       };
@@ -55,8 +55,8 @@ const Blog = () => {
 
     useEffect(() => {
       console.log(description)
-      console.log(typeof ingredients);
-      console.log(typeof steps);
+      console.log(ingredients);
+      console.log(steps);
     }, [ingredients, steps]);
 
     const handleComment = async () => {

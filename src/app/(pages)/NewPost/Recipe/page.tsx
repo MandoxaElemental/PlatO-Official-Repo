@@ -3,7 +3,7 @@ import { Button, FileInput, TextInput, Modal, ModalBody, ModalFooter, ModalHeade
 import React, { useEffect, useState } from 'react'
 import { Ingredient, IngredientGroup, StepGroup, tagArr } from '@/app/Utils/Interfaces'
 import Image from 'next/image'
-import { addBlogItem, AddIngredientItem, AddStepItem, getToken } from '@/app/Utils/DataServices'
+import { addBlogItem, getToken } from '@/app/Utils/DataServices'
 import { format } from 'date-fns'
 import { useRouter } from 'next/navigation'
 import MeasurementDropdown from '@/app/Components/MeasurementDropdown'
@@ -160,23 +160,7 @@ const Recipe = () => {
       let result = await addBlogItem(blogItem, getToken());
       if (result) {
       
-        // for (const group of ingredientGroups) {
-        //   const ingredientItem = {
-        //     blogId: blogId,
-        //     title: group.title,
-        //     ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
-        //   };
-        //   await AddIngredientItem(ingredientItem, getToken());
-        // }
-    
-        // for (const group of stepGroups) {
-        //   const stepItem = {
-        //     blogId: blogId,
-        //     title: group.title,
-        //     steps: group.steps
-        //   };
-        //   await AddStepItem(stepItem, getToken());
-        // }
+
         alert('Success!');
         router.push("/Home");
       } else {
