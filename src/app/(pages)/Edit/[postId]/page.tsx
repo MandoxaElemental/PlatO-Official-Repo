@@ -286,7 +286,7 @@ const Recipe = () => {
         </div>
         <div className='border-b-1 border-solid border-slate-300 p-2'>
             <p className='font-semibold text-xl text-center'>Ingredients</p>
-                        {ingredientGroups.map((group, groupIndex) => (
+            {ingredientGroups.map((group, groupIndex) => (
               <div key={groupIndex}>
                 <div className='my-2 flex flex-col items-center'>
                 <TextInput

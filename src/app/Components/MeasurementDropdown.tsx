@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 type Props = {
   selected: string;
@@ -6,14 +6,31 @@ type Props = {
 };
 
 const categorizedMeasurements: Record<string, string[]> = {
-  Volume: ['tsp', 'tbsp', 'c', 'qt', 'gal', 'ml', 'l'],
-  Weight: ['oz', 'lbs', 'kg', 'g'],
+  Imperial: ['tsp', 'tbsp', 'c', 'pt', 'qt', 'gal', 'oz', 'lbs'],
+  Metric: ['ml', 'dl', 'l', 'mg', 'g', 'kg'],
   Size: ['sm', 'md', 'lg'],
+  Miscellaneous: ['pinch', 'dash', 'piece', 'whole', 'half', 'slice', 'clove', 'stick', 'can', 'bottle', 'pkg'],
 };
 
 const MeasurementDropdown: React.FC<Props> = ({ selected, onSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [filter, setFilter] = useState('');
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const filtered = Object.entries(categorizedMeasurements).reduce(
     (acc, [category, units]) => {
@@ -27,7 +44,7 @@ const MeasurementDropdown: React.FC<Props> = ({ selected, onSelect }) => {
   );
 
   return (
-    <div className="relative inline-block w-[140px]">
+    <div ref={dropdownRef} className="relative inline-block w-[140px]">
       <button
         type="button"
         className="w-full bg-white border border-gray-300 text-sm px-3 py-2 rounded shadow"

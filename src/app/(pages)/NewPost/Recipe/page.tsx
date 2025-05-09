@@ -240,6 +240,9 @@ const Recipe = () => {
             <p className='font-semibold text-xl text-center'>Ingredients</p>
             {ingredientGroups.map((group, groupIndex) => (
   <div key={groupIndex}>
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              Group {groupIndex + 1}
+            </label>
     <div className='my-2 flex items-center px-2'>
         <Image
             className="h-10 w-10 pr-5 hover:opacity-50 dark:invert cursor-pointer"
