@@ -69,7 +69,7 @@ const SignUpPage1 = () =>
     {
       localStorage.setItem("Username", username);
       alert("Account Created!");
-      router.push("/Login/PreferencesPage");
+      router.push("/Login/LoginPage");
     }else
     {
       alert("Username or Email already exists");

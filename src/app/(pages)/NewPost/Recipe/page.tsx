@@ -157,7 +157,8 @@ const Recipe = () => {
       };
   
 
-      let result = await addBlogItem(blogItem, getToken());
+      let result = false
+      result = await addBlogItem(blogItem, getToken());
       if (result) {
       
 
