@@ -51,7 +51,11 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
         ) : (
           <div>
             <div className='font-semibold text-2xl pb-2'>- Recipe -</div>
-            <Image className='object-cover h-[200px] w-full' src={String(blog.image)} alt="post" width={50} height={20} />
+            <Image className='object-cover h-[200px] w-full' src={
+              blog.image != "" ?
+              String(blog.image) :
+              "/assets/Placeholder.png"
+              } alt="post" width={50} height={20} />
             <p className='font-semibold text-2xl p-2'>{blog.recipeName}</p>
             <div className='p-2 text-left'>{blog.description}</div>
             <Link className='text-blue-600 text-xl underline pb-2' href={`/Blog/${blog.id}`}>Read Full Recipe</Link>

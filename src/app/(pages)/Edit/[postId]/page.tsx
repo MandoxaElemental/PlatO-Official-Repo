@@ -32,56 +32,65 @@ const Recipe = () => {
     const { postId } = useParams();
 
     useEffect(() => {
-        const getData = async () => {
-          if (!postId) return;
-          const data = await getBlogbyId(Number(postId), getToken());
-          const ingredientData = await getIngredientsByBlogId(Number(postId), getToken());
+      const getData = async () => {
+        if (!postId) return;
       
-          const parseIngredients = (rawIngredients: string[]): Ingredient[] => {
-            const measurements = [
-              'tsp', 'tbsp', 'c', 'qt', 'gal', 'oz', 'lbs', 'kg', 'g', 'ml', 'l', 'sm', 'md', 'lg'
-            ];
-          
-            return rawIngredients.map((item) => {
-              const parts = item.trim().split(' ');
-          
-              const amountParts: string[] = [];
-              let measurement = 'Measurement';
-              let ingredient = '';
-          
-              for (let i = 0; i < parts.length; i++) {
-                const part = parts[i];
-          
-                if (measurements.includes(part)) {
-                  measurement = part;
-                  ingredient = parts.slice(i + 1).join(' ');
-                  break;
-                } else {
-                  amountParts.push(part);
-                }
+        const data = await getBlogbyId(Number(postId), getToken());
+        const ingredientData = await getIngredientsByBlogId(Number(postId), getToken());
+      
+        const parseIngredients = (rawIngredients: string[]): Ingredient[] => {
+          const measurements = ['tsp', 'tbsp', 'c', 'qt', 'gal', 'oz', 'lbs', 'kg', 'g', 'ml', 'l', 'sm', 'md', 'lg'];
+          return rawIngredients.map((item) => {
+            const parts = item.trim().split(' ');
+            const amountParts: string[] = [];
+            let measurement = 'Measurement';
+            let ingredient = '';
+      
+            for (let i = 0; i < parts.length; i++) {
+              const part = parts[i];
+              if (measurements.includes(part)) {
+                measurement = part;
+                ingredient = parts.slice(i + 1).join(' ');
+                break;
+              } else {
+                amountParts.push(part);
               }
-          
-              return {
-                amount: amountParts.join(' '),
-                measurement,
-                ingredient
-              };
-            });
-          };
-          
+            }
       
-          setName(data.recipeName);
-          setId(data.id);
-          setImage(data.image);
-          setDescription(data.description);
-          setIngredientGroups([{ title: "", ingredients: parseIngredients(ingredientData.ingredients) }]);
-          setStepGroups([{ title: "", steps: data.steps }]);
-          setSelectedTags(data.tags || []);
-            setRating(data.rating)
-            setRatingNumber(data.numberOfRatings)
-            setRatingAverage(data.averageRating)
-            setLikes(data.numberOfLikes)
+            return {
+              amount: amountParts.join(' '),
+              measurement,
+              ingredient
+            };
+          });
         };
+      
+        setName(data.recipeName);
+        setId(data.id);
+        setImage(data.image);
+        setDescription(data.description);
+      
+        setIngredientGroups(
+          (ingredientData as IngredientGroup[]).map((group) => ({
+            title: group.title || "",
+            ingredients: parseIngredients(group.ingredients as [] || [])
+          }))
+        );
+        
+        setStepGroups(
+          (data.steps as StepGroup[] || []).map((group) => ({
+            title: group.title || "",
+            steps: group.steps || []
+          }))
+        );
+
+        setSelectedTags(data.tags || []);
+        setRating(data.rating);
+        setRatingNumber(data.numberOfRatings);
+        setRatingAverage(data.averageRating);
+        setLikes(data.numberOfLikes);
+      };
+      
       
         getData();
       }, [postId]);
