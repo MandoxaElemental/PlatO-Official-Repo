@@ -6,24 +6,36 @@ import { IBlogItems } from "@/app/Utils/Interfaces";
 import { getAllBlogs, getToken } from "@/app/Utils/DataServices";
 
 export default function Home() {
+  const [blogItems, setBlogItems] = useState<IBlogItems[]>([]);
 
-  const [blogItems, setBlogItems] = useState<IBlogItems[]>([])
-
-  useEffect(()=>{
+  useEffect(() => {
     const getData = async () => {
       const data: IBlogItems[] = await getAllBlogs(getToken());
-      const filteredData = data.filter(item => item.isPublished && !item.isDeleted)
-      setBlogItems(filteredData)
-    }
-    getData()
-  }, [])
+
+      const filteredData = data
+        .filter(item => item.isPublished && !item.isDeleted)
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+      setBlogItems(filteredData);
+    };
+
+    getData();
+  }, []);
+
+  const firstThree = blogItems.slice(0, 3);
+  const remainingPosts = blogItems.slice(3);
 
   return (
     <div className="pt-10">
-        {blogItems.map((item: IBlogItems) => (
-          <Post key={item.id} blog={item} />
-        ))}
-        <Recommended/>
+      {firstThree.map((item: IBlogItems) => (
+        <Post key={item.id} blog={item} />
+      ))}
+
+      {blogItems.length > 3 && <Recommended />}
+
+      {remainingPosts.map((item: IBlogItems) => (
+        <Post key={item.id} blog={item} />
+      ))}
     </div>
   );
 }

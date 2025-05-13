@@ -11,7 +11,7 @@ const StarRating = ({ currentRating, onRate }: StarRatingProps) => {
       {stars.map((star) => (
         <Image
           key={star}
-          className="h-8 w-8 px-1 cursor-pointer"
+          className="h-8 w-8 px-1 cursor-pointer dark:invert"
           src={star <= (hovered || currentRating) ? "/assets/star.svg" : "/assets/star-outline.svg"}
           alt={`star-${star}`}
           width={500}

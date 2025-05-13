@@ -53,12 +53,6 @@ const Blog = () => {
       getData();
     }, [postId]);
 
-    useEffect(() => {
-      console.log(description)
-      console.log(ingredients);
-      console.log(steps);
-    }, [ingredients, steps]);
-
     const handleComment = async () => {
       const item = {
         id: 0,

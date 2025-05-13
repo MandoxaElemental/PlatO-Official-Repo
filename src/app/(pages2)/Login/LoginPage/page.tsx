@@ -5,6 +5,7 @@ import { getUserInfoByEmail, getUserInfoByUsername, login } from '@/app/Utils/Da
 import { IToken } from '@/app/Utils/Interfaces';
 import { Button, TextInput } from 'flowbite-react';
 import Image from 'next/image'
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 
@@ -80,6 +81,7 @@ const LogInPage = () =>
           <TextInput onChange={(event) => setPassword(event.target.value)} type='password'/>
         </div>
         <RememberCheck/>
+        <div className='text-blue-600 underline'><Link href={"/Login/SignupPage"}>Don&apos;t have an Account? Sign Up Here</Link></div>
         <div className='mb-3'>
           <Button onClick={handleSubmit} className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer'>Login</Button>
         </div>

@@ -74,6 +74,9 @@ export interface IUserData
     premiumMember: boolean,
     interests: string[],
     savedRecipes: string[]
+    following: string[]
+    followers: string[]
+
 }
 export interface ICommentItems
 {

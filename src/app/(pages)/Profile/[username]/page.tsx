@@ -18,7 +18,6 @@ const ProfilePage = () => {
         alert('You must be logged in to view profiles');
         return;
       }
-
       if (typeof username !== 'string') return;
 
       try {

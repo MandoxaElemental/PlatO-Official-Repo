@@ -165,6 +165,7 @@ const SignUpPage1 = () =>
           <ButtonSignUpGoogle/>
           <ButtonSignUpFB/>
           <ButtonSignUpX/>
+          <div className='text-blue-600 underline'><Link href={"/Login/SignupPage"}>Already have an Account? Sign In Here</Link></div>
           <div className='max-lg:mb-1.5 mt-10 min-lg:col-start-2 min-lg:row-start-5'>
             <Button onClick={handleSwitch} className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200' disabled={((badUsername || noEmptyFieldsPageOne) || (badEmail || noEmptyFieldsPageOne)) ? true : false}>Continue</Button>
           </div>
@@ -193,7 +194,20 @@ const SignUpPage1 = () =>
           </div>
           <div className='flex justify-items-start space-x-2'>
             <Checkbox onChange={handleCheckBox} checked={!isChecked} id='rememberme'/>
-            <Label htmlFor='rememberme' className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>I have read and agreed to PlatO <Link href='/' className='text-blue-500 hover:text-blue-300 focus:text-purple-500 underline'>Terms and Conditions</Link></Label>
+            <Label htmlFor='rememberme' className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>I have read and agreed to PlatO <a
+  href="/Login/TermsOfService"
+  onClick={(e) => {
+    e.preventDefault();
+    window.open(
+      '/Login/TermsOfService',
+      'TermsWindow',
+      'width=600,height=700,resizable=yes,scrollbars=yes'
+    );
+  }}
+  className='text-blue-500 hover:text-blue-300 focus:text-purple-500 underline'
+>
+  Terms and Conditions
+</a></Label>
           </div>
           <div className='mb-1.5 mt-10'>
             <Button onClick={handleSwitch2} className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200' disabled={(noEmptyFieldsPageTwo || isChecked) ? true : false}>Signup and Continue</Button>
