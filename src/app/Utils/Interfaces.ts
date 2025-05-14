@@ -21,6 +21,9 @@ export interface IBlogItems
     averageRating: number,
     numberOfLikes: number,
     postType: string,
+    totalTime: string,
+    servings: string,
+    source: string,
     isPublished: boolean,
     isDeleted: boolean
 }

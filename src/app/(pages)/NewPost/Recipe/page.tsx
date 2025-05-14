@@ -12,10 +12,13 @@ const Recipe = () => {
     const [blogId, setBlogId] = useState<number>(0);
     const [id, setId] = useState<number>(0);
     const [username, setUsername] = useState<string>("");
-    const [recipeImage, setImage] = useState<string|ArrayBuffer|null>('');
+    const [recipeImage, setImage] = useState<string|ArrayBuffer|null>('../assets/Placeholder.png');
     const [length, setLength] = useState(200);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const [totalTime, setTotalTime] = useState('');
+    const [servings, setServings] = useState('');
+    const [source, setSource] = useState('');
     const [ingredientGroups, setIngredientGroups] = useState<IngredientGroup[]>([
       { title: "", ingredients: [{ amount: '', measurement: 'Measurement', ingredient: '' }] }
     ]);
@@ -25,6 +28,9 @@ const Recipe = () => {
     const [query, setQuery] = useState<string>('');
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [openModal, setOpenModal] = useState(false);
+    const [openModal2, setOpenModal2] = useState(false);
+    const [pastedText, setPastedText] = useState('');
+
     const router = useRouter();
   
     useEffect(() => {
@@ -147,6 +153,9 @@ const Recipe = () => {
           steps: group.steps
         })),
         tags: selectedTags,
+        totalTime: totalTime,
+        servings: servings + servings === "1" ? " Serving" : " Servings",
+        source: source,
         rating: 0,
         numberOfRatings: 0,
         averageRating: 5,
@@ -169,8 +178,97 @@ const Recipe = () => {
       }
     };
 
+    const handleAutoFill = () => {
+      const parsed = parseRecipeText(pastedText);
+    
+      setName(parsed.title);
+      setDescription(parsed.description);
+      setTotalTime(parsed.totalTime);
+      setServings(parsed.servings);
+      setIngredientGroups(parsed.ingredients);
+      setStepGroups(parsed.steps);
+      setOpenModal2(false)
+    };
+
+    const parseRecipeText = (rawText: string) => {
+      const lines = rawText.split('\n').map(line => line.trim()).filter(Boolean);
+    
+      let title = '';
+      let description = '';
+      let totalTime = '';
+      let servings = '';
+      const ingredients: IngredientGroup[] = [{ title: '', ingredients: [] }];
+      const steps: StepGroup[] = [{ title: '', steps: [] }];
+      let currentSection = '';
+    
+      const ingredientRegex = /^([\d\s\/\-½⅓⅔¼¾⅛⅜⅝⅞]+)?\s*([a-zA-Z]+)?\s+(.+)$/;
+    
+      let i = 0;
+    
+      if (lines.length > 0) title = lines[i++];
+      if (lines.length > 1) description = lines[i++];
+    
+      for (; i < lines.length; i++) {
+        const line = lines[i];
+    
+        if (/ingredients?/i.test(line)) {
+          currentSection = 'ingredients';
+          continue;
+        } else if (/instructions?|directions?/i.test(line)) {
+          currentSection = 'steps';
+          continue;
+        }
+    
+        if (/total time/i.test(line)) {
+          totalTime = line.split(':')[1]?.trim() || '';
+          continue;
+        }
+        if (/servings?/i.test(line)) {
+          servings = line.split(':')[1]?.trim() || '';
+          continue;
+        }
+    
+        if (currentSection === 'ingredients') {
+          if (!/\d/.test(line)) {
+            ingredients.push({ title: line, ingredients: [] });
+            continue;
+          }
+          const match = line.match(ingredientRegex);
+          if (match) {
+            const amount = match[1]?.trim() || '';
+            const measurement = match[2]?.trim() || 'Measurement';
+            const ingredient = match[3]?.trim() || '';
+            ingredients[ingredients.length - 1].ingredients.push({ amount, measurement, ingredient });
+          }
+        } else if (currentSection === 'steps') {
+          steps[steps.length - 1].steps.push(line.replace(/^\d+\.\s*/, ''));
+        }
+      }
+    
+      return { title, description, totalTime, servings, ingredients, steps };
+    };
+    
+
   return (
     <div className='pt-10 px-5 w-full'>
+        <Modal show={openModal2} onClose={() => setOpenModal2(false)}>
+        <ModalHeader>Paste Recipe</ModalHeader>
+        <ModalBody>
+                <div className='my-4'>
+          <p className='font-bold mb-2'>Paste Recipe</p>
+          <textarea
+            className='w-full p-2 border rounded h-60'
+            placeholder='Paste full recipe here...'
+            value={pastedText}
+            onChange={(e) => setPastedText(e.target.value)}
+          />
+          <Button className='mt-2' onClick={handleAutoFill}>Auto Fill Recipe</Button>
+        </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={() => setOpenModal2(false)}>Back</Button>
+        </ModalFooter>
+      </Modal>
         <Modal show={openModal} onClose={() => setOpenModal(false)}>
         <ModalHeader>Tags</ModalHeader>
         <ModalBody className="ScrollBar">
@@ -229,12 +327,45 @@ const Recipe = () => {
             New Recipe
         </div>
         <div className='border-b-1 border-solid border-slate-300 p-2'>
+          <div className='flex justify-center mb-2'>
+          <img src={recipeImage as string} alt="Preview" className="mt-4 max-w-xs rounded-lg" />
+          </div>
             <FileInput onChange={handleImage} id="Picture" accept="image/png, image/jpg" />
         </div>
         <div className='border-b-1 border-solid border-slate-300 p-2 flex flex-col items-center'>
-            <TextInput placeholder='[Recipe Name]' className='w-[200px] pb-2' onChange={(e) => setName(e.target.value)}></TextInput>
+        <Button className="mb-2" onClick={() => setOpenModal2(true)}>Paste Recipe</Button>
+            <TextInput value={name} placeholder='[Recipe Name]' className='w-[200px] pb-2' onChange={(e) => setName(e.target.value)}></TextInput>
             <p className='text-center text-blue-600'>Description 200/{length}</p>
-            <TextInput onChange={(e) => setDescription(e.target.value)} className='w-[400px]'></TextInput>
+            <TextInput value={description} onChange={(e) => setDescription(e.target.value)} className='w-[400px]'></TextInput>
+              <div className="mt-4 flex justify-between">    
+            <div className="px-1">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Total Time
+              </label>
+              <TextInput value={totalTime}
+                className="w-[100px]"
+                onChange={(e) => setTotalTime(e.target.value)}
+              />
+            </div>
+            <div className="px-1">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              Servings
+            </label>
+            <TextInput value={servings}
+              className="w-[100px]"
+              onChange={(e) => setServings(e.target.value)}
+            />
+          </div>
+          </div>
+          <div className="mb-4 px-1">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Source
+              </label>
+              <TextInput
+                className="w-[400px]"
+                onChange={(e) => setSource(e.target.value)}
+              />
+            </div>
         </div>
         <div className='border-b-1 border-solid border-slate-300 p-2'>
             <p className='font-semibold text-xl text-center'>Ingredients</p>

@@ -12,6 +12,8 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
   const [currentUser, setCurrentUser] = useState<IUserData | null>(null);
   const [username, setUsername] = useState('');
   const userIdNum = Number(blog.userId);
+  const isSaved = currentUser?.savedRecipes?.includes(String(blog.id));
+
 
   useEffect(() => {
     const storedUsername = localStorage.getItem("Username");
@@ -80,6 +82,32 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
     }
   };
 
+  const handleSave = async () => {
+    if (!currentUser) return;
+    const postId = String(blog.id);
+    const isAlreadySaved = currentUser.savedRecipes?.includes(postId);
+  
+    const updatedSavedRecipes = isAlreadySaved
+      ? currentUser.savedRecipes.filter((id) => id !== postId)
+      : [...(currentUser.savedRecipes || []), postId];
+  
+    const updatedUser = {
+      ...currentUser,
+      savedRecipes: updatedSavedRecipes,
+    };
+  
+    try {
+      const success = await updateUserItem(updatedUser, getToken());
+      if (success) {
+        setCurrentUser(updatedUser);
+        alert(isAlreadySaved ? "Removed from saved recipes" : "Saved to recipes");
+      }
+    } catch (error) {
+      console.error("Error saving post:", error);
+    }
+  };
+  
+
   return (
     <div className="text-center max-w-[500px] border-t-1 border-solid border-slate-300">
       <div className="flex justify-between items-center py-2 px-5">
@@ -92,12 +120,13 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
           </Link>
         </div>
 
-        <Button
+        {blog.publisherName === localStorage.getItem("Username") ? '' : <Button
           className={`rounded-md ${isFollowing ? "bg-red-200 hover:bg-red-400" : "bg-blue-200 hover:bg-blue-400"} text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200`}
           onClick={handleFollow}
         >
           {isFollowing ? "Unfollow" : "Follow"}
         </Button>
+                          }
       </div>
 
       {blog.postType !== "recipe" ? (
@@ -147,9 +176,15 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
             <Image width={20} height={20} className="h-5 w-5 dark:invert" src="/assets/repeat.svg" alt="share" />
             <p className="pl-2">Share</p>
           </div>
-          <div className="flex items-center">
-            <Image width={20} height={20} className="h-5 w-5 dark:invert" src="/assets/bookmark.svg" alt="save" />
-            <p className="pl-2">Save</p>
+          <div className="flex items-center cursor-pointer" onClick={handleSave}>
+            <Image
+              width={20}
+              height={20}
+              className="h-5 w-5 dark:invert"
+              src={isSaved ? "/assets/bookmark-fill.svg" : "/assets/bookmark.svg"}
+              alt="save"
+            />
+            <p className="pl-2">{isSaved ? "Saved" : "Save"}</p>
           </div>
         </div>
     </div>

@@ -12,7 +12,8 @@ const Post = () => {
         const [blogId, setBlogId] = useState<number>(0);
         const [id, setId] = useState<number>(0);
         const [username, setUsername] = useState<string>("");
-        const [image, setImage] = useState<string|ArrayBuffer|null>('');
+        const [media, setMedia] = useState<string | ArrayBuffer | null>(null);
+        const [mediaType, setMediaType] = useState<'image' | 'video' | null>(null);
         const [description, setDescription] = useState('');
         const [length, setLength] = useState(200);
         const [openModal, setOpenModal] = useState(false);
@@ -53,25 +54,28 @@ const Post = () => {
                 );
               };
 
-              const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-                
-                    const reader = new FileReader();
-                    const file = e.target.files?.[0]
-                
-                    if(file){
-                      reader.onload = () => {
-                        setImage(reader.result);
-                      }
-                      reader.readAsDataURL(file);
-                    }
-                  }
+              const handleMedia = (e: React.ChangeEvent<HTMLInputElement>) => {
+                const reader = new FileReader();
+                const file = e.target.files?.[0];
+              
+                if (file) {
+                  const fileType = file.type.startsWith('video') ? 'video' : 'image';
+              
+                  reader.onload = () => {
+                    setMedia(reader.result);
+                    setMediaType(fileType);
+                  };
+              
+                  reader.readAsDataURL(file);
+                }
+              };
                   const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
                     setBlogId(0)
                     const item = {
                       id: blogId,
                       userId: id,
                       publisherName: username,
-                      image: image,
+                      image: media,
                       date: format(new Date(), 'MM-dd-yyyy'),
                       recipeName: '',
                       description: description,
@@ -79,10 +83,13 @@ const Post = () => {
                       steps: [],
                       tags: selectedTags,
                       rating: 0,
+                      totalTime: '',
+                      servings: '',
+                      source: "",
                       numberOfRatings: 0,
                       averageRating: 5,
                       numberOfLikes: 0,
-                      postType: 'media',
+                      postType: mediaType === 'video' ? 'video' : 'image',
                       isPublished: e.currentTarget.textContent === 'Draft' ? false : true,
                       isDeleted: false
                     }
@@ -158,8 +165,19 @@ const Post = () => {
                 New Post
             </div>
             <div className='border-b-1 border-solid border-slate-300 p-2'>
-              <div className='border-b-1 border-solid border-slate-300 p-2'>
-                  <FileInput onChange={handleImage} id="Picture" accept="image/png, image/jpg" />
+              <div className=''>
+                <div className="flex justify-center mb-2">
+                {media && mediaType === 'image' && (
+                    <img src={media as string} alt="Preview" className="mt-4 max-w-xs rounded-lg" />
+                  )}
+                  {media && mediaType === 'video' && (
+                    <video controls className="mt-4 max-w-xs rounded-lg">
+                      <source src={media as string} />
+                      Your browser does not support the video tag.
+                    </video>
+                  )}
+                </div>
+                <FileInput onChange={handleMedia} id="Media" accept="image/png, image/jpg, image/jpeg, video/mp4, video/webm" />
               </div>
             </div>
             <div className='border-b-1 border-solid border-slate-300 p-2 flex flex-col items-center'>

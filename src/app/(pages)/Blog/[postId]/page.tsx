@@ -123,7 +123,7 @@ const Blog = () => {
             {ingredients.map((item, i) => {
               return (
                   <div key={i}>
-                    <h1>{item.title}</h1>
+                    <h1 className="font-bold">{item.title}</h1>
                     <ul className='list-disc text-left pl-10'>
                       {item.ingredients.map((ingredient, j) => (
                         <li key={j}>{ingredient}</li>

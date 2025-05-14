@@ -11,6 +11,8 @@ import Link from 'next/link';
 const ProfilePage = () => {
   const { username } = useParams();
   const [blogItems, setBlogItems] = useState<IBlogItems[]>([]);
+  const [followers, setFollowers] = useState(0)
+  const [following, setFollowing] = useState(0)
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -22,6 +24,8 @@ const ProfilePage = () => {
 
       try {
         const user = await getUserInfoByUsername(username);
+        setFollowers(user.followers.length)
+        setFollowing(user.following.length)
         const userBlogItems = await getBlogItemsByUserId(user.id, getToken());
         setBlogItems(userBlogItems);
       } catch (error) {
@@ -46,11 +50,11 @@ const ProfilePage = () => {
           <div className='flex text-center flex-grid gap-3'>
             <div>
               <p className='font-semibold'>Following</p>
-              <p>000</p>
+              <p>{followers}</p>
             </div>
             <div>
               <p className='font-semibold'>Followers</p>
-              <p>000</p>
+              <p>{following}</p>
             </div>
           </div>
         </div>
