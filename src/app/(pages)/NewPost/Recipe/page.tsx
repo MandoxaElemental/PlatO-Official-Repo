@@ -154,7 +154,7 @@ const Recipe = () => {
         })),
         tags: selectedTags,
         totalTime: totalTime,
-        servings: servings + servings === "1" ? " Serving" : " Servings",
+        servings: servings,
         source: source,
         rating: 0,
         numberOfRatings: 0,

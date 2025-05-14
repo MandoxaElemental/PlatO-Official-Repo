@@ -23,6 +23,9 @@ const Recipe = () => {
     ]);
     const [query, setQuery] = useState<string>('');
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
+    const [totalTime, setTotalTime] = useState('');
+        const [servings, setServings] = useState('');
+        const [source, setSource] = useState('');
     const [rating, setRating] = useState<number>(0);
     const [ratingNumber, setRatingNumber] = useState<number>(0);
     const [ratingAverage, setRatingAverage] = useState<number>(0);
@@ -85,6 +88,9 @@ const Recipe = () => {
         );
 
         setSelectedTags(data.tags || []);
+        setTotalTime(data.totalTime)
+        setServings(data.servings)
+        setSource(data.source)
         setRating(data.rating);
         setRatingNumber(data.numberOfRatings);
         setRatingAverage(data.averageRating);
@@ -205,6 +211,9 @@ const Recipe = () => {
             steps: group.steps
           })),
           tags: selectedTags,
+          totalTime: totalTime,
+          servings: servings,
+          source: source,
           rating: rating,
           numberOfRatings: ratingNumber,
           averageRating: ratingAverage,
@@ -292,6 +301,35 @@ const Recipe = () => {
             <TextInput value={name} placeholder='[Recipe Name]' className='w-[200px] pb-2' onChange={(e) => setName(e.target.value)}></TextInput>
             <p className='text-center text-blue-600'>Description 200/{length}</p>
             <TextInput value={description} onChange={(e) => setDescription(e.target.value)} className='w-[400px]'></TextInput>
+                        <div className="mt-4 flex justify-between">    
+                      <div className="px-1">
+                        <label className="block text-gray-700 text-sm font-bold mb-2">
+                          Total Time
+                        </label>
+                        <TextInput value={totalTime}
+                          className="w-[100px]"
+                          onChange={(e) => setTotalTime(e.target.value)}
+                        />
+                      </div>
+                      <div className="px-1">
+                      <label className="block text-gray-700 text-sm font-bold mb-2">
+                        Servings
+                      </label>
+                      <TextInput value={servings}
+                        className="w-[100px]"
+                        onChange={(e) => setServings(e.target.value)}
+                      />
+                    </div>
+                    </div>
+                    <div className="mb-4 px-1">
+                        <label className="block text-gray-700 text-sm font-bold mb-2">
+                          Source
+                        </label>
+                        <TextInput
+                          className="w-[400px]"
+                          onChange={(e) => setSource(e.target.value)}
+                        />
+                      </div>
         </div>
         <div className='border-b-1 border-solid border-slate-300 p-2'>
             <p className='font-semibold text-xl text-center'>Ingredients</p>
