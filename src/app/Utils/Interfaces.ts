@@ -192,7 +192,7 @@ export const tagArr: TagCategory[] = [
         "Meat", "Beef", "Chicken", "Pork", "Turkey", "Lamb", "Goat", "Sheep", "Duck", "Veal", "Game Meat",
         "Seafood", "Fish", "Salmon", "Tuna", "Lobster", "Crab", "Shrimp", "Oysters", "Scallops", "Clams", "Squid",
         "Vegetables", "Leafy Greens", "Root Vegetables", "Fruits", "Berries", "Tropical Fruits", "Citrus", "Tomatoes", "Onions", "Garlic", "Mushrooms",
-        "Eggs", "Cheese", "Tofu", "Tempeh", "Legumes", "Beans", "Lentils", "Nuts", "Seeds", "Rice", "Pasta", "Potatoes", "Grains", "Corn", "Quinoa", "Oats", "Bread"
+        "Eggs", "Cheese", "Tofu", "Tempeh", "Legumes", "Beans", "Lentils", "Nuts", "Seeds", "Rice", "Pasta", "Potatoes", "Grains", "Corn", "Quinoa", "Oats", "Bread", "Chocolate", "Vanilla", "Caramel"
       ]
     },
         {

@@ -1,22 +1,30 @@
-'use client'
+'use client';
 import Post from "@/app/Components/Post";
 import Recommended from "@/app/Components/Recommended";
 import { useEffect, useState } from "react";
 import { IBlogItems } from "@/app/Utils/Interfaces";
 import { getAllBlogs, getToken } from "@/app/Utils/DataServices";
+import { Spinner } from "flowbite-react";
 
 export default function Home() {
   const [blogItems, setBlogItems] = useState<IBlogItems[]>([]);
+  const [loading, setLoading] = useState<boolean>(true); // ⬅️ Add loading state
 
   useEffect(() => {
     const getData = async () => {
-      const data: IBlogItems[] = await getAllBlogs(getToken());
+      try {
+        const data: IBlogItems[] = await getAllBlogs(getToken());
 
-      const filteredData = data
-        .filter(item => item.isPublished && !item.isDeleted)
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        const filteredData = data
+          .filter(item => item.isPublished && !item.isDeleted)
+          .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-      setBlogItems(filteredData);
+        setBlogItems(filteredData);
+      } catch (error) {
+        console.error("Failed to fetch blogs:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     getData();
@@ -24,6 +32,15 @@ export default function Home() {
 
   const firstThree = blogItems.slice(0, 3);
   const remainingPosts = blogItems.slice(3);
+
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spinner aria-label="Loading blogs..." />
+      </div>
+    );
+  }
 
   return (
     <div className="pt-10">

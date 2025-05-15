@@ -3,7 +3,7 @@ import { Button, FileInput, TextInput, Modal, ModalBody, ModalFooter, ModalHeade
 import React, { useEffect, useState } from 'react'
 import { Ingredient, IngredientGroup, StepGroup, tagArr } from '@/app/Utils/Interfaces'
 import Image from 'next/image'
-import {getBlogbyId, getIngredientsByBlogId, getToken, updateBlogItem } from '@/app/Utils/DataServices'
+import {getBlogbyId, getToken, updateBlogItem } from '@/app/Utils/DataServices'
 import { format } from 'date-fns'
 import { useParams, useRouter } from 'next/navigation'
 import MeasurementDropdown from '@/app/Components/MeasurementDropdown'
@@ -39,10 +39,9 @@ const Recipe = () => {
         if (!postId) return;
       
         const data = await getBlogbyId(Number(postId), getToken());
-        const ingredientData = await getIngredientsByBlogId(Number(postId), getToken());
       
         const parseIngredients = (rawIngredients: string[]): Ingredient[] => {
-          const measurements = ['tsp', 'tbsp', 'c', 'qt', 'gal', 'oz', 'lbs', 'kg', 'g', 'ml', 'l', 'sm', 'md', 'lg'];
+          const measurements = ['tsp', 'tbsp', 'c', 'pt', 'qt', 'gal', 'oz', 'lbs', 'ml', 'dl', 'l', 'mg', 'g', 'kg', 'sm', 'md', 'lg', 'pinch', 'dash', 'piece', 'whole', 'half', 'slice', 'clove', 'stick', 'can', 'bottle', 'pkg'];
           return rawIngredients.map((item) => {
             const parts = item.trim().split(' ');
             const amountParts: string[] = [];
@@ -74,7 +73,7 @@ const Recipe = () => {
         setDescription(data.description);
       
         setIngredientGroups(
-          (ingredientData as IngredientGroup[]).map((group) => ({
+          (data.ingredients as IngredientGroup[]).map((group) => ({
             title: group.title || "",
             ingredients: parseIngredients(group.ingredients as [] || [])
           }))
@@ -101,8 +100,7 @@ const Recipe = () => {
         getData();
       }, [postId]);
       
-    
-  
+
     useEffect(() => {
       const storedUsername = localStorage.getItem("Username");
       const storedId = localStorage.getItem("UserID");

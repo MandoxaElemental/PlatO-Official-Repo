@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 const SavedRecipes = () => {
   const [username, setUsername] = useState<string>('');
   const [savedBlogItems, setSavedBlogItems] = useState<IBlogItems[]>([]);
+  
 
   useEffect(() => {
     const storedUsername = localStorage.getItem('Username');
@@ -27,7 +28,7 @@ const SavedRecipes = () => {
         const user: IUserData = await getUserInfoByUsername(username);
         const allBlogs: IBlogItems[] = await getAllBlogs(getToken());
 
-        const savedIdsSet = new Set(user.savedRecipes);
+        const savedIdsSet = new Set(user.savedRecipes.map(id => String(id)));
         const savedItems = allBlogs.filter(blog => savedIdsSet.has(String(blog.id)));
 
         setSavedBlogItems(savedItems);
@@ -46,12 +47,20 @@ const SavedRecipes = () => {
       <div className="border-b-1 border-solid border-slate-300 p-2 text-2xl font-semibold text-center">
         Saved Recipes
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-4">
+      <div className="py-4">
         {savedBlogItems.length > 0 ? (
           savedBlogItems.map((item, index) => (
             <Link key={index} href={`/Blog/${item.id}`}>
-                <Image className='object-cover h-[200px] w-[200px]' src={item.image === null ? "/assets/Placeholder.png" : `${item.image}`} alt="post" width={50} height={20}/>
-              <div className="text-xl font-semibold pt-2">{item.recipeName}</div>
+              <div className='flex justify-around'>
+                <Image className='object-cover h-[150px] w-[150px]' src={item.image === null ? "/assets/Placeholder.png" : `${item.image}`} alt="post" width={50} height={50}/>
+              <div className="min-w-screentext-xl p-5 w-[300px]">
+                <p className='font-semibold '>
+                {item.recipeName}
+                </p>
+                {item.description}
+              </div>
+                <Image className='dark:invert' src="/assets/caret-right-fill.svg" alt="go" width={25} height={25}/>
+              </div>
             </Link>
           ))
         ) : (
