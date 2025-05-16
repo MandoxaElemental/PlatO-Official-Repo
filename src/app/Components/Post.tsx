@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import { IBlogItems, IUserData } from '../Utils/Interfaces';
-import { getToken, updateBlogItem, getUserInfoByUsername, updateUserItem } from '../Utils/DataServices';
+import { getToken, updateBlogItem, getUserInfoByUsername, updateUserItem, getUserInfoById } from '../Utils/DataServices';
 
 const Post = ({ blog }: { blog: IBlogItems }) => {
   const [likes, setLikes] = useState(blog.numberOfLikes);
@@ -11,21 +11,37 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [currentUser, setCurrentUser] = useState<IUserData | null>(null);
   const [username, setUsername] = useState('');
+  const [profilePic, setProfilePic] = useState('');
   const userIdNum = Number(blog.userId);
   const [isSaved, setIsSaved] = useState(false);
   
-
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const data = await getUserInfoById(String(blog.userId));
+        setProfilePic(data.profilePicture ?? "./assets/person.svg");
+      } catch (error) {
+        console.error("Failed to load profile picture", error);
+        setProfilePic("/assets/person.svg");
+      }
+    };
+  
+    getData();
+  }, [blog.userId]); 
 
   useEffect(() => {
     const storedUsername = localStorage.getItem("Username");
     if (storedUsername) setUsername(storedUsername);
   }, []);
 
+
   useEffect(() => {
-    if (!currentUser || !blog?.id) return;
-    setIsSaved(currentUser.savedRecipes?.includes(String(blog.id)) ?? false);
-    setIsFollowing(currentUser.following?.includes(String(blog.userId)) ?? false);
-  }, [currentUser, blog.id, blog.userId]);
+    if (currentUser && blog?.id) {
+      setIsSaved(currentUser.savedRecipes?.includes(String(blog.id)));
+      setIsFollowing(currentUser.following?.includes(String(blog.userId)));
+
+    }
+  }, [currentUser, blog?.id]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -35,9 +51,6 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
         const user = await getUserInfoByUsername(username);
         if (user) {
           setCurrentUser(user);
-  
-          const isAlreadyFollowing = user.following?.includes(String(blog.userId));
-          setIsFollowing(Boolean(isAlreadyFollowing));
         }
       } catch (error) {
         console.error("Failed to fetch user info:", error);
@@ -49,26 +62,26 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
 
   const handleFollow = async () => {
     if (!currentUser) return;
-    
-    let updatedFollowing: string[] = [];
   
-    
-  if (isFollowing) {
-    updatedFollowing = currentUser.following.filter((friendId) => friendId !== String(userIdNum));
-  } else {
-    updatedFollowing = Array.from(new Set([...currentUser.following, String(userIdNum)]));
-  }
+    const updatedFollowing = isFollowing
+      ? currentUser.following.filter((friendId) => friendId !== String(userIdNum))
+      : [...new Set([...(currentUser.following || []), String(userIdNum)])];
   
-    const updatedUser = {
+    const updatedUser: IUserData = {
       ...currentUser,
       following: updatedFollowing,
+      salt: currentUser.salt || '',
+      hash: currentUser.hash || '',
     };
+
+    console.log(currentUser.salt)
+    console.log(currentUser.hash)
   
     try {
       const success = await updateUserItem(updatedUser, getToken());
       if (success) {
         setCurrentUser(updatedUser);
-        setIsFollowing(!isFollowing);
+        setIsFollowing(updatedUser.following.includes(String(blog.userId)));
         alert(isFollowing ? "Unfollowed" : "Following");
       }
     } catch (error) {
@@ -89,34 +102,34 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
     }
   };
 
-  const handleSave = async () => {
-    if (!currentUser) return;
-    const postId = String(blog.id);
-    const isAlreadySaved = currentUser.savedRecipes?.includes(postId);
-  
-    let updatedSavedRecipes: string[];
-  
-    if (isAlreadySaved) {
-      updatedSavedRecipes = currentUser.savedRecipes.filter((id) => id !== postId);
-    } else {
-      updatedSavedRecipes = Array.from(new Set([...currentUser.savedRecipes || [], postId]));
-    }
-  
-    const updatedUser = {
-      ...currentUser,
-      savedRecipes: updatedSavedRecipes,
-    };
-  
-    try {
-      const success = await updateUserItem(updatedUser, getToken());
-      if (success) {
-        setCurrentUser(updatedUser);
-        alert(isAlreadySaved ? "Removed from saved recipes" : "Saved to recipes");
-      }
-    } catch (error) {
-      console.error("Error saving post:", error);
-    }
+
+const handleSave = async () => {
+  if (!currentUser) return;
+
+  const postId = String(blog.id);
+  const isAlreadySaved = currentUser.savedRecipes?.includes(postId);
+
+  const updatedSavedRecipes = isAlreadySaved
+    ? currentUser.savedRecipes.filter((id) => id !== postId)
+    : [...new Set([...(currentUser.savedRecipes || []), postId])];
+
+  const updatedUser: IUserData = {
+    ...currentUser,
+    savedRecipes: updatedSavedRecipes,
+    salt: currentUser.salt || '',
+    hash: currentUser.hash || '',
   };
+
+  try {
+    const success = await updateUserItem(updatedUser, getToken());
+    if (success) {
+      setCurrentUser(updatedUser);
+      alert(isAlreadySaved ? "Removed from saved recipes" : "Saved to recipes");
+    }
+  } catch (error) {
+    console.error("Error saving post:", error);
+  }
+};
   
   
 
@@ -125,7 +138,7 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
       <div className="flex justify-between items-center py-2 px-5">
         <div className="flex items-center">
           <div className="rounded-full bg-green-500 w-10 h-10 flex justify-center items-center">
-            <Image width={50} height={50} src="/assets/person.svg" alt="profilePic" />
+            <Image width={50} height={50} src={`${profilePic}`} alt="profilePic" />
           </div>
           <Link href={`/Profile/${blog.publisherName}`} className="pl-3 cursor-pointer">
             {blog.publisherName}

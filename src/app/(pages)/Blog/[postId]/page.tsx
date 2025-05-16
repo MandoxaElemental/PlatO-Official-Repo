@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import Image from "next/image";
 import BlogPost from '@/app/Components/Blog';
-import { addCommentItem, getBlogbyId, getCommentItemsByBlogId, getToken } from '@/app/Utils/DataServices';
+import { addCommentItem, getBlogbyId, getCommentItemsByBlogId, getToken, getUserInfoByUsername } from '@/app/Utils/DataServices';
 import { useParams } from 'next/navigation';
 import { Button, TextInput, Spinner } from 'flowbite-react';
 import { ICommentItems, IIngredientItems, IStepItems } from '@/app/Utils/Interfaces';
@@ -18,6 +18,7 @@ const Blog = () => {
     const [userId, setUserId] = useState<number>(0);
     const [username, setUsername] = useState<string>("");
     const [user, setUser] = useState<string>('');
+    const [profilePic, setProfilePic] = useState<string>('');
     const [image, setImage] = useState<string>('');
     const [postType, setPostType] = useState<string>('');
     const [description, setDescription] = useState<string>('');
@@ -38,32 +39,42 @@ const Blog = () => {
         if (storedId) setUserId(Number(storedId));
     }, []);
 
+
+
     useEffect(() => {
-        const getData = async () => {
-            if (!postId) return;
-            const data = await getBlogbyId(Number(postId), getToken());
-            setName(data.recipeName);
-            setId(String(data.id));
-            setUser(data.publisherName);
-            setImage(data.image ?? "/assets/Placeholder.png");
-            setDescription(data.description);
-            setIngredients(data.ingredients ?? []);
-            setSteps(data.steps ?? []);
-            setTags(data.tags);
-            setPostType(data.postType);
-            setLoading(false);
+      const getData = async () => {
+        if (!postId) return;
+        const data = await getBlogbyId(Number(postId), getToken());
+        setName(data.recipeName);
+        setId(String(data.id));
+        setUser(data.publisherName);
+        setProfilePic(data.profilePicture ?? "/assets/person.png");
+        setImage(data.image ?? "/assets/Placeholder.png");
+        setDescription(data.description);
+        setIngredients(data.ingredients ?? []);
+        setSteps(data.steps ?? []);
+        setTags(data.tags);
+        setPostType(data.postType);
+        setLoading(false);
+
+        const getProfile = async () => {
+          try {
+            const data2 = await getUserInfoByUsername(String(data.publisherName));
+            setProfilePic(data2.profilePicture ?? "./assets/person.svg");
+          } catch (error) {
+            console.error("Failed to load profile picture", error);
+            setProfilePic("/assets/person.svg");
+          }
         };
-
-        getData();
-    }, [postId]);
-
-    useEffect(() => {
+      
+        getProfile();
+    };
         const fetchComments = async () => {
             if (!postId) return;
             const comments = await getCommentItemsByBlogId(Number(postId), getToken());
             setCommentSection(comments);
         };
-
+        getData();
         fetchComments();
     }, [postId]);
 
@@ -92,7 +103,7 @@ const Blog = () => {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-[80vh]">
+            <div className="flex justify-center mt-15">
                 <Spinner aria-label="Loading post..." size="xl" />
             </div>
         );
@@ -101,6 +112,7 @@ const Blog = () => {
     return (
         <div className="pt-10 w-min-full">
             <BlogPost
+                profile={`${profilePic}`}
                 username={user}
                 id={id}
                 post={(
@@ -186,9 +198,9 @@ const Blog = () => {
                 comments={(
                     <div>
                         <div className='p-5 border-t border-solid border-slate-300 flex items-center justify-between'>
-                            <div className='rounded-full bg-green-500 w-10 h-10 flex justify-center items-center'>
-                                <Image width={50} height={50} src="../assets/person.svg" alt="profilePic" />
-                            </div>
+                        <div className="rounded-full overflow-hidden w-10 h-10 relative bg-blue-200">
+                            <Image src={`${profilePic}`} alt="profilePic" fill className="object-cover"/>
+                          </div>
                             <TextInput value={comment} onChange={(e) => setComment(e.target.value)} className='w-[320px]' />
                             <Button onClick={handleComment} className="rounded-full h-8 bg-blue-200 hover:bg-blue-400 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200">Post</Button>
                         </div>

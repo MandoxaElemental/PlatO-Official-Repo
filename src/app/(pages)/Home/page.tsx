@@ -36,7 +36,7 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center mt-15">
         <Spinner aria-label="Loading blogs..." />
       </div>
     );

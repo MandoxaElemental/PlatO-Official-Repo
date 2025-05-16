@@ -1,18 +1,21 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
-import { checkToken, getBlogItemsByUserId, getUserInfoByUsername, getToken } from '@/app/Utils/DataServices';
-import { IBlogItems } from '@/app/Utils/Interfaces';
+import { checkToken, getBlogItemsByUserId, getUserInfoByUsername, getToken, updateUserItem } from '@/app/Utils/DataServices';
+import { IBlogItems, IUserData } from '@/app/Utils/Interfaces';
 import { Button, TabItem, Tabs } from 'flowbite-react';
 import Link from 'next/link';
 
 const ProfilePage = () => {
   const { username } = useParams();
+  const [userData, setUserData] = useState<IUserData | null>(null);
   const [blogItems, setBlogItems] = useState<IBlogItems[]>([]);
   const [followers, setFollowers] = useState(0)
   const [following, setFollowing] = useState(0)
+  const [profilePic, setProfilePic] = useState<string>('/assets/person.svg');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -24,6 +27,8 @@ const ProfilePage = () => {
 
       try {
         const user = await getUserInfoByUsername(username);
+        setUserData(user);
+        setProfilePic(user.profilePicture || '/assets/person.svg');
         setFollowers(user.followers.length)
         setFollowing(user.following.length)
         const userBlogItems = await getBlogItemsByUserId(user.id, getToken());
@@ -36,12 +41,55 @@ const ProfilePage = () => {
     fetchProfileData();
   }, [username]);
 
+  const handleImageClick = () => {
+    if (username === localStorage.getItem("Username")) {
+      fileInputRef.current?.click();
+    }
+  };
+  
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !userData) return;
+  
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64String = reader.result?.toString();
+      if (!base64String) return;
+  
+      const updatedUser = { ...userData, profilePicture: base64String };
+      const token = getToken();
+      const success = await updateUserItem(updatedUser, token);
+      if (success) {
+        setProfilePic(base64String);
+        setUserData(updatedUser);
+      }
+    };
+  
+    reader.readAsDataURL(file);
+  };
+  
+
   return (
     <div className='pt-10 px-5 w-min-full'>
       <div className='flex flex-grid gap-5 border-b-1 border-solid border-slate-300 pb-2'>
-        <div className='border-solid border-4 border-black rounded-full bg-slate-500 w-30 h-30 flex justify-center items-center'>
-          <Image className='h-20 w-20' src="/assets/person.svg" alt="profilePic" width={100} height={100} />
-        </div>
+      <div className='relative rounded-full bg-slate-500 w-30 h-30 flex justify-center items-center cursor-pointer' onClick={handleImageClick}>
+  <Image
+    className='h-30 w-30 rounded-full object-cover'
+    src={profilePic}
+    alt="profilePic"
+    width={100}
+    height={100}
+  />
+  <input
+    type="file"
+    accept="image/*"
+    ref={fileInputRef}
+    style={{ display: 'none' }}
+    onChange={handleFileChange}
+  />
+  {username === localStorage.getItem("Username")}
+</div>
+
         <div className='p-5'>
             <div className='flex gap-4'>
                   <h1 className='text-3xl font-bold'>{username}</h1> {username === localStorage.getItem("Username") ? '' : <Button className="rounded-full h-8 bg-blue-200 hover:bg-blue-400 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200">Follow</Button>
