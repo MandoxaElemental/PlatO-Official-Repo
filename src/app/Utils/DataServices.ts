@@ -195,7 +195,7 @@ export const getBlogbyId = async (blogId: number, token: string) =>
 }
 export const getBlogbyTag = async (tag: string, token: string) =>
 {
-    const response = await fetch(`${url}/Blog/GetBlogsByTag/${tag}`,
+    const response = await fetch(`${url}/Blog/GetBlogsByTags/${tag}`,
     {
         method: "GET",
         headers: {

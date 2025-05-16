@@ -19,7 +19,7 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
     const getData = async () => {
       try {
         const data = await getUserInfoById(String(blog.userId));
-        setProfilePic(data.profilePicture ?? "./assets/person.svg");
+        setProfilePic(data?.profilePicture || "/assets/person.svg");
       } catch (error) {
         console.error("Failed to load profile picture", error);
         setProfilePic("/assets/person.svg");
@@ -27,7 +27,7 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
     };
   
     getData();
-  }, [blog.userId]); 
+  }, [blog.userId]);
 
   useEffect(() => {
     const storedUsername = localStorage.getItem("Username");
@@ -137,8 +137,13 @@ const handleSave = async () => {
     <div className="text-center max-w-[500px] border-t-1 border-solid border-slate-300">
       <div className="flex justify-between items-center py-2 px-5">
         <div className="flex items-center">
-          <div className="rounded-full bg-green-500 w-10 h-10 flex justify-center items-center">
-            <Image width={50} height={50} src={`${profilePic}`} alt="profilePic" />
+        <div className="rounded-full bg-blue-200 w-10 h-10 overflow-hidden relative">
+            <Image
+              src={`${profilePic}`}
+              alt="profilePic"
+              fill
+              className="object-cover"
+            />
           </div>
           <Link href={`/Profile/${blog.publisherName}`} className="pl-3 cursor-pointer">
             {blog.publisherName}

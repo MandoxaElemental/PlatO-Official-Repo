@@ -72,7 +72,7 @@ const ProfilePage = () => {
   return (
     <div className='pt-10 px-5 w-min-full'>
       <div className='flex flex-grid gap-5 border-b-1 border-solid border-slate-300 pb-2'>
-      <div className='relative rounded-full bg-slate-500 w-30 h-30 flex justify-center items-center cursor-pointer' onClick={handleImageClick}>
+      <div className='relative rounded-full bg-blue-200 w-30 h-30 flex justify-center items-center cursor-pointer' onClick={handleImageClick}>
   <Image
     className='h-30 w-30 rounded-full object-cover'
     src={profilePic}
