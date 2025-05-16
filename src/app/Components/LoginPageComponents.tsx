@@ -149,14 +149,12 @@ const ButtonBack = ({ pageLink }: buttonHREF) => {
 
 type ButtonPreferencesProps = {
     imageDescription: string
-    imageSrc: string;
 }
 
-const ButtonPreferences = ({ imageDescription, imageSrc }: ButtonPreferencesProps) => {
+const ButtonPreferences = ({ imageDescription}: ButtonPreferencesProps) => {
     return (
         <div className='flex justify-center items-center h-25 w-28 rounded-3xl bg-transparent '>
             <h1 className=' text-white absolute font-extrabold text-lg'>{imageDescription}</h1>
-            <Image className='rounded-3xl' src={imageSrc} alt={`icon${imageDescription}`} width={200} height={200} />
         </div>
     )
 }

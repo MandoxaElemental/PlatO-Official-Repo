@@ -12,13 +12,20 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
   const [currentUser, setCurrentUser] = useState<IUserData | null>(null);
   const [username, setUsername] = useState('');
   const userIdNum = Number(blog.userId);
-  const isSaved = currentUser?.savedRecipes?.includes(String(blog.id));
+  const [isSaved, setIsSaved] = useState(false);
+  
 
 
   useEffect(() => {
     const storedUsername = localStorage.getItem("Username");
     if (storedUsername) setUsername(storedUsername);
   }, []);
+
+  useEffect(() => {
+    if (!currentUser || !blog?.id) return;
+    setIsSaved(currentUser.savedRecipes?.includes(String(blog.id)) ?? false);
+    setIsFollowing(currentUser.following?.includes(String(blog.userId)) ?? false);
+  }, [currentUser, blog.id, blog.userId]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -87,9 +94,13 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
     const postId = String(blog.id);
     const isAlreadySaved = currentUser.savedRecipes?.includes(postId);
   
-    const updatedSavedRecipes = isAlreadySaved
-      ? currentUser.savedRecipes.filter((id) => id !== postId)
-      : [...(currentUser.savedRecipes || []), postId];
+    let updatedSavedRecipes: string[];
+  
+    if (isAlreadySaved) {
+      updatedSavedRecipes = currentUser.savedRecipes.filter((id) => id !== postId);
+    } else {
+      updatedSavedRecipes = Array.from(new Set([...currentUser.savedRecipes || [], postId]));
+    }
   
     const updatedUser = {
       ...currentUser,
@@ -106,6 +117,7 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
       console.error("Error saving post:", error);
     }
   };
+  
   
 
   return (

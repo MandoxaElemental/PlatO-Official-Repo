@@ -1,6 +1,6 @@
 "use client"
 
-import { ButtonCancel, ButtonPreferences, ButtonSignUpFB, ButtonSignUpGoogle, ButtonSignUpX } from '@/app/Components/LoginPageComponents'
+import { ButtonCancel} from '@/app/Components/LoginPageComponents'
 import { createAccount } from '@/app/Utils/DataServices'
 import { tagArr } from '@/app/Utils/Interfaces'
 import { Button, Checkbox, Label, TextInput } from 'flowbite-react'
@@ -135,52 +135,74 @@ const SignUpPage1 = () =>
   <>
     {/* SignupPageOne START */}
     <div className={`${switchBool ? "hidden" : ""}`}>
-      <div className='justify-items-center'>
-        <Image src={`/assets/4.svg`} alt="logo" width={400} height={400}/>
+  <div className='flex justify-center mb-4'>
+    <Image src={`/assets/4.svg`} alt="logo" width={300} height={300} />
+  </div>
+
+  <div className='flex items-center justify-center'>
+    <div className='grid gap-3 w-full max-w-md'>
+      {/* Name */}
+      <div>
+        <h1 className='text-gray-400'>Name*</h1>
+        <TextInput onChange={(event) => setName(event.target.value)} type='text' />
       </div>
-      <div className='flex items-center justify-center'>
-        <div className='grid gap-3'>
-          <div>
-            <h1 className='text-gray-400'>Name*</h1>
-            <TextInput onChange={(event) => setName(event.target.value)} type='text'/>
-          </div>
-          <div className="min-lg:col-start-2">
-            <div className="flex gap-5">
-              <h1 className='text-gray-400'>Username*</h1>
-              <h1 className={`text-red-500 italic ${badUsername ? "" : "hidden"}`}>Cannot Include &quot;@&quot;</h1>
-            </div>
-            <TextInput onChange={(event) => setUsername(event.target.value)} type='text' className={badUsername ? `outline-red-500 outline-[2px] rounded-[9px]` : ""}/>
-          </div>
-          <div>
-            <div className="flex gap-5">
-              <h1 className=' text-gray-400'>Email*</h1>
-              <h1 className={`text-red-500 italic ${badEmail ? "" : "hidden"}`}>Must Include &quot;@&quot;</h1>
-            </div>
-            <TextInput onChange={(event) => setEmail(event.target.value)} type='text' className={badEmail ? `outline-red-500 outline-[2px] rounded-[9px]` : ""}/>
-          </div>
-          <div>
-            <h1 className=' text-gray-400'>Password*</h1>
-            <TextInput onChange={(event) => setPassword(event.target.value)} type='password'/>
-          </div>
-          <ButtonSignUpGoogle/>
-          <ButtonSignUpFB/>
-          <ButtonSignUpX/>
-          <div className='text-blue-600 underline'><Link href={"/Login/SignupPage"}>Already have an Account? Sign In Here</Link></div>
-          <div className='max-lg:mb-1.5 mt-10 min-lg:col-start-2 min-lg:row-start-5'>
-            <Button onClick={handleSwitch} className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200' disabled={((badUsername || noEmptyFieldsPageOne) || (badEmail || noEmptyFieldsPageOne)) ? true : false}>Continue</Button>
-          </div>
-          <div className="min-lg:col-start-1 min-lg:mt-10">
-            <ButtonCancel pageLink=''/>
-          </div>
+
+      <div>
+        <div className="flex gap-5">
+          <h1 className='text-gray-400'>Username*</h1>
+          <h1 className={`text-red-500 italic ${badUsername ? "" : "hidden"}`}>Cannot Include &quot;@&quot;</h1>
         </div>
+        <TextInput
+          onChange={(event) => setUsername(event.target.value)}
+          type='text'
+          className={badUsername ? `outline-red-500 outline-[2px] rounded-[9px]` : ""}
+        />
+      </div>
+
+      <div>
+        <div className="flex gap-5">
+          <h1 className='text-gray-400'>Email*</h1>
+          <h1 className={`text-red-500 italic ${badEmail ? "" : "hidden"}`}>Must Include &quot;@&quot;</h1>
+        </div>
+        <TextInput
+          onChange={(event) => setEmail(event.target.value)}
+          type='text'
+          className={badEmail ? `outline-red-500 outline-[2px] rounded-[9px]` : ""}
+        />
+      </div>
+
+      <div>
+        <h1 className='text-gray-400'>Password*</h1>
+        <TextInput onChange={(event) => setPassword(event.target.value)} type='password' />
+      </div>
+
+      <div className='text-center text-blue-600 underline'>
+        <Link href={"/Login/LoginPage"}>Already have an Account? Sign In Here</Link>
+      </div>
+
+      <div className='mt-5'>
+        <Button
+          onClick={handleSwitch}
+          className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200'
+          disabled={(badUsername || noEmptyFieldsPageOne || badEmail)}
+        >
+          Continue
+        </Button>
+      </div>
+
+      <div className="my-2 w-full">
+        <ButtonCancel pageLink='' />
       </div>
     </div>
+  </div>
+</div>
+
     {/* SignupPageOne END */}
 
     {/* SignupPageTwo START */}
     <div className={`${switchBool && !switchBool2 ? "" : "hidden"}`}>
       <div className='justify-items-center'>
-        <Image src={`/assets/4.svg`} alt="logo" width={400} height={400}/>
+        <Image src={`/assets/4.svg`} alt="logo" width={300} height={300}/>
       </div>
       <div className='flex items-center justify-center'>
         <div className='grid gap-3'>
@@ -222,12 +244,12 @@ const SignUpPage1 = () =>
     {/* SignupPageThree Start */}
     <div className={`${switchBool && switchBool2 ? "" : "hidden"}`}>
       <div className='justify-items-center'>
-        <Image src={`/assets/4.svg`} alt="logo" width={400} height={400}/>
+        <Image src={`/assets/4.svg`} alt="logo" width={300} height={300}/>
       </div>
       <div className='text-center text-lg font-semibold p-2'>Pick up to three Interests:</div>
       <div className='h-screen flex items-center flex-col'>
         <div className='w-screen-min'>                
-          <div className="space-y-4">
+          <div className="space-y-4 h-[300px] overflow-auto">
             {filteredCategories.map((cat, i) => (
               <div key={i}>
                 <div className="grid md:grid-cols-5 grid-cols-3 gap-3">
@@ -237,13 +259,13 @@ const SignUpPage1 = () =>
                       <button
                         key={j}
                         onClick={() => toggleTag(tag)}
-                        className={`rounded-3xl border cursor-pointer h-25 w-28 ${
+                        className={`rounded-3xl border cursor-pointer h-10 w-28 ${
                           isSelected
                             ? 'bg-blue-400 text-white border-blue-600'
                             : 'bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200'
                         }`}
                       >
-                        <ButtonPreferences imageDescription={tag} imageSrc='/assets/burger.png'/>
+                        {tag}
                       </button>
                     );
                   })}
@@ -257,6 +279,12 @@ const SignUpPage1 = () =>
             disabled={selectedTags.length < 3}
           >
             Continue
+          </Button>
+          <Button
+            onClick={handleSubmit}
+            className='my-5 rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200'
+          >
+            Skip
           </Button>
         </div>
       </div>

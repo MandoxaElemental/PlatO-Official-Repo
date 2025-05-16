@@ -63,6 +63,8 @@ export interface IUserData
 {
     id: number,
     name: string,
+    salt: string,
+    hash: string,
     username: string,
     email: string,
     phoneNumber: string,

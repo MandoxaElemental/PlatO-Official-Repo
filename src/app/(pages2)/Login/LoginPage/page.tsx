@@ -1,6 +1,6 @@
 "use client"
 
-import { ButtonCancel, ButtonLogInFB, ButtonLoginGoogle, ButtonLogInX, RememberCheck } from '@/app/Components/LoginPageComponents'
+import { ButtonCancel, RememberCheck } from '@/app/Components/LoginPageComponents'
 import { getUserInfoByEmail, getUserInfoByUsername, login } from '@/app/Utils/DataServices';
 import { IToken } from '@/app/Utils/Interfaces';
 import { Button, TextInput } from 'flowbite-react';
@@ -86,9 +86,9 @@ const LogInPage = () =>
           <Button onClick={handleSubmit} className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer'>Login</Button>
         </div>
         <ButtonCancel pageLink=''/>
-        <ButtonLoginGoogle/>
+        {/* <ButtonLoginGoogle/>
         <ButtonLogInFB/>
-        <ButtonLogInX/>
+        <ButtonLogInX/> */}
         </div>
       </div>
     </>
