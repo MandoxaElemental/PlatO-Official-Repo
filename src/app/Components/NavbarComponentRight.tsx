@@ -30,7 +30,7 @@ export function NavbarComponentRight() {
         <div className="flex justify-evenly py-5 gap-2">
           {randomTags.map((item, idx) => (
             <Link key={idx} href={`/Discover/${item.tag}`}>
-            <div className="h-[70px] w-[700px] rounded-2xl text-sm bg-blue-200 hover:bg-blue-400 cursor-pointer flex justify-center items-center font-bold text-white">
+            <div className="h-[70px] w-[70px] rounded-2xl text-sm bg-blue-200 hover:bg-blue-400 cursor-pointer flex justify-center items-center font-bold text-white">
               {item.tag}
             </div>
             </Link>
