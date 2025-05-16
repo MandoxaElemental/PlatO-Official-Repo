@@ -27,10 +27,10 @@ export function NavbarComponentRight() {
     <Sidebar aria-label="Default sidebar example">
       <SidebarItems>
         <TextInput placeholder="Search" />
-        <div className="flex justify-evenly py-5 gap-2">
+        <div className="flex flex-col items-center py-5 gap-2">
           {randomTags.map((item, idx) => (
             <Link key={idx} href={`/Discover/${item.tag}`}>
-            <div className="h-[70px] w-[70px] rounded-2xl text-sm bg-blue-200 hover:bg-blue-400 cursor-pointer flex justify-center items-center font-bold text-white">
+            <div className="h-[40px] w-[170px] rounded-2xl text-sm bg-blue-200 hover:bg-blue-400 cursor-pointer flex justify-center items-center font-bold text-white">
               {item.tag}
             </div>
             </Link>

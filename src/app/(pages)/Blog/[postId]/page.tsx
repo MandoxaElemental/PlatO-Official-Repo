@@ -48,7 +48,6 @@ const Blog = () => {
         setName(data.recipeName);
         setId(String(data.id));
         setUser(data.publisherName);
-        setProfilePic(data.profilePicture ?? "/assets/person.png");
         setImage(data.image ?? "/assets/Placeholder.png");
         setDescription(data.description);
         setIngredients(data.ingredients ?? []);

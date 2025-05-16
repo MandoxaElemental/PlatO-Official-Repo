@@ -53,6 +53,9 @@ const BlogPost = ({profile, post, username, id, comments} : {profile: string; po
         <div className="flex items-center">
             <Image width={50} height={50} className="h-5 w-5" src="../assets/repeat.svg" alt="share" /><p className="pl-2">Share</p>
         </div>
+        <div className="flex items-center">
+            <Image width={50} height={50} className="h-5 w-5" src="../assets/bookmark.svg" alt="save" /><p className="pl-2">Share</p>
+        </div>
         </div>
             {comments}
     </div>

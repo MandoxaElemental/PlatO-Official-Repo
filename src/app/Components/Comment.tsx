@@ -70,7 +70,7 @@ const Comment = ({ username, date, comment, commentId}: { username: string; date
       }, []);
 
   return (
-    <div className='text-left border-b border-slate-300 pt-2'>
+    <div className='text-left border-b-1 border-slate-300 pt-2'>
       <div className='flex'>
         <div className='rounded-full bg-green-500 w-10 h-10 flex justify-center items-center'>
           <Image

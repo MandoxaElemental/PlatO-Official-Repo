@@ -57,6 +57,7 @@ const SavedRecipes = () => {
                 <p className='font-semibold '>
                 {item.recipeName}
                 </p>
+                <div className='flex'><p className="font-semibold">By: </p>{item.publisherName}</div>
                 {item.description}
               </div>
                 <Image className='dark:invert' src="/assets/caret-right-fill.svg" alt="go" width={25} height={25}/>
