@@ -12,7 +12,7 @@ const layout = ({
   return (
     <>
     <MobileHeader/>
-    <div className="flex md:justify-between justify-center px-5 min-h-[100vh]">
+    <div className="flex md:justify-between justify-center px-5 max-h-[100vh]">
               <div className="max-h-screen overflow-y-auto scrollbar-hide lg:block hidden">
             <NavbarComponent/>
               </div>

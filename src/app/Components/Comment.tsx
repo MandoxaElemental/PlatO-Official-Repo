@@ -76,7 +76,7 @@ const Comment = ({ username, date, comment, commentId}: { username: string; date
           <Image
             width={50}
             height={50}
-            src='/assets/person.svg'
+            src='/assets/person-circle.svg'
             alt='profilePic'
           />
         </div>

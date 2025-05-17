@@ -14,7 +14,7 @@ const ProfilePage = () => {
   const [blogItems, setBlogItems] = useState<IBlogItems[]>([]);
   const [followers, setFollowers] = useState(0)
   const [following, setFollowing] = useState(0)
-  const [profilePic, setProfilePic] = useState<string>('/assets/person.svg');
+  const [profilePic, setProfilePic] = useState<string>('/assets/person-circle.svg');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ const ProfilePage = () => {
       try {
         const user = await getUserInfoByUsername(username);
         setUserData(user);
-        setProfilePic(user.profilePicture || '/assets/person.svg');
+        setProfilePic(user.profilePicture || '/assets/person-circle.svg');
         setFollowers(user.followers.length)
         setFollowing(user.following.length)
         const userBlogItems = await getBlogItemsByUserId(user.id, getToken());

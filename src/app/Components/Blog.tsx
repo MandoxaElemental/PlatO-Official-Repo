@@ -15,21 +15,20 @@ const BlogPost = ({profile, post, username, id, comments} : {profile: string; po
             </div>
             {username === localStorage.getItem("Username") ? 
             <div className='pl-5 grid grid-cols-2 gap-3'>
-                <Image className='h-5 w-5' src="../assets/bookmark.svg" alt="edit" width={100} height={100}/> 
                 <Popover
                 trigger="click"
                 content={
                 <div className='p-2'>
                 <Link href={`/Edit/${id}`}>
                     <div className='flex items-center'>
-                    <Image className='h-4 w-4' src="../assets/pencil.svg" alt="edit" width={100} height={100}/> 
+                    <Image className='h-4 w-4  dark:invert' src="../assets/pencil.svg" alt="edit" width={100} height={100}/> 
                     <p className='pl-2'>
                         Edit Post
                     </p>
                     </div>
                 </Link>
                 <div className='flex items-center font-semibold text-red-600'>
-                    <Image className='h-4 w-4' src="../assets/trash.svg" alt="edit" width={100} height={100}/>
+                    <Image className='h-4 w-4 dark:invert' src="../assets/trash.svg" alt="edit" width={100} height={100}/>
                     <p className='pl-2'>
                         Delete Post
                     </p>
@@ -37,7 +36,7 @@ const BlogPost = ({profile, post, username, id, comments} : {profile: string; po
                 </div>
                 }
             >
-        <Image className='h-5 w-5 cursor-pointer' src="../assets/three-dots-vertical.svg" alt="edit" width={100} height={100}/> 
+        <Image className='h-5 w-5 cursor-pointer dark:invert' src="../assets/three-dots-vertical.svg" alt="edit" width={100} height={100}/> 
       </Popover>{" "}
                 </div>
             : <Button className="rounded-full h-8 bg-blue-200 hover:bg-blue-400 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200">Follow</Button>
@@ -48,13 +47,13 @@ const BlogPost = ({profile, post, username, id, comments} : {profile: string; po
         </div>
         <div className='flex justify-evenly p-2 pt-5 border-t-1 border-solid border-slate-300'>
         <div className="flex items-center">
-            <Image width={50} height={50} className="h-5 w-5" src="../assets/heart.svg" alt="like" /><p className="pl-2">Like</p>
+            <Image width={50} height={50} className="h-5 w-5 dark:invert" src="../assets/heart.svg" alt="like" /><p className="pl-2">Like</p>
         </div>
         <div className="flex items-center">
-            <Image width={50} height={50} className="h-5 w-5" src="../assets/repeat.svg" alt="share" /><p className="pl-2">Share</p>
+            <Image width={50} height={50} className="h-5 w-5 dark:invert" src="../assets/repeat.svg" alt="share" /><p className="pl-2">Share</p>
         </div>
         <div className="flex items-center">
-            <Image width={50} height={50} className="h-5 w-5" src="../assets/bookmark.svg" alt="save" /><p className="pl-2">Share</p>
+            <Image width={50} height={50} className="h-5 w-5 dark:invert" src="../assets/bookmark.svg" alt="save" /><p className="pl-2">Share</p>
         </div>
         </div>
             {comments}

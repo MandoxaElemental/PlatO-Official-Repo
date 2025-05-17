@@ -19,10 +19,10 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
     const getData = async () => {
       try {
         const data = await getUserInfoById(String(blog.userId));
-        setProfilePic(data?.profilePicture || "/assets/person.svg");
+        setProfilePic(data?.profilePicture || "/assets/person-circle.svg");
       } catch (error) {
         console.error("Failed to load profile picture", error);
-        setProfilePic("/assets/person.svg");
+        setProfilePic("/assets/person-circle.svg");
       }
     };
   
@@ -134,7 +134,7 @@ const handleSave = async () => {
   
 
   return (
-    <div className="text-center max-w-[500px] border-t-1 border-solid border-slate-300">
+    <div className="text-center max-w-[500px] mb-5 border-1 border-solid border-blue-100 shadow-blue-200/50 rounded-md shadow-sm">
       <div className="flex justify-between items-center py-2 px-5">
         <div className="flex items-center">
         <div className="rounded-full bg-blue-200 w-10 h-10 overflow-hidden relative">
@@ -145,7 +145,7 @@ const handleSave = async () => {
               className="object-cover"
             />
           </div>
-          <Link href={`/Profile/${blog.publisherName}`} className="pl-3 cursor-pointer">
+          <Link href={`/Profile/${blog.publisherName}`} className="pl-3 cursor-pointer font-semibold">
             {blog.publisherName}
           </Link>
         </div>
@@ -167,6 +167,7 @@ const handleSave = async () => {
             className="aspect-square object-cover object-center"
             width={500}
             height={500}
+            sizes="(max-width: 1080px) 100vw, 1080px"
           />
         </Link>
       ) : (
@@ -187,7 +188,7 @@ const handleSave = async () => {
         </div>
       )}
 
-<div className='flex justify-evenly p-2 pt-5'>
+<div className='flex justify-evenly p-2 pt-5 text-xs text-blue-400'>
           <div className="flex items-center cursor-pointer" onClick={handleLike}>
             <Image
               width={20}
