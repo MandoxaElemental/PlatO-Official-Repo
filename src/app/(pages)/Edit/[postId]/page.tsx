@@ -54,7 +54,7 @@ const Recipe = () => {
             'mg', 'g', 'gram', 'grams', 'kg', 'kilogram', 'kilograms',
             'sm', 'md', 'lg', 'pinch', 'dash',
             'piece', 'pieces', 'whole', 'half', 'slice', 'clove', 'stick', 'can', 'bottle', 'pkg',
-            'large', 'medium', 'small'
+            'large', 'medium', 'small', "Measurement"
           ];          return rawIngredients.map((item) => {
             const parts = item.trim().split(' ');
             const amountParts: string[] = [];
@@ -216,7 +216,7 @@ const Recipe = () => {
         reader.readAsDataURL(file);
       }
     }
-    const handleSave = async () => {
+    const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
         const item = {
           id: Number(postId),
           userId: id,
@@ -242,7 +242,7 @@ const Recipe = () => {
           averageRating: ratingAverage,
           numberOfLikes: likes,
           postType: 'recipe',
-          isPublished: true,
+          isPublished:  e.currentTarget.textContent === 'Draft' ? false : true,
           isDeleted: false
         };
             
@@ -495,7 +495,7 @@ const Recipe = () => {
         <div onClick={() => setOpenModal(true)} className='flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer'><Image className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" width={100} height={100}/><p>Add Tags</p></div>
         </div>
         <div className='p-2 flex justify-end'>
-            <Button outline className='mx-1 w-[100px]'>Draft</Button>
+            <Button onClick={handleSave} outline className='mx-1 w-[100px]'>Draft</Button>
             <Button onClick={handleSave} className='mx-1 w-[100px]'>Save</Button>
         </div>
     </div>
