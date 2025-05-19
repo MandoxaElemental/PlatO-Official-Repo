@@ -175,7 +175,7 @@ const Blog = () => {
                                     {steps.map((item, i) => (
                                         <div key={i}>
                                             <h1>{item.title}</h1>
-                                            <ol className="list-decimal text-left pl-5">
+                                            <ol className="list-decimal text-left mx-8">
                                                 {item.steps.map((steps, j) => (
                                                     <li key={j}>{steps}</li>
                                                 ))}

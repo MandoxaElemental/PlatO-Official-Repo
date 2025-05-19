@@ -5,7 +5,7 @@ import React from 'react'
 
 const BlogPost = ({profile, post, username, id, comments} : {profile: string; post: React.ReactNode; username: string; id: string, comments: React.ReactNode;}) => {
   return (
-    <div className='text-center max-w-[500px] border-t-1 border-solid border-slate-300'>
+    <div className='text-center max-w-[500px] border-1 border-solid border-blue-100 rounded-md'>
         <div className='flex justify-between items-center py-2 px-5'>
             <div className='flex items-center'>
                 <div className="rounded-full overflow-hidden w-10 h-10 relative bg-blue-200">
@@ -42,10 +42,10 @@ const BlogPost = ({profile, post, username, id, comments} : {profile: string; po
             : <Button className="rounded-full h-8 bg-blue-200 hover:bg-blue-400 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200">Follow</Button>
             }
         </div>
-        <div className='border-t-1 border-solid border-slate-300'>
+        <div className=''>
         {post}
         </div>
-        <div className='flex justify-evenly p-2 pt-5 border-t-1 border-solid border-slate-300'>
+        <div className='flex justify-evenly p-2 pt-5 border-t-1 border-solid border-blue-200'>
         <div className="flex items-center">
             <Image width={50} height={50} className="h-5 w-5 dark:invert" src="../assets/heart.svg" alt="like" /><p className="pl-2">Like</p>
         </div>

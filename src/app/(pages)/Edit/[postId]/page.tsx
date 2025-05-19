@@ -19,7 +19,7 @@ const Recipe = () => {
       { title: "", ingredients: [{ amount: '', measurement: 'Measurement', ingredient: '' }] }
         ]);
     const [stepGroups, setStepGroups] = useState<StepGroup[]>([
-      { title: "", steps: [''] }
+      { title: "", steps: [] }
     ]);
     const [query, setQuery] = useState<string>('');
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -41,8 +41,21 @@ const Recipe = () => {
         const data = await getBlogbyId(Number(postId), getToken());
       
         const parseIngredients = (rawIngredients: string[]): Ingredient[] => {
-          const measurements = ['tsp', 'tbsp', 'c', 'pt', 'qt', 'gal', 'oz', 'lbs', 'ml', 'dl', 'l', 'mg', 'g', 'kg', 'sm', 'md', 'lg', 'pinch', 'dash', 'piece', 'whole', 'half', 'slice', 'clove', 'stick', 'can', 'bottle', 'pkg'];
-          return rawIngredients.map((item) => {
+          const measurements = [
+            'tsp', 'teaspoon', 'teaspoons',
+            'tbsp', 'tablespoon', 'tablespoons',
+            'c', 'cup', 'cups',
+            'pt', 'pint', 'pints',
+            'qt', 'quart', 'quarts',
+            'gal', 'gallon', 'gallons',
+            'oz', 'ounce', 'ounces',
+            'lb', 'lbs', 'pound', 'pounds',
+            'ml', 'dl', 'l', 'liter', 'liters',
+            'mg', 'g', 'gram', 'grams', 'kg', 'kilogram', 'kilograms',
+            'sm', 'md', 'lg', 'pinch', 'dash',
+            'piece', 'pieces', 'whole', 'half', 'slice', 'clove', 'stick', 'can', 'bottle', 'pkg',
+            'large', 'medium', 'small'
+          ];          return rawIngredients.map((item) => {
             const parts = item.trim().split(' ');
             const amountParts: string[] = [];
             let measurement = 'Measurement';
@@ -151,6 +164,18 @@ const Recipe = () => {
     
           const addStepGroup = () => {
             setStepGroups([...stepGroups, { title: 'New Section', steps: [''] }]);
+          };
+
+          const removeIngredientGroup = (groupIndex: number) => {
+            const newGroups = [...ingredientGroups];
+            newGroups.splice(groupIndex, 1);
+            setIngredientGroups(newGroups);
+          };
+          
+          const removeStepGroup = (groupIndex: number) => {
+            const newGroups = [...stepGroups];
+            newGroups.splice(groupIndex, 1);
+            setStepGroups(newGroups);
           };
    
 
@@ -333,7 +358,15 @@ const Recipe = () => {
             <p className='font-semibold text-xl text-center'>Ingredients</p>
             {ingredientGroups.map((group, groupIndex) => (
               <div key={groupIndex}>
-                <div className='my-2 flex flex-col items-center'>
+                <div className='my-2 flex items-center px-2'>
+                  <Image
+                    className="h-10 w-10 pr-5 hover:opacity-50 dark:invert cursor-pointer"
+                              src="../assets/x-lg.svg"
+                              alt="remove"
+                              onClick={() => removeIngredientGroup(groupIndex)}
+                              width={100}
+                              height={100}
+                          />
                 <TextInput
                   className="w-[400px] font-bold"
                   value={group.title}
@@ -396,7 +429,15 @@ const Recipe = () => {
   <p className='font-semibold text-xl text-center'>Instructions</p>
   {stepGroups.map((group, groupIndex) => (
     <div key={groupIndex}>
-      <div className='my-2 flex flex-col items-center'>
+      <div className='my-2 flex items-center px-2'>
+        <Image
+          className="h-10 w-10 pr-5 hover:opacity-50 dark:invert cursor-pointer"
+          src="../assets/x-lg.svg"
+                    alt="remove"
+                    onClick={() => removeStepGroup(groupIndex)}
+                    width={100}
+                    height={100}
+                />
         <TextInput
           className="w-[400px] font-bold"
           value={group.title}

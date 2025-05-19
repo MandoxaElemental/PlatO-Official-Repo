@@ -23,7 +23,7 @@ const Recipe = () => {
       { title: "", ingredients: [{ amount: '', measurement: 'Measurement', ingredient: '' }] }
     ]);
     const [stepGroups, setStepGroups] = useState<StepGroup[]>([
-      { title: "", steps: [''] }
+      { title: "", steps: [] }
     ]);
     const [query, setQuery] = useState<string>('');
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -198,10 +198,11 @@ const Recipe = () => {
       let totalTime = '';
       let servings = '';
       const ingredients: IngredientGroup[] = [{ title: '', ingredients: [] }];
-      const steps: StepGroup[] = [{ title: '', steps: [] }];
+      const steps: StepGroup[] = [];
       let currentSection = '';
     
-      const ingredientRegex = /^([\d\s\/\-½⅓⅔¼¾⅛⅜⅝⅞]+)?\s*([a-zA-Z]+)?\s+(.+)$/;
+      const unicodeFractions = '½⅓⅔¼¾⅛⅜⅝⅞';
+      const ingredientRegex = new RegExp(`^((\\d+[\\s-])?(\\d+\\/\\d+)|[\\d${unicodeFractions}\\/\\.\\s-]+)?\\s*([a-zA-Z]+)?\\s+(.+)$`);
     
       let i = 0;
     
@@ -216,6 +217,7 @@ const Recipe = () => {
           continue;
         } else if (/instructions?|directions?/i.test(line)) {
           currentSection = 'steps';
+          steps.push({ title: '', steps: [] }); // Initialize step group
           continue;
         }
     
@@ -223,30 +225,111 @@ const Recipe = () => {
           totalTime = line.split(':')[1]?.trim() || '';
           continue;
         }
+    
         if (/servings?/i.test(line)) {
           servings = line.split(':')[1]?.trim() || '';
           continue;
         }
     
         if (currentSection === 'ingredients') {
-          if (!/\d/.test(line)) {
-            ingredients.push({ title: line, ingredients: [] });
+          if (!/\d/.test(line) && !ingredientRegex.test(line)) {
+            ingredients.push({ title: line, ingredients: [] }); // new group title
             continue;
           }
+    
           const match = line.match(ingredientRegex);
           if (match) {
-            const amount = match[1]?.trim() || '';
-            const measurement = match[2]?.trim() || 'Measurement';
-            const ingredient = match[3]?.trim() || '';
+            const amount = (match[1] || '').trim();
+            const measurement = (match[4] || 'Measurement').trim();
+            const ingredient = (match[5] || '').trim();
+    
             ingredients[ingredients.length - 1].ingredients.push({ amount, measurement, ingredient });
           }
         } else if (currentSection === 'steps') {
-          steps[steps.length - 1].steps.push(line.replace(/^\d+\.\s*/, ''));
+          if (/^[A-Z][a-z]+:/.test(line)) {
+            steps.push({ title: line.replace(':', '').trim(), steps: [] });
+          } else {
+            if (steps.length === 0) steps.push({ title: '', steps: [] });
+            steps[steps.length - 1].steps.push(line.replace(/^\d+\.\s*/, '').trim());
+          }
         }
       }
     
       return { title, description, totalTime, servings, ingredients, steps };
     };
+    
+
+    const handleScrapeFromURL = async () => {
+      if (!source) {
+        alert("Please enter a source URL.");
+        return;
+      }
+    
+      try {
+        const response = await fetch('/api/scrape-recipe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: source }),
+        });
+    
+        const data = await response.json();
+    
+        if (data.error) {
+          alert(data.error);
+          return;
+        }
+    
+        const formattedIngredients: IngredientGroup[] = [
+          {
+            title: '',
+            ingredients: data.ingredients.map((line: string) => parseIngredientLine(line)),
+          },
+        ];
+    
+        const formattedSteps: StepGroup[] = [
+          {
+            title: '',
+            steps: data.steps.map((s: string) => s.trim()).filter(Boolean),
+          },
+        ];
+    
+        setName(data.title);
+        setDescription(data.description);
+        setTotalTime(data.totalTime);
+        setServings(data.servings);
+        setIngredientGroups(formattedIngredients);
+        setStepGroups(formattedSteps);
+    
+      } catch (err) {
+        console.error(err);
+        alert('Failed to scrape recipe from the URL.');
+      }
+    };
+
+    useEffect(()=> {
+      console.log(stepGroups)
+    }, [stepGroups])
+    
+    const parseIngredientLine = (line: string): Ingredient => {
+      const fractionRegex = /^((?:\d+\s)?[\d\/⅓⅔¼¾½⅛⅜⅝⅞]+)\s+([a-zA-Z]+)\s+(.+)$/;
+      const match = line.match(fractionRegex);
+    
+      if (match) {
+        return {
+          amount: match[1].trim(),
+          measurement: match[2].trim(),
+          ingredient: match[3].trim(),
+        };
+      } else {
+        return {
+          amount: '',
+          measurement: 'Measurement',
+          ingredient: line.trim(),
+        };
+      }
+    };
+    
+    
     
 
   return (
@@ -334,6 +417,15 @@ const Recipe = () => {
         </div>
         <div className='border-b-1 border-solid border-slate-300 p-2 flex flex-col items-center'>
         <Button className="mb-2" onClick={() => setOpenModal2(true)}>Paste Recipe</Button>
+        <div className="flex items-center gap-2 my-2">
+  <TextInput
+    value={source}
+    onChange={(e) => setSource(e.target.value)}
+    placeholder="Paste recipe URL"
+  />
+  <Button onClick={handleScrapeFromURL}>Scrape Recipe</Button>
+</div>
+
             <TextInput value={name} placeholder='[Recipe Name]' className='w-[200px] pb-2' onChange={(e) => setName(e.target.value)}></TextInput>
             <p className='text-center text-blue-600'>Description 200/{length}</p>
             <TextInput value={description} onChange={(e) => setDescription(e.target.value)} className='w-[400px]'></TextInput>
