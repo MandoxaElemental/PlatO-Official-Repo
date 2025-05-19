@@ -42,7 +42,7 @@ const Drafts = () => {
 
   return (
     <div className='pt-10 px-5 w-full'>
-      <div className='border-b-1 border-solid border-slate-300 p-2 text-2xl font-semibold text-center'>
+      <div className='border-b-1 border-solid border-blue-200 p-2 text-2xl font-semibold text-center'>
             Drafts
         </div>
         <div>{blogItems.map((item, ibx) => {
@@ -50,8 +50,17 @@ const Drafts = () => {
             <div key={ibx} className=''>
               { !item.isPublished && (
                   <Link href={`/Edit/${item.id}`}>
-                  <Image className='object-cover h-[200px] w-[200px]' src={item.image === null ? "/assets/Placeholder.png" : `${item.image}`} alt="post" width={50} height={20}/>
-                  </Link>
+                  <div className='flex justify-around'>
+                    {/* <Image className='object-cover h-[150px] w-[150px]' src={item.image === null ? `${Placeholder}` : `${item.image}`} alt="post" width={50} height={50}/> */}
+                  <div className="min-w-screentext-xl p-5 w-[300px]">
+                    <p className='font-semibold '>
+                    {item.recipeName}
+                    </p>
+                    {item.description}
+                  </div>
+                    <Image className='dark:invert' src="/assets/caret-right-fill.svg" alt="go" width={25} height={25}/>
+                  </div>
+                </Link>
                 )
               }
             </div>

@@ -188,7 +188,7 @@ const handleSave = async () => {
         </div>
       )}
 
-<div className='flex justify-evenly p-2 pt-5 text-xs text-blue-400'>
+<div className='flex justify-evenly p-2 pt-5 text-xs font-blue-400'>
           <div className="flex items-center cursor-pointer" onClick={handleLike}>
             <Image
               width={20}
