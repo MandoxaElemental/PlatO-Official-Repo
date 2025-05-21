@@ -70,17 +70,17 @@ export interface IUserData
     phoneNumber: string,
     dateOfBirth: string,
     profilePicture: string,
-    likedBlogs: string[],
-    ratedBlogs: string[],
+    likedBlogs: number[],
+    ratedBlogs: number[],
     dateCreated: string,
-    incomingFriendRequest: string[],
-    outgoingFriendRequest: string[],
-    friends: string[],
+    incomingFriendRequest: number[],
+    outgoingFriendRequest: number[],
+    friends: number[],
     premiumMember: boolean,
     interests: string[],
-    savedRecipes: string[]
-    following: string[]
-    followers: string[]
+    savedRecipes: number[]
+    following: number[]
+    followers: number[]
 
 }
 export interface ICommentItems

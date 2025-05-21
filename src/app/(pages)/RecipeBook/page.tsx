@@ -1,6 +1,7 @@
 'use client';
 import { checkToken, getAllBlogs, getToken, getUserInfoByUsername } from '@/app/Utils/DataServices';
 import { IBlogItems, IUserData } from '@/app/Utils/Interfaces';
+import { Spinner } from 'flowbite-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
@@ -8,6 +9,7 @@ import React, { useEffect, useState } from 'react';
 const SavedRecipes = () => {
   const [username, setUsername] = useState<string>('');
   const [savedBlogItems, setSavedBlogItems] = useState<IBlogItems[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   
 
   useEffect(() => {
@@ -32,6 +34,7 @@ const SavedRecipes = () => {
         const savedItems = allBlogs.filter(blog => savedIdsSet.has(String(blog.id)));
 
         setSavedBlogItems(savedItems);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching saved recipes:', error);
       }
@@ -42,6 +45,14 @@ const SavedRecipes = () => {
     }
   }, [username]);
 
+  if (loading) {
+          return (
+              <div className="flex justify-center mt-15">
+                  <Spinner aria-label="Loading post..." size="xl" />
+              </div>
+          );
+      }
+
   return (
     <div className="pt-10 px-5 w-full">
       <div className="border-b-1 border-solid border-slate-300 p-2 text-2xl font-semibold text-center">
@@ -49,11 +60,11 @@ const SavedRecipes = () => {
       </div>
       <div className="py-4">
         {savedBlogItems.length > 0 ? (
-          savedBlogItems.map((item, index) => (
-            <Link key={index} href={`/Blog/${item.id}`}>
+          savedBlogItems.map((item) => (
+            <Link key={item.id} href={`/Blog/${item.id}`}>
               <div className='flex justify-around'>
                 <Image className='object-cover h-[150px] w-[150px]' src={item.image === null ? "/assets/Placeholder.png" : `${item.image}`} alt="post" width={50} height={50}/>
-              <div className="min-w-screentext-xl p-5 w-[300px]">
+              <div className="min-w-screentext-xl p-5 pt-2 max-w-[300px]">
                 <p className='font-semibold '>
                 {item.recipeName}
                 </p>

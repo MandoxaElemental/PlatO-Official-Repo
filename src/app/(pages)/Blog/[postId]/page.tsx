@@ -6,10 +6,11 @@ import BlogPost from '@/app/Components/Blog';
 import { addCommentItem, getBlogbyId, getCommentItemsByBlogId, getToken, getUserInfoByUsername } from '@/app/Utils/DataServices';
 import { useParams } from 'next/navigation';
 import { Button, TextInput, Spinner } from 'flowbite-react';
-import { ICommentItems, IIngredientItems, IStepItems } from '@/app/Utils/Interfaces';
+import { IBlogItems, ICommentItems, IIngredientItems, IStepItems, IUserData } from '@/app/Utils/Interfaces';
 import { format } from 'date-fns';
 import Comment from '@/app/Components/Comment';
 import Link from 'next/link';
+import SaveButton from '@/app/Components/SaveButton';
 
 const Blog = () => {
     const { postId } = useParams();
@@ -30,6 +31,9 @@ const Blog = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [rating, setRating] = useState<number>(0);
     const [hover, setHover] = useState<number>(0);
+    const [currentUser, setCurrentUser] = useState<IUserData | null>(null);
+    const [blogItem, setBlogItem] = useState<IBlogItems | null>(null);
+    
 
     useEffect(() => {
         const storedUsername = localStorage.getItem("Username");
@@ -39,12 +43,30 @@ const Blog = () => {
         if (storedId) setUserId(Number(storedId));
     }, []);
 
+      useEffect(() => {
+        const fetchUser = async () => {
+          if (!username) return;
+      
+          try {
+            const user = await getUserInfoByUsername(username);
+            if (user) {
+              setCurrentUser(user);
+            }
+          } catch (error) {
+            console.error("Failed to fetch user info:", error);
+          }
+        };
+      
+        fetchUser();
+      }, [username]);
+
 
 
     useEffect(() => {
       const getData = async () => {
         if (!postId) return;
         const data = await getBlogbyId(Number(postId), getToken());
+        setBlogItem(data);
         setName(data.recipeName);
         setId(String(data.id));
         setUser(data.publisherName);
@@ -100,6 +122,7 @@ const Blog = () => {
         }
     };
 
+
     if (loading) {
         return (
             <div className="flex justify-center mt-15">
@@ -111,6 +134,7 @@ const Blog = () => {
     return (
         <div className="pt-10 w-min-full">
             <BlogPost
+                item={blogItem!}
                 profile={`${profilePic}`}
                 username={user}
                 id={id}
@@ -193,6 +217,13 @@ const Blog = () => {
                             </div>
                         )}
                     </div>
+                )}
+                save={(
+                    <SaveButton
+                    postId={Number(id)}
+                    currentUser={currentUser}
+                    onUpdate={setCurrentUser}
+                    />
                 )}
                 comments={(
                     <div>

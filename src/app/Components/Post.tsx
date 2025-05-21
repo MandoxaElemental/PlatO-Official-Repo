@@ -3,17 +3,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState, useEffect, useRef } from 'react';
 import { IBlogItems, IUserData } from '../Utils/Interfaces';
-import { getToken, updateBlogItem, getUserInfoByUsername, updateUserItem, getUserInfoById } from '../Utils/DataServices';
+import { getUserInfoByUsername, getUserInfoById } from '../Utils/DataServices';
+import FollowButton from './FollowButton';
+import SaveButton from './SaveButton';
+import LikeButton from './LikeButton';
 
 const Post = ({ blog }: { blog: IBlogItems }) => {
-  const [likes, setLikes] = useState(blog.numberOfLikes);
-  const [liked, setLiked] = useState(false);
-  const [isFollowing, setIsFollowing] = useState(false);
   const [currentUser, setCurrentUser] = useState<IUserData | null>(null);
   const [username, setUsername] = useState('');
   const [profilePic, setProfilePic] = useState('');
-  const userIdNum = Number(blog.userId);
-  const [isSaved, setIsSaved] = useState(false);
   const [currentView, setCurrentView] = useState<"main" | "ingredients" | "steps">("main");
   const containerRef = useRef<HTMLDivElement>(null);
   
@@ -39,14 +37,6 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
 
 
   useEffect(() => {
-    if (currentUser && blog?.id) {
-      setIsSaved(currentUser.savedRecipes?.includes(String(blog.id)));
-      setIsFollowing(currentUser.following?.includes(String(blog.userId)));
-
-    }
-  }, [currentUser, blog?.id]);
-
-  useEffect(() => {
     const fetchUser = async () => {
       if (!username) return;
   
@@ -63,76 +53,7 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
     fetchUser();
   }, [username]);
 
-  const handleFollow = async () => {
-    if (!currentUser) return;
-  
-    const updatedFollowing = isFollowing
-      ? currentUser.following.filter((friendId) => friendId !== String(userIdNum))
-      : [...new Set([...(currentUser.following || []), String(userIdNum)])];
-  
-    const updatedUser: IUserData = {
-      ...currentUser,
-      following: updatedFollowing,
-      salt: currentUser.salt || '',
-      hash: currentUser.hash || '',
-    };
 
-    console.log(currentUser.salt)
-    console.log(currentUser.hash)
-  
-    try {
-      const success = await updateUserItem(updatedUser, getToken());
-      if (success) {
-        setCurrentUser(updatedUser);
-        setIsFollowing(updatedUser.following.includes(String(blog.userId)));
-        alert(isFollowing ? "Unfollowed" : "Following");
-      }
-    } catch (error) {
-      console.error('Error updating follow status:', error);
-    }
-  };
-
-  const handleLike = async () => {
-    const updatedLikes = liked ? likes - 1 : likes + 1;
-    const updatedBlog: IBlogItems = { ...blog, numberOfLikes: updatedLikes };
-  
-    try {
-      await updateBlogItem(updatedBlog, getToken());
-      setLikes(updatedLikes);
-      setLiked(!liked);
-    } catch (error) {
-      console.error('Error updating likes:', error);
-    }
-  };
-
-
-const handleSave = async () => {
-  if (!currentUser) return;
-
-  const postId = String(blog.id);
-  const isAlreadySaved = currentUser.savedRecipes?.includes(postId);
-
-  const updatedSavedRecipes = isAlreadySaved
-    ? currentUser.savedRecipes.filter((id) => id !== postId)
-    : [...new Set([...(currentUser.savedRecipes || []), postId])];
-
-  const updatedUser: IUserData = {
-    ...currentUser,
-    savedRecipes: updatedSavedRecipes,
-    salt: currentUser.salt || '',
-    hash: currentUser.hash || '',
-  };
-
-  try {
-    const success = await updateUserItem(updatedUser, getToken());
-    if (success) {
-      setCurrentUser(updatedUser);
-      alert(isAlreadySaved ? "Removed from saved recipes" : "Saved to recipes");
-    }
-  } catch (error) {
-    console.error("Error saving post:", error);
-  }
-};
 
 useEffect(() => {
   const container = containerRef.current;
@@ -167,8 +88,6 @@ useEffect(() => {
   };
 }, [currentView]);
 
-  
-  
 
   return (
     <div className="text-center max-w-[500px] mb-5 border-1 border-solid border-blue-100 shadow-blue-200/50 rounded-md shadow-sm">
@@ -187,13 +106,13 @@ useEffect(() => {
           </Link>
         </div>
 
-        {blog.publisherName === localStorage.getItem("Username") ? '' : <Button
-          className={`rounded-md ${isFollowing ? "bg-red-200 hover:bg-red-400" : "bg-blue-200 hover:bg-blue-400"} text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200`}
-          onClick={handleFollow}
-        >
-          {isFollowing ? "Unfollow" : "Follow"}
-        </Button>
-                          }
+        {blog.publisherName !== localStorage.getItem("Username") && (
+          <FollowButton
+            targetUserId={Number(blog.userId)}
+            currentUser={currentUser}
+            onUpdate={setCurrentUser}
+          />
+        )}
       </div>
 
       {blog.postType !== "recipe" ? (
@@ -218,13 +137,15 @@ useEffect(() => {
       <div className="p-2 text-left">
   {currentView === "main" && (
     <>
-      <Image
-        className="object-cover h-[300px] w-full"
-        src={blog.image !== "" ? String(blog.image) : "/assets/Placeholder.png"}
-        alt="post"
-        width={500}
-        height={500}
-      />
+      <Link href={`/Blog/${blog.id}`}>
+        <Image
+          className="object-cover h-[300px] w-full"
+          src={blog.image !== "" ? String(blog.image) : "/assets/Placeholder.png"}
+          alt="post"
+          width={500}
+          height={500}
+          />
+      </Link>
       <p className="font-semibold text-2xl p-2">{blog.recipeName}</p>
       <div className="p-2 text-left">{blog.description}</div>
     </>
@@ -272,7 +193,7 @@ useEffect(() => {
       const currentIndex = views.indexOf(currentView);
       if (currentIndex > 0) setCurrentView(views[currentIndex - 1] as typeof currentView);
     }}
-    className="bg-[#00000000] p-2 hover:bg-[#00000000] hover:opacity-50 opacity-80 absolute top-[50%] left-0"
+    className="h-[100%] bg-[#00000000] hover:bg-[#00000000] hover:opacity-25 opacity-80 p-2 absolute top-0 left-0"
     disabled={currentView === "main"}
   >
   <Image width={20} height={20} className="h-10 w-10 dark:invert" src="/assets/caret-left-fill.svg" alt="comment" />
@@ -284,7 +205,7 @@ useEffect(() => {
       const currentIndex = views.indexOf(currentView);
       if (currentIndex < views.length - 1) setCurrentView(views[currentIndex + 1] as typeof currentView);
     }}
-    className="bg-[#00000000] hover:bg-[#00000000] hover:opacity-50 opacity-80 p-2 absolute top-[50%] right-0"
+    className="h-[100%] bg-[#00000000] hover:bg-[#00000000] hover:opacity-25 opacity-80 p-2 absolute top-0 right-0"
     disabled={currentView === "steps"}
   >
   <Image width={20} height={20} className="h-10 w-10 dark:invert" src="/assets/caret-right-fill.svg" alt="comment" />
@@ -299,16 +220,11 @@ useEffect(() => {
       )}
 
 <div className='flex justify-evenly p-2 pt-5 text-xs font-blue-400'>
-          <div className="flex items-center cursor-pointer" onClick={handleLike}>
-            <Image
-              width={20}
-              height={20}
-              className="h-5 w-5 dark:invert"
-              src={liked ? "/assets/heart-fill.svg" : "/assets/heart.svg"}
-              alt="like"
-            />
-            <p className="pl-2">{liked ? 'Liked' : 'Like'} ({likes})</p>
-          </div>
+          <LikeButton
+            blog={blog}
+            currentUser={currentUser}
+            onUserUpdate={setCurrentUser}
+          />
           <div className="flex items-center">
             <Image width={20} height={20} className="h-5 w-5 dark:invert" src="/assets/chat-left.svg" alt="comment" />
             <p className="pl-2">Comment</p>
@@ -317,16 +233,11 @@ useEffect(() => {
             <Image width={20} height={20} className="h-5 w-5 dark:invert" src="/assets/repeat.svg" alt="share" />
             <p className="pl-2">Share</p>
           </div>
-          <div className="flex items-center cursor-pointer" onClick={handleSave}>
-            <Image
-              width={20}
-              height={20}
-              className="h-5 w-5 dark:invert"
-              src={isSaved ? "/assets/bookmark-fill.svg" : "/assets/bookmark.svg"}
-              alt="save"
+          <SaveButton
+              postId={blog.id}
+              currentUser={currentUser}
+              onUpdate={setCurrentUser}
             />
-            <p className="pl-2">{isSaved ? "Saved" : "Save"}</p>
-          </div>
         </div>
     </div>
   );

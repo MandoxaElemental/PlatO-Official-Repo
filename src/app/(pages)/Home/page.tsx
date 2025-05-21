@@ -8,7 +8,7 @@ import { Spinner } from "flowbite-react";
 
 export default function Home() {
   const [blogItems, setBlogItems] = useState<IBlogItems[]>([]);
-  const [loading, setLoading] = useState<boolean>(true); // ⬅️ Add loading state
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const getData = async () => {
