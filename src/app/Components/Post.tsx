@@ -1,7 +1,7 @@
 import { Button } from 'flowbite-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { IBlogItems, IUserData } from '../Utils/Interfaces';
 import { getToken, updateBlogItem, getUserInfoByUsername, updateUserItem, getUserInfoById } from '../Utils/DataServices';
 
@@ -14,6 +14,9 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
   const [profilePic, setProfilePic] = useState('');
   const userIdNum = Number(blog.userId);
   const [isSaved, setIsSaved] = useState(false);
+  const [currentView, setCurrentView] = useState<"main" | "ingredients" | "steps">("main");
+  const containerRef = useRef<HTMLDivElement>(null);
+  
   
   useEffect(() => {
     const getData = async () => {
@@ -130,6 +133,40 @@ const handleSave = async () => {
     console.error("Error saving post:", error);
   }
 };
+
+useEffect(() => {
+  const container = containerRef.current;
+  if (!container) return;
+
+  let touchStartX = 0;
+
+  const handleTouchStart = (e: TouchEvent) => {
+    touchStartX = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: TouchEvent) => {
+    const touchEndX = e.changedTouches[0].clientX;
+    const deltaX = touchEndX - touchStartX;
+
+    if (Math.abs(deltaX) > 50) {
+      const views = ["main", "ingredients", "steps"];
+      const currentIndex = views.indexOf(currentView);
+      const nextIndex = deltaX > 0 ? currentIndex - 1 : currentIndex + 1;
+      if (nextIndex >= 0 && nextIndex < views.length) {
+        setCurrentView(views[nextIndex] as typeof currentView);
+      }
+    }
+  };
+
+  container.addEventListener("touchstart", handleTouchStart);
+  container.addEventListener("touchend", handleTouchEnd);
+
+  return () => {
+    container.removeEventListener("touchstart", handleTouchStart);
+    container.removeEventListener("touchend", handleTouchEnd);
+  };
+}, [currentView]);
+
   
   
 
@@ -145,7 +182,7 @@ const handleSave = async () => {
               className="object-cover"
             />
           </div>
-          <Link href={`/Profile/${blog.publisherName}`} className="pl-3 cursor-pointer font-semibold">
+          <Link href={`/Profile/${blog.publisherName}`} className="pl-3 cursor-pointer font-semibold text-blue-600">
             {blog.publisherName}
           </Link>
         </div>
@@ -171,21 +208,94 @@ const handleSave = async () => {
           />
         </Link>
       ) : (
-        <div>
-          <div className="font-semibold text-2xl pb-2">- Recipe -</div>
-          <Image
-            className="object-cover h-[200px] w-full"
-            src={blog.image !== "" ? String(blog.image) : "/assets/Placeholder.png"}
-            alt="post"
-            width={50}
-            height={20}
-          />
-          <p className="font-semibold text-2xl p-2">{blog.recipeName}</p>
-          <div className="p-2 text-left">{blog.description}</div>
-          <Link className="text-blue-600 text-xl underline pb-2" href={`/Blog/${blog.id}`}>
-            Read Full Recipe
-          </Link>
+        <div className='relative' ref={containerRef}>
+
+      <div className="flex gap-4 justify-center py-4">
+
+
+      </div>
+
+      <div className="p-2 text-left">
+  {currentView === "main" && (
+    <>
+      <Image
+        className="object-cover h-[300px] w-full"
+        src={blog.image !== "" ? String(blog.image) : "/assets/Placeholder.png"}
+        alt="post"
+        width={500}
+        height={500}
+      />
+      <p className="font-semibold text-2xl p-2">{blog.recipeName}</p>
+      <div className="p-2 text-left">{blog.description}</div>
+    </>
+  )}
+
+  {currentView === "ingredients" && (
+    <div className="px-5">
+      <h3 className="font-bold text-lg pb-2">Ingredients:</h3>
+      <ul className="list-disc list-inside">
+        {blog.ingredients.map((item, i) => (
+          <div key={i}>
+            <h1 className="font-bold">{item.title}</h1>
+            <ul className='list-disc text-left pl-10'>
+              {item.ingredients.map((ingredient, j) => (
+                <li key={j}>{ingredient}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </ul>
+    </div>
+  )}
+
+  {currentView === "steps" && (
+    <div className="px-5">
+      <h3 className="font-bold text-lg pb-2">Steps:</h3>
+      {blog.steps.map((item, i) => (
+        <div key={i}>
+          <h1>{item.title}</h1>
+          <ol className="list-decimal text-left mx-8">
+            {item.steps.map((step, j) => (
+              <li key={j}>{step}</li>
+            ))}
+          </ol>
         </div>
+      ))}
+    </div>
+  )}
+</div>
+
+      <div className="flex justify-between px-4 py-4 items-center">
+  <Button
+    onClick={() => {
+      const views = ["main", "ingredients", "steps"];
+      const currentIndex = views.indexOf(currentView);
+      if (currentIndex > 0) setCurrentView(views[currentIndex - 1] as typeof currentView);
+    }}
+    className="bg-[#00000000] p-2 hover:bg-[#00000000] hover:opacity-50 opacity-80 absolute top-[50%] left-0"
+    disabled={currentView === "main"}
+  >
+  <Image width={20} height={20} className="h-10 w-10 dark:invert" src="/assets/caret-left-fill.svg" alt="comment" />
+  </Button>
+
+  <Button
+    onClick={() => {
+      const views = ["main", "ingredients", "steps"];
+      const currentIndex = views.indexOf(currentView);
+      if (currentIndex < views.length - 1) setCurrentView(views[currentIndex + 1] as typeof currentView);
+    }}
+    className="bg-[#00000000] hover:bg-[#00000000] hover:opacity-50 opacity-80 p-2 absolute top-[50%] right-0"
+    disabled={currentView === "steps"}
+  >
+  <Image width={20} height={20} className="h-10 w-10 dark:invert" src="/assets/caret-right-fill.svg" alt="comment" />
+  </Button>
+</div>
+
+
+      <Link className="text-blue-600 text-xl underline pb-2" href={`/Blog/${blog.id}`}>
+        Read Full Recipe
+      </Link>
+    </div>
       )}
 
 <div className='flex justify-evenly p-2 pt-5 text-xs font-blue-400'>

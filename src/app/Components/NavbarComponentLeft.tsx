@@ -57,17 +57,12 @@ export function NavbarComponent() {
           </SidebarItem>
           <SidebarItem href={`/Profile/${username}`} >
           <div className="flex items-center">
-            <Image className="h-5 w-5 dark:invert" src="../assets/person.svg" alt="profile" width={100} height={100} /><p className="pl-2">Profile</p>
+            <Image className="h-5 w-5 dark:invert" src="../assets/person.svg" alt="profile" width={100} height={100} /><p className="pl-2">{username}</p>
             </div>
           </SidebarItem>
           <Button className="rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full h-8 cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200" href="/NewPost">Post</Button>
         </SidebarItemGroup>
         <SidebarItemGroup>
-          <SidebarItem href="#" >
-          <div className="flex items-center">
-            <Image className="h-5 w-5 dark:invert" src="../assets/person.svg" alt="profile" width={100} height={100} /><p className="pl-2">{username}</p>
-            </div>
-          </SidebarItem>
           <SidebarItem href="/Settings" >
           <div className="flex items-center">
             <Image className="h-5 w-5 dark:invert" src="../assets/gear.svg" alt="profile" width={100} height={100} /><p className="pl-2">Settings and Privacy</p>
