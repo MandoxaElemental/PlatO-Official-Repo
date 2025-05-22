@@ -1,4 +1,3 @@
-import { Button } from 'flowbite-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState, useEffect, useRef } from 'react';
@@ -124,19 +123,20 @@ useEffect(() => {
             width={500}
             height={500}
             sizes="(max-width: 1080px) 100vw, 1080px"
+            loading="lazy"
           />
         </Link>
       ) : (
-        <div className='relative' ref={containerRef}>
-
-      <div className="flex gap-4 justify-center py-4">
-
-
-      </div>
-
-      <div className="p-2 text-left">
-  {currentView === "main" && (
-    <>
+      <div className="relative overflow-hidden max-w-[500px] h-[100%]" ref={containerRef}>
+  <div
+    className="flex transition-transform duration-500 ease-in-out"
+    style={{
+      width: '1500px',
+      transform: `translateX(-${["main", "ingredients", "steps"].indexOf(currentView) * 500}px)`,
+    }}
+  >
+    {/* Main View */}
+    <div className="w-[500px] max-h-[450px] shrink-0">
       <Link href={`/Blog/${blog.id}`}>
         <Image
           className="object-cover h-[300px] w-full"
@@ -144,38 +144,35 @@ useEffect(() => {
           alt="post"
           width={500}
           height={500}
-          />
+          loading="lazy"
+        />
       </Link>
       <p className="font-semibold text-2xl p-2">{blog.recipeName}</p>
       <div className="p-2 text-left">{blog.description}</div>
-    </>
-  )}
-
-  {currentView === "ingredients" && (
-    <div className="px-5">
-      <h3 className="font-bold text-lg pb-2">Ingredients:</h3>
-      <ul className="list-disc list-inside">
-        {blog.ingredients.map((item, i) => (
-          <div key={i}>
-            <h1 className="font-bold">{item.title}</h1>
-            <ul className='list-disc text-left pl-10'>
-              {item.ingredients.map((ingredient, j) => (
-                <li key={j}>{ingredient}</li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </ul>
     </div>
-  )}
 
-  {currentView === "steps" && (
-    <div className="px-5">
-      <h3 className="font-bold text-lg pb-2">Steps:</h3>
+    {/* Ingredients View */}
+    <div className="w-[500px] max-h-[450px] shrink-0 px-10 overflow-y-auto">
+      <h3 className="font-bold text-lg px-2 pt-5">Ingredients:</h3>
+      {blog.ingredients.map((item, i) => (
+        <div key={i}>
+          <h1 className="font-bold">{item.title}</h1>
+          <ul className="list-disc text-left pl-6">
+            {item.ingredients.map((ingredient, j) => (
+              <li key={j}>{ingredient}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    {/* Steps View */}
+    <div className="w-[500px] max-h-[450px] shrink-0 px-10 overflow-y-auto">
+      <h3 className="font-bold text-lg px-2 pt-5">Steps:</h3>
       {blog.steps.map((item, i) => (
         <div key={i}>
-          <h1>{item.title}</h1>
-          <ol className="list-decimal text-left mx-8">
+          <h1 className="font-semibold">{item.title}</h1>
+          <ol className="list-decimal text-left mx-6">
             {item.steps.map((step, j) => (
               <li key={j}>{step}</li>
             ))}
@@ -183,40 +180,38 @@ useEffect(() => {
         </div>
       ))}
     </div>
-  )}
-</div>
+  </div>
 
-      <div className="flex justify-between px-4 py-4 items-center">
-  <Button
-    onClick={() => {
-      const views = ["main", "ingredients", "steps"];
-      const currentIndex = views.indexOf(currentView);
-      if (currentIndex > 0) setCurrentView(views[currentIndex - 1] as typeof currentView);
-    }}
-    className="h-[100%] bg-[#00000000] hover:bg-[#00000000] hover:opacity-25 opacity-80 p-2 absolute top-0 left-0"
-    disabled={currentView === "main"}
-  >
-  <Image width={20} height={20} className="h-10 w-10 dark:invert" src="/assets/caret-left-fill.svg" alt="comment" />
-  </Button>
-
-  <Button
-    onClick={() => {
-      const views = ["main", "ingredients", "steps"];
-      const currentIndex = views.indexOf(currentView);
-      if (currentIndex < views.length - 1) setCurrentView(views[currentIndex + 1] as typeof currentView);
-    }}
-    className="h-[100%] bg-[#00000000] hover:bg-[#00000000] hover:opacity-25 opacity-80 p-2 absolute top-0 right-0"
-    disabled={currentView === "steps"}
-  >
-  <Image width={20} height={20} className="h-10 w-10 dark:invert" src="/assets/caret-right-fill.svg" alt="comment" />
-  </Button>
-</div>
-
-
-      <Link className="text-blue-600 text-xl underline pb-2" href={`/Blog/${blog.id}`}>
-        Read Full Recipe
-      </Link>
+  {/* Navigation Buttons */}
+  <div className="absolute inset-y-0 left-0">
+    <div
+      onClick={() => {
+        const views = ["main", "ingredients", "steps"];
+        const currentIndex = views.indexOf(currentView);
+        if (currentIndex > 0) setCurrentView(views[currentIndex - 1] as typeof currentView);
+      }}
+      className="bg-transparent h-full hover:bg-black/10 p-2 rounded-0 flex flex-col justify-center"
+      // disabled={currentView === "main"}
+    >
+      <Image width={20} height={20} className="h-10 w-10 dark:invert hover:opacity-50" src="/assets/caret-left-fill.svg" alt="left" />
     </div>
+  </div>
+
+  <div className="absolute inset-y-0 right-0">
+    <div
+      onClick={() => {
+        const views = ["main", "ingredients", "steps"];
+        const currentIndex = views.indexOf(currentView);
+        if (currentIndex < views.length - 1) setCurrentView(views[currentIndex + 1] as typeof currentView);
+      }}
+      className="bg-transparent h-full hover:bg-black/10 p-2 rounded-0 flex flex-col justify-center"
+      // disabled={currentView === "steps"}
+    >
+      <Image width={20} height={20} className="h-10 w-10 dark:invert hover:opacity-50" src="/assets/caret-right-fill.svg" alt="right" />
+    </div>
+  </div>
+</div>
+
       )}
 
 <div className='flex justify-evenly p-2 pt-5 text-xs font-blue-400'>

@@ -24,14 +24,14 @@ const Layout = ({
   return (
     <>
       <MobileHeader />
-      <div className="flex md:justify-between justify-center px-5 max-h-[100vh]">
+      <div className="flex md:justify-between justify-center px-5 z-5 max-h-[100vh]">
         <div className="max-h-screen overflow-y-auto scrollbar-hide lg:block hidden">
           <NavbarComponent />
         </div>
-        <div className="w-min-screen h-min-screen overflow-y-auto scrollbar-hide">
+        <div className="min-h-screen min-h-screen overflow-y-auto scrollbar-hide">
           {children}
         </div>
-        <div className="max-h-screen overflow-y-auto scrollbar-hide lg:block hidden">
+        <div className="max-h-screen overflow-y-auto scrollbar-hide z-5 lg:block hidden">
           <NavbarComponentRight />
         </div>
       </div>

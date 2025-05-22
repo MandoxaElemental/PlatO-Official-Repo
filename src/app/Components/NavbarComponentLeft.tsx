@@ -23,8 +23,10 @@ export function NavbarComponent() {
     <Sidebar aria-label="Default sidebar example">
       <SidebarItems>
         <SidebarItemGroup>
-      <Image src="../assets/4.svg" alt="plato" className="block dark:hidden h-[100px]" width={150} height={175}/>
-      <Image src="../assets/1.svg" alt="plato" className="hidden dark:block h-[100px]" width={150} height={175}/>
+          <div className="flex justify-center">
+      <Image src="../assets/plato.svg" alt="plato" className=" block dark:hidden h-[120px]" width={150} height={125}/>
+      <Image src="../assets/plato-dark.svg" alt="plato" className=" hidden dark:block h-[120px]" width={150} height={125}/>
+          </div>
           <SidebarItem href="/Home" >
             <div className="flex items-center">
             <Image className="h-5 w-5 dark:invert" src="../assets/house.svg" alt="home" width={0} height={100}/><p className="pl-2">Home</p>

@@ -1,11 +1,11 @@
 'use client'
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'flowbite-react';
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Popover } from 'flowbite-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react'
 import { IBlogItems } from '../Utils/Interfaces';
 import { deleteBlogItem, getToken } from '../Utils/DataServices';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 const BlogPost = ({ profile, post, username, id, comments, save, item }: {
   profile: string;
@@ -14,11 +14,10 @@ const BlogPost = ({ profile, post, username, id, comments, save, item }: {
   id: string;
   comments: React.ReactNode;
   save: React.ReactNode;
-  item: IBlogItems;
-}) => {
-  const router = useRouter();
+  item: IBlogItems; }) => {
   
   const [showModal, setShowModal] = useState(false);
+  const router = useRouter();
 
   const confirmDelete = () => {
     setShowModal(true);
@@ -47,26 +46,32 @@ const BlogPost = ({ profile, post, username, id, comments, save, item }: {
         </div>
 
         {username === localStorage.getItem("Username") ?
-          <div className='pl-5 grid grid-cols-2 gap-3'>
-            <div className='relative'>
-              <div className='absolute right-0'>
-                <div className='p-2 bg-white border rounded-md shadow-md'>
-                  <Link href={`/Edit/${id}`}>
-                    <div className='flex items-center cursor-pointer'>
-                      <Image className='h-4 w-4 dark:invert' src="../assets/pencil.svg" alt="edit" width={100} height={100} />
-                      <p className='pl-2'>Edit Post</p>
-                    </div>
-                  </Link>
-                  <div
-                    className='flex items-center font-semibold text-red-600 cursor-pointer'
-                    onClick={confirmDelete}
-                  >
-                    <Image className='h-4 w-4 dark:invert' src="../assets/trash.svg" alt="delete" width={100} height={100} />
-                    <p className='pl-2'>Delete Post</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className='pl-5'>
+                <Popover
+                trigger="click"
+                content={
+                    <>
+                        <div className='p-2'>
+                            <Link href={`/Edit/${id}`}>
+                                <div className='flex items-center cursor-pointer p-2'>
+                                        <Image className='h-4 w-4' src="../assets/pencil.svg" alt="edit" width={100} height={100}/> 
+                                        <p className='pl-2'>
+                                            Edit Post
+                                        </p>
+                                </div>
+                            </Link>
+                            <div onClick={confirmDelete} className='flex items-center font-semibold text-red-600 cursor-pointer p-2 hover:border-red-600 hover:border-1'>
+                                <Image className='h-4 w-4' src="../assets/trash.svg" alt="edit" width={100} height={100}/>
+                                <p className='pl-2'>
+                                    Delete Post
+                                </p>
+                            </div>
+                        </div>
+                    </>
+                }
+            >
+        <Image className='h-5 w-5 cursor-pointer' src="../assets/three-dots-vertical.svg" alt="edit" width={100} height={100}/> 
+      </Popover>{" "}
           </div>
           : <Button className="rounded-full h-8 bg-blue-200 hover:bg-blue-400 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200">Follow</Button>
         }
@@ -94,10 +99,10 @@ const BlogPost = ({ profile, post, username, id, comments, save, item }: {
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button color="failure" onClick={() => handleDelete(item)}>
-            Yes, Delete
+          <Button className="cursor-pointer" color="danger" onClick={() => handleDelete(item)}>
+            Delete
           </Button>
-          <Button color="gray" onClick={() => setShowModal(false)}>
+          <Button className="cursor-pointer" color="gray" onClick={() => setShowModal(false)}>
             Cancel
           </Button>
         </ModalFooter>

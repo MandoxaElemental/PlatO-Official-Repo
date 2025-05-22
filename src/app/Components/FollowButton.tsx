@@ -46,7 +46,7 @@ const FollowButton = ({ targetUserId, currentUser, onUpdate }: FollowButtonProps
 
   return (
     <Button
-      className={`rounded-md ${isFollowing ? "bg-red-200 hover:bg-red-400" : "bg-blue-200 hover:bg-blue-400"} rounded-full h-8 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200`}
+      className={`rounded-md ${isFollowing ? "hover:bg-blue-400 bg-white border-2 border-blue-200" : "bg-blue-200 hover:bg-blue-400"} rounded-full h-8 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200`}
       onClick={handleFollow}
     >
       {isFollowing ? "Unfollow" : "Follow"}
