@@ -1,5 +1,5 @@
 'use client'
-import {  Button,
+import {
     Drawer,
     DrawerHeader,
     DrawerItems,
@@ -23,7 +23,7 @@ export function MobileHeader() {
     const handleClose = () => setIsOpen(false);
     return (
     <>
-      <Drawer open={isOpen} onClose={handleClose} className="bg-blue-200 dark:bg-blue-200">
+      <Drawer open={isOpen} onClose={handleClose} className="">
         <DrawerHeader titleIcon={() => <></>} />
         <DrawerItems>
           <Sidebar
@@ -34,34 +34,39 @@ export function MobileHeader() {
               <div>
                       <SidebarItems>
                         <SidebarItemGroup>
+                          <div className="rounded-full bg-blue-200 w-10 h-10 overflow-hidden relative">
+                            <Image src="/assets/person-circle.svg" alt="profilePic" fill className="object-cover"/>
+                          </div>
+                          <p className="text-xl font-bold">
                         {username}
+                          </p>
                         </SidebarItemGroup>
                         <SidebarItemGroup>
                           <SidebarItem href="/Premium">
                           <div className="flex items-center">
-                            <Image className="h-5 w-5 dark:invert" src="../assets/award.svg" alt="notifications" width={100} height={100}/><p className="pl-2">Premium</p>
+                            <Image className="h-8 w-8 dark:invert" src="../assets/award.svg" alt="notifications" width={100} height={100}/><p className="pl-4 text-xl">Premium</p>
                             </div>
                           </SidebarItem>
                           <SidebarItem href="/Messages" >
                           <div className="flex items-center">
-                            <Image className="h-5 w-5 dark:invert" src="../assets/envelope.svg" alt="messages"  width={100} height={100}/><p className="pl-2">Messages</p>
+                            <Image className="h-8 w-8 dark:invert" src="../assets/envelope.svg" alt="messages"  width={100} height={100}/><p className="pl-4 text-xl">Messages</p>
                             </div>
                           </SidebarItem>
                           <SidebarItem href="/RecipeBook" >
                           <div className="flex items-center">
-                            <Image className="h-5 w-5 dark:invert" src="../assets/book.svg" alt="book" width={100} height={100} /><p className="pl-2">Recipe Book</p>
+                            <Image className="h-8 w-8 dark:invert" src="../assets/book.svg" alt="book" width={100} height={100} /><p className="pl-4 text-xl">Recipe Book</p>
                             </div>
                           </SidebarItem>
                           <SidebarItem href={`/Profile/${username}`} >
                           <div className="flex items-center">
-                            <Image className="h-5 w-5 dark:invert" src="../assets/person.svg" alt="profile" width={100} height={100} /><p className="pl-2">Profile</p>
+                            <Image className="h-8 w-8 dark:invert" src="../assets/person.svg" alt="profile" width={100} height={100} /><p className="pl-4 text-xl">Profile</p>
                             </div>
                           </SidebarItem>
                         </SidebarItemGroup>
                         <SidebarItemGroup>
                           <SidebarItem href="/Settings" >
                           <div className="flex items-center">
-                            <Image className="h-5 w-5 dark:invert" src="../assets/gear.svg" alt="profile" width={100} height={100} /><p className="pl-2">Settings and Privacy</p>
+                            <Image className="h-8 w-8 dark:invert" src="../assets/gear.svg" alt="profile" width={100} height={100} /><p className="pl-4 text-xl">Settings and Privacy</p>
                             </div>
                           </SidebarItem>
                           <SidebarItem href="/"
@@ -79,9 +84,11 @@ export function MobileHeader() {
           </Sidebar>
         </DrawerItems>
       </Drawer>
-      <div className="sticky top-0 block md:hidden">
-        <div className="flex bg-blue-200 h-15 p-2 justify-around">
-        <Button onClick={() => setIsOpen(true)}>Show drawer</Button>
+      <div className="sticky top-0 block md:hidden z-5">
+        <div className="flex bg-[#f9fafb] h-15 p-2 justify-around">
+          <div onClick={() => setIsOpen(true)} className="rounded-full bg-blue-200 w-10 h-10 overflow-hidden relative">
+            <Image src="/assets/person-circle.svg" alt="profilePic" fill className="object-cover"/>
+          </div>
         </div>
       </div>
     </>

@@ -9,7 +9,10 @@ const categorizedMeasurements: Record<string, string[]> = {
   Imperial: ['tsp', 'tbsp', 'c', 'pt', 'qt', 'gal', 'oz', 'lbs'],
   Metric: ['ml', 'dl', 'l', 'mg', 'g', 'kg'],
   Size: ['sm', 'md', 'lg'],
-  Miscellaneous: ['pinch', 'dash', 'piece', 'whole', 'half', 'slice', 'clove', 'stick', 'can', 'bottle', 'pkg'],
+  Miscellaneous: [
+    'pinch', 'dash', 'piece', 'whole', 'half',
+    'slice', 'clove', 'stick', 'can', 'bottle', 'pkg'
+  ],
 };
 
 const MeasurementDropdown: React.FC<Props> = ({ selected, onSelect }) => {
@@ -19,10 +22,7 @@ const MeasurementDropdown: React.FC<Props> = ({ selected, onSelect }) => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
@@ -31,6 +31,9 @@ const MeasurementDropdown: React.FC<Props> = ({ selected, onSelect }) => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  const allUnits = Object.values(categorizedMeasurements).flat();
+  const lowercasedUnits = allUnits.map((u) => u.toLowerCase());
 
   const filtered = Object.entries(categorizedMeasurements).reduce(
     (acc, [category, units]) => {
@@ -42,6 +45,10 @@ const MeasurementDropdown: React.FC<Props> = ({ selected, onSelect }) => {
     },
     {} as Record<string, string[]>
   );
+
+  const showCustomOption =
+    filter.length > 0 &&
+    !lowercasedUnits.includes(filter.toLowerCase());
 
   return (
     <div ref={dropdownRef} className="relative inline-block w-[140px]">
@@ -56,11 +63,12 @@ const MeasurementDropdown: React.FC<Props> = ({ selected, onSelect }) => {
         <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded shadow max-h-60 overflow-y-auto p-2 space-y-2">
           <input
             type="text"
-            placeholder="Search..."
+            placeholder="Search or enter custom..."
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
             className="w-full mb-2 border border-gray-300 px-2 py-1 text-sm rounded"
           />
+
           {Object.entries(filtered).map(([category, units]) => (
             <div key={category}>
               <p className="text-xs font-semibold text-gray-500">{category}</p>
@@ -79,7 +87,21 @@ const MeasurementDropdown: React.FC<Props> = ({ selected, onSelect }) => {
               ))}
             </div>
           ))}
-          {Object.keys(filtered).length === 0 && (
+
+          {showCustomOption && (
+            <div
+              className="cursor-pointer px-2 py-1 text-sm text-blue-600 hover:bg-blue-100 rounded"
+              onClick={() => {
+                onSelect(filter);
+                setIsOpen(false);
+                setFilter('');
+              }}
+            >
+              Use custom value: "<strong>{filter}</strong>"
+            </div>
+          )}
+
+          {!showCustomOption && Object.keys(filtered).length === 0 && (
             <p className="text-sm text-gray-500 text-center">No results</p>
           )}
         </div>

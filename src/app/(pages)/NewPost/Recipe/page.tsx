@@ -352,9 +352,10 @@ const Recipe = () => {
           <Button onClick={() => setOpenModal2(false)}>Back</Button>
         </ModalFooter>
       </Modal>
+
         <Modal show={openModal} onClose={() => setOpenModal(false)}>
         <ModalHeader>Tags</ModalHeader>
-        <ModalBody className="ScrollBar">
+        <ModalBody className="">
           <div className="space-y-6">
             Search for tags
             <TextInput value={query} onChange={(e) => setQuery(e.target.value)}/>
@@ -416,14 +417,14 @@ const Recipe = () => {
             <FileInput onChange={handleImage} id="Picture" accept="image/png, image/jpg" />
         </div>
         <div className='border-b-1 border-solid border-slate-300 p-2 flex flex-col items-center'>
-        <Button className="mb-2" onClick={() => setOpenModal2(true)}>Paste Recipe</Button>
+        <Button disabled className="mb-2" onClick={() => setOpenModal2(true)}>Paste Recipe</Button>
         <div className="flex items-center gap-2 my-2">
   <TextInput
     value={source}
     onChange={(e) => setSource(e.target.value)}
     placeholder="Paste recipe URL"
   />
-  <Button onClick={handleScrapeFromURL}>Scrape Recipe</Button>
+  <Button disabled onClick={handleScrapeFromURL}>Scrape Recipe</Button>
 </div>
 
             <TextInput value={name} placeholder='[Recipe Name]' className='w-[200px] pb-2' onChange={(e) => setName(e.target.value)}></TextInput>
@@ -463,8 +464,8 @@ const Recipe = () => {
             <p className='font-semibold text-xl text-center'>Ingredients</p>
             {ingredientGroups.map((group, groupIndex) => (
   <div key={groupIndex}>
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Group {groupIndex + 1}
+            <label className="block text-gray-700 text-sm font-bold pl-15 mb-2">
+              INGREDIENT GROUP HEADER {groupIndex + 1}
             </label>
     <div className='my-2 flex items-center px-2'>
         <Image
@@ -477,6 +478,7 @@ const Recipe = () => {
         />
       <TextInput
         className="w-[550px] font-bold"
+        placeholder='ex. pie filling/piecrust'
         value={group.title}
         onChange={(e) => {
           const newGroups = [...ingredientGroups];
@@ -484,6 +486,17 @@ const Recipe = () => {
           setIngredientGroups(newGroups);
         }}
       />
+    </div>
+    <div className="flex pl-5">
+            <label className="block text-gray-700 text-sm pl-10 font-bold mb-2">
+              AMOUNT
+            </label>
+            <label className="block text-gray-700 text-sm font-bold pl-6 mb-2">
+              MEASUREMENT
+            </label>
+            <label className="block text-gray-700 text-sm font-bold pl-6 mb-2">
+              INGREDIENT
+            </label>
     </div>
     {group.ingredients.map((ing, index) => (
         <div key={index} className="flex items-center px-2">
@@ -496,9 +509,6 @@ const Recipe = () => {
             height={100}
           />
           <div className="mb-4 px-1">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              AMOUNT
-            </label>
             <TextInput
               className="w-[80px]"
               value={ing.amount}
@@ -506,18 +516,12 @@ const Recipe = () => {
             />
           </div>
           <div className="mb-4 px-1">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              MEASUREMENT
-            </label>
             <MeasurementDropdown
               selected={ing.measurement}
               onSelect={(val) => updateIngredient(groupIndex, index, 'measurement', val)}
             />
           </div>
           <div className="mb-4 px-1">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              INGREDIENT
-            </label>
             <TextInput
               className="w-[300px]"
               value={ing.ingredient}
@@ -537,6 +541,9 @@ const Recipe = () => {
   <p className='font-semibold text-xl text-center'>Instructions</p>
   {stepGroups.map((group, groupIndex) => (
     <div key={groupIndex}>
+    <label className="block text-gray-700 text-sm font-bold pl-15 mb-2">
+              STEP GROUP HEADER {groupIndex + 1}
+    </label>
       <div className='my-2 flex items-center px-2'>
       <Image
             className="h-10 w-10 pr-5 hover:opacity-50 dark:invert cursor-pointer"

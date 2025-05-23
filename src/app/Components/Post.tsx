@@ -89,7 +89,7 @@ useEffect(() => {
 
 
   return (
-    <div className="text-center max-w-[500px] mb-5 border-1 border-solid border-blue-100 shadow-blue-200/50 rounded-md shadow-sm">
+    <div className="text-center max-w-[450px] md:max-w-[500px] mb-5 border-1 border-solid border-blue-100 shadow-blue-200/50 rounded-md shadow-sm">
       <div className="flex justify-between items-center py-2 px-5">
         <div className="flex items-center">
         <div className="rounded-full bg-blue-200 w-10 h-10 overflow-hidden relative">
@@ -127,7 +127,7 @@ useEffect(() => {
           />
         </Link>
       ) : (
-      <div className="relative overflow-hidden max-w-[500px] h-[100%]" ref={containerRef}>
+      <div className="relative overflow-hidden max-w-[450px] md:max-w-[500px] h-[100%]" ref={containerRef}>
   <div
     className="flex transition-transform duration-500 ease-in-out"
     style={{
@@ -190,10 +190,10 @@ useEffect(() => {
         const currentIndex = views.indexOf(currentView);
         if (currentIndex > 0) setCurrentView(views[currentIndex - 1] as typeof currentView);
       }}
-      className="bg-transparent h-full hover:bg-black/10 p-2 rounded-0 flex flex-col justify-center"
+      className="bg-transparent h-full hover:opacity-50 hover:bg-black/10 p-2 rounded-r-xl flex flex-col justify-center"
       // disabled={currentView === "main"}
     >
-      <Image width={20} height={20} className="h-10 w-10 dark:invert hover:opacity-50" src="/assets/caret-left-fill.svg" alt="left" />
+      <Image width={20} height={20} className="h-10 w-10 dark:invert" src="/assets/caret-left-fill.svg" alt="left" />
     </div>
   </div>
 
@@ -204,10 +204,10 @@ useEffect(() => {
         const currentIndex = views.indexOf(currentView);
         if (currentIndex < views.length - 1) setCurrentView(views[currentIndex + 1] as typeof currentView);
       }}
-      className="bg-transparent h-full hover:bg-black/10 p-2 rounded-0 flex flex-col justify-center"
+      className="bg-transparent h-full hover:opacity-50 hover:bg-black/10 p-2 rounded-l-xl flex flex-col justify-center"
       // disabled={currentView === "steps"}
     >
-      <Image width={20} height={20} className="h-10 w-10 dark:invert hover:opacity-50" src="/assets/caret-right-fill.svg" alt="right" />
+      <Image width={20} height={20} className="h-10 w-10 dark:invert" src="/assets/caret-right-fill.svg" alt="right" />
     </div>
   </div>
 </div>

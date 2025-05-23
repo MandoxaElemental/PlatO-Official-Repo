@@ -82,10 +82,28 @@ const LogInPage = () =>
         </div>
         <RememberCheck/>
         <div className='text-blue-600 underline'><Link href={"/Login/SignupPage"}>Don&apos;t have an Account? Sign Up Here</Link></div>
-        <div className='mb-3'>
-          <Button onClick={handleSubmit} className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer'>Login</Button>
-        </div>
-        <ButtonCancel pageLink=''/>
+        <div className='mb-3 space-y-2'>
+  <Button
+    onClick={handleSubmit}
+    className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer'
+  >
+    Login
+  </Button>
+  <Button
+    onClick={() => {
+      localStorage.setItem("Token", "guest-token");
+      localStorage.setItem("UserID", "0");
+      localStorage.setItem("Username", "Guest");
+
+      alert("Logged in as Guest");
+      router.push("/Home");
+    }}
+    className='rounded-md bg-gray-300 hover:bg-gray-500 text-black w-full cursor-pointer'
+  >
+    Continue as Guest
+  </Button>
+</div>
+<ButtonCancel pageLink=''/>
         {/* <ButtonLoginGoogle/>
         <ButtonLogInFB/>
         <ButtonLogInX/> */}

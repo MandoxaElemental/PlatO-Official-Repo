@@ -66,6 +66,7 @@ const Blog = () => {
       const getData = async () => {
         if (!postId) return;
         const data = await getBlogbyId(Number(postId), getToken());
+        console.log(data)
         setBlogItem(data);
         setName(data.recipeName);
         setId(String(data.id));
