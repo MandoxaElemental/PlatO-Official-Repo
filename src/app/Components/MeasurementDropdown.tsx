@@ -97,7 +97,7 @@ const MeasurementDropdown: React.FC<Props> = ({ selected, onSelect }) => {
                 setFilter('');
               }}
             >
-              Use custom value: "<strong>{filter}</strong>"
+              Use custom value: &quot;<strong>{filter}</strong>&quot;
             </div>
           )}
 
