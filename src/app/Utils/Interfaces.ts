@@ -83,6 +83,9 @@ export interface IUserData
     followers: number[]
 
 }
+
+export type IUserUpdate = Omit<IUserData, 'salt' | 'hash'>;
+
 export interface ICommentItems
 {
     id: number,

@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export function MobileFooter() {
   return (
-    <div className="sticky bottom-0 block md:hidden bg-[#f9fafb]">
+    <div className="sticky bottom-0 block md:hidden bg-[#f9fafb] dark:bg-[#1f2937]">
       <div className="flex h-16 p-2 justify-around items-center">
         <Link href={"/Home"}>
         <div className="flex justify-center pt-2">

@@ -1,6 +1,6 @@
-import { IBlogItems, ICommentItems, IIngredientItems, IReplyItems, IStepItems, IUserData, IUserInfoCreate, IUserInfoLogin } from "./Interfaces"
+import { IBlogItems, ICommentItems, IIngredientItems, IReplyItems, IStepItems, IUserData, IUserInfoCreate, IUserInfoLogin, IUserUpdate } from "./Interfaces"
 
-const url = "https://platobackend-a7hagaahdvdfesgm.westus-01.azurewebsites.net"
+const url = "plato-backend-service-ckfsdddugkazhmgz.westus-01.azurewebsites.net"
 
 let userData: IUserData
 
@@ -50,7 +50,7 @@ export const login = async (user: IUserInfoLogin) =>
     return data;
 }
 
-export const updateUserItem = async (user: IUserData, token: string) =>
+export const updateUserItem = async (user: IUserUpdate, token: string) =>
     {
         const response = await fetch(`${url}/User/EditUser`,
         {

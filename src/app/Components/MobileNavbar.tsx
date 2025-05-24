@@ -85,7 +85,7 @@ export function MobileHeader() {
         </DrawerItems>
       </Drawer>
       <div className="sticky top-0 block md:hidden z-5">
-        <div className="flex bg-[#f9fafb] h-15 p-2 justify-around">
+        <div className="flex bg-[#f9fafb] dark:bg-[#1f2937] h-15 p-2 pl-5">
           <div onClick={() => setIsOpen(true)} className="rounded-full bg-blue-200 w-10 h-10 overflow-hidden relative">
             <Image src="/assets/person-circle.svg" alt="profilePic" fill className="object-cover"/>
           </div>
