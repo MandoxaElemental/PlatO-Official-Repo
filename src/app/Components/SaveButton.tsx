@@ -20,15 +20,18 @@ const SaveButton = ({ postId, currentUser, onUpdate }: SaveButtonProps) => {
 
   const handleSave = async () => {
     if (!currentUser) return;
+    const { salt, hash, ...rest } = currentUser;
 
     const updatedSavedRecipes = isSaved
       ? currentUser.savedRecipes.filter((id) => id !== postId)
       : [...new Set([...(currentUser.savedRecipes || []), postId])];
 
-    const updatedUser: IUserData = {
-      ...currentUser,
-      savedRecipes: updatedSavedRecipes,
-    };
+      const updatedUser: IUserData = {
+        ...rest,
+        salt,
+        hash,
+        savedRecipes: updatedSavedRecipes,
+      };
 
     try {
       const success = await updateUserItem(updatedUser, getToken());
