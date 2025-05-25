@@ -28,8 +28,6 @@ const FollowButton = ({ targetUserId, currentUser, onUpdate }: FollowButtonProps
     const updatedUser: IUserData = {
       ...currentUser,
       following: updatedFollowing,
-      ...(currentUser.salt && { salt: currentUser.salt }),
-      ...(currentUser.hash && { hash: currentUser.hash }),
     };
 
     try {

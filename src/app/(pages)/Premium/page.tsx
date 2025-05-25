@@ -1,10 +1,10 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { IUserUpdate } from '@/app/Utils/Interfaces';
+import { IUserData } from '@/app/Utils/Interfaces';
 import { getUserInfoByUsername, updateUserItem } from '@/app/Utils/DataServices';
 
 const Premium = () => {
-  const [userData, setUserData] = useState<IUserUpdate | null>(null);
+  const [userData, setUserData] = useState<IUserData | null>(null);
   const [isGuest, setIsGuest] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [token, setToken] = useState('');
@@ -20,7 +20,7 @@ const Premium = () => {
 
     if (storedToken !== 'guest-token' && storedUsername !== 'Guest') {
       getUserInfoByUsername(storedUsername)
-        .then((data: IUserUpdate) => {
+        .then((data: IUserData) => {
           setUserData(data);
           setIsLoaded(true);
         })
@@ -36,7 +36,7 @@ const Premium = () => {
   const handleUpgrade = async () => {
     if (!userData || isGuest) return;
 
-    const updatedUser: IUserUpdate = {
+    const updatedUser: IUserData = {
       ...userData,
       premiumMember: true,
     };
@@ -88,6 +88,7 @@ const Premium = () => {
         <li>👩‍🍳 Real-time Recipe Collaboration</li>
         <li>📰 Weekly Premium Newsletter</li>
         <li>🔓 Access to Exclusive Recipes & Videos</li>
+        <li>📦 Increased Upload Limits</li>
         <li>📌 Pin Recipes to Your Profile</li>
       </ul>
     </div>

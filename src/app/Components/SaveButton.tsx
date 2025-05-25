@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { getToken, updateUserItem } from '../Utils/DataServices';
-import { IUserUpdate } from '../Utils/Interfaces';
+import { IUserData } from '../Utils/Interfaces';
 import Image from 'next/image';
 
 interface SaveButtonProps {
   postId: number;
-  currentUser: IUserUpdate | null;
-  onUpdate?: (user: IUserUpdate) => void;
+  currentUser: IUserData | null;
+  onUpdate?: (user: IUserData) => void;
 }
 
 const SaveButton = ({ postId, currentUser, onUpdate }: SaveButtonProps) => {
@@ -20,16 +20,15 @@ const SaveButton = ({ postId, currentUser, onUpdate }: SaveButtonProps) => {
 
   const handleSave = async () => {
     if (!currentUser) return;
-    const { ...rest } = currentUser;
 
     const updatedSavedRecipes = isSaved
       ? currentUser.savedRecipes.filter((id) => id !== postId)
       : [...new Set([...(currentUser.savedRecipes || []), postId])];
 
-      const updatedUser: IUserUpdate = {
-        ...rest,
-        savedRecipes: updatedSavedRecipes,
-      };
+    const updatedUser: IUserData = {
+      ...currentUser,
+      savedRecipes: updatedSavedRecipes,
+    };
 
     try {
       const success = await updateUserItem(updatedUser, getToken());

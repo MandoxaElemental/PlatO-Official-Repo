@@ -63,8 +63,6 @@ export interface IUserData
 {
     id: number,
     name: string,
-    salt: string,
-    hash: string,
     username: string,
     email: string,
     phoneNumber: string,
@@ -83,9 +81,6 @@ export interface IUserData
     followers: number[]
 
 }
-
-export type IUserUpdate = Omit<IUserData, 'salt' | 'hash'>;
-
 export interface ICommentItems
 {
     id: number,
