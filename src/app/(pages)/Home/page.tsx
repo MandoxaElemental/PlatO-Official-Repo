@@ -1,17 +1,21 @@
 'use client';
-
 import Post from "@/app/Components/Post";
 import Recommended from "@/app/Components/Recommended";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IBlogItems } from "@/app/Utils/Interfaces";
 import { getAllBlogs, getToken } from "@/app/Utils/DataServices";
 import { dummyBlogData } from "@/app/Utils/dummyData";
 import { Spinner } from "flowbite-react";
 
+const BATCH_SIZE = 5;
+
 export default function Home() {
   const [blogItems, setBlogItems] = useState<IBlogItems[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [isFallback, setIsFallback] = useState<boolean>(false); // flag to indicate dummy data
+  const [isFallback, setIsFallback] = useState<boolean>(false);
+  const [visibleCount, setVisibleCount] = useState<number>(BATCH_SIZE);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
     const getData = async () => {
@@ -35,8 +39,29 @@ export default function Home() {
     getData();
   }, []);
 
+  useEffect(() => {
+    if (!sentinelRef.current) return;
+
+    if (observerRef.current) observerRef.current.disconnect();
+
+    observerRef.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        setVisibleCount(prev => {
+          if (prev >= blogItems.length - 3) return prev;
+          return prev + BATCH_SIZE;
+        });
+      }
+    });
+
+    observerRef.current.observe(sentinelRef.current);
+
+    return () => {
+      if (observerRef.current) observerRef.current.disconnect();
+    };
+  }, [blogItems.length, sentinelRef]);
+
   const firstThree = blogItems.slice(0, 3);
-  const remainingPosts = blogItems.slice(3);
+  const remainingPosts = blogItems.slice(3, 3 + visibleCount);
 
   if (loading) {
     return (
@@ -63,6 +88,15 @@ export default function Home() {
       {remainingPosts.map((item: IBlogItems) => (
         <Post key={item.id} blog={item} />
       ))}
+
+      {/* 👇 Infinite scroll trigger */}
+      <div ref={sentinelRef} className="h-10 flex justify-center items-center text-gray-400">
+        {visibleCount < blogItems.length - 3 ? (
+          <Spinner size="sm" aria-label="Loading more..." />
+        ) : (
+          <span>No more posts</span>
+        )}
+      </div>
     </div>
   );
 }

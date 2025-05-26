@@ -31,8 +31,6 @@ const Recipe = () => {
     const [openModal, setOpenModal] = useState(false);
     const [openModal2, setOpenModal2] = useState(false);
     const [pastedText, setPastedText] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-  const [postSuccess, setPostSuccess] = useState(false);
 
     const router = useRouter();
   
@@ -139,51 +137,47 @@ const Recipe = () => {
       }
     }
     const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
-  setIsLoading(true);
-  setPostSuccess(false);
+      const blogItem = {
+        id: blogId,
+        userId: id,
+        publisherName: username,
+        image: recipeImage,
+        date: format(new Date(), 'MM-dd-yyyy'),
+        recipeName: name,
+        description: description,
+        ingredients: ingredientGroups.map(group => ({
+          title: group.title,
+          ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
+        })),
+        steps: stepGroups.map(group => ({
+          title: group.title,
+          steps: group.steps
+        })),
+        tags: selectedTags,
+        totalTime: totalTime,
+        servings: servings,
+        source: source,
+        rating: 0,
+        numberOfRatings: 0,
+        averageRating: 5,
+        numberOfLikes: 0,
+        postType: 'recipe',
+        isPublished: e.currentTarget.textContent === 'Draft' ? false : true,
+        isDeleted: false
+      };
+  
 
-  const blogItem = {
-    id: blogId,
-    userId: id,
-    publisherName: username,
-    image: recipeImage,
-    date: format(new Date(), 'MM-dd-yyyy'),
-    recipeName: name,
-    description: description,
-    ingredients: ingredientGroups.map(group => ({
-      title: group.title,
-      ingredients: group.ingredients.map(i => `${i.amount} ${i.measurement} ${i.ingredient}`)
-    })),
-    steps: stepGroups.map(group => ({
-      title: group.title,
-      steps: group.steps
-    })),
-    tags: selectedTags,
-    totalTime: totalTime,
-    servings: servings,
-    source: source,
-    rating: 0,
-    numberOfRatings: 0,
-    averageRating: 5,
-    numberOfLikes: 0,
-    postType: 'recipe',
-    isPublished: e.currentTarget.textContent === 'Draft' ? false : true,
-    isDeleted: false
-  };
+      let result = false
+      result = await addBlogItem(blogItem, getToken());
+      if (result) {
+      
 
-  const result = await addBlogItem(blogItem, getToken());
-
-  if (result) {
-    setPostSuccess(true);
-    setTimeout(() => {
-      router.push("/Home");
-    }, 1500); // delay to show checkmark
-  } else {
-    setIsLoading(false);
-    alert("Post Error");
-  }
-};
-
+        alert('Success!');
+        router.push("/Home");
+      } else {
+        alert('Post Error');
+      }
+    };
 
     const handleAutoFill = () => {
       const parsed = parseRecipeText(pastedText);
@@ -625,34 +619,6 @@ const Recipe = () => {
             <Button onClick={handleSave} className='mx-1 w-[100px]'>Post</Button>
         </div>
     </div>
-    {isLoading && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-    {!postSuccess ? (
-      <div className="flex flex-col items-center space-y-4">
-        <div className="w-16 h-16 border-4 border-white border-dashed rounded-full animate-spin"></div>
-        <span className="text-white text-xl font-medium">Posting...</span>
-      </div>
-    ) : (
-      <div className="flex flex-col items-center space-y-4">
-        <svg
-          className="w-16 h-16 text-green-500"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M5 13l4 4L19 7"
-          />
-        </svg>
-        <span className="text-white text-xl font-medium">Success!</span>
-      </div>
-    )}
-  </div>
-)}
-
     </>
   )
 }

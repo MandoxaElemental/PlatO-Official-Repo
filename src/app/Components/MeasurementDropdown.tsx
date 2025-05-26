@@ -57,7 +57,7 @@ const MeasurementDropdown: React.FC<Props> = ({ selected, onSelect }) => {
         className="w-full bg-white border border-gray-300 text-sm px-3 py-2 rounded shadow"
         onClick={() => setIsOpen(!isOpen)}
       >
-        {selected || 'Measurement'}
+        {selected || ''}
       </button>
       {isOpen && (
         <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded shadow max-h-60 overflow-y-auto p-2 space-y-2">

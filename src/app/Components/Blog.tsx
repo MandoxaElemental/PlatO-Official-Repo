@@ -70,7 +70,7 @@ const BlogPost = ({ profile, post, username, id, comments, save, item }: {
                     </>
                 }
             >
-        <Image className='h-5 w-5 cursor-pointer' src="../assets/three-dots-vertical.svg" alt="edit" width={100} height={100}/> 
+        <Image className='h-5 w-5 cursor-pointer dark:inverted' src="../assets/three-dots-vertical.svg" alt="edit" width={100} height={100}/> 
       </Popover>{" "}
           </div>
           : <Button className="rounded-full h-8 bg-blue-200 hover:bg-blue-400 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200">Follow</Button>

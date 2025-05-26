@@ -24,6 +24,8 @@ const Blog = () => {
     const [image, setImage] = useState<string>('');
     const [postType, setPostType] = useState<string>('');
     const [description, setDescription] = useState<string>('');
+    const [serving, setServing] = useState<string>('');
+    const [time, setTime] = useState<string>('');
     const [ingredients, setIngredients] = useState<IIngredientItems[]>([]);
     const [steps, setSteps] = useState<IStepItems[]>([]);
     const [tags, setTags] = useState<string[]>([]);
@@ -72,6 +74,8 @@ const Blog = () => {
         setName(data.recipeName);
         setId(String(data.id));
         setUser(data.publisherName);
+        setServing(data.servings);
+        setTime(data.totalTime);
         setImage(data.image ?? "/assets/Placeholder.png");
         setDescription(data.description);
         setIngredients(data.ingredients ?? []);
@@ -183,7 +187,16 @@ const Blog = () => {
                                     );
                                   })}
                                 </div>
-
+                                <div className="p-2 flex justify-around">
+                                  <div className="text-center">
+                                    <p className="font-semibold">Time</p>
+                                    {time}
+                                  </div>
+                                  <div className="text-center">
+                                    <p className="font-semibold">Servings</p>
+                                    {serving}
+                                  </div>
+                                </div>
                                 <div className='p-2 text-left'>{description}</div>
                                 <div className='border-t border-solid border-slate-300 py-2'>
                                     <p className='font-semibold'>Ingredients</p>
