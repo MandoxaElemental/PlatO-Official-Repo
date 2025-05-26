@@ -7,25 +7,25 @@ export function MobileFooter() {
       <div className="flex h-16 p-2 justify-around items-center">
         <Link href={"/Home"}>
         <div className="flex justify-center pt-2">
-          <Image className="h-8 w-8 dark:invert" src="../assets/house.svg" alt="home" width={0} height={100}/>
+          <Image className="h-5 w-5 dark:invert" src="../assets/house.svg" alt="home" width={0} height={100}/>
         </div>
           <div>Home</div>
         </Link>
         <Link href={"/Discover"}>
         <div className="flex justify-center pt-2">
-          <Image className="h-8 w-8 dark:invert" src="../assets/search.svg" alt="home" width={0} height={100}/>
+          <Image className="h-5 w-5 dark:invert" src="../assets/search.svg" alt="home" width={0} height={100}/>
         </div>
           <div>Discover</div>
         </Link>
         <Link href={"/NewPost"}>
         <div className="flex justify-center pt-2">
-          <Image className="h-8 w-8 dark:invert" src="../assets/camera.svg" alt="home" width={0} height={100}/>
+          <Image className="h-5 w-5 dark:invert" src="../assets/camera.svg" alt="home" width={0} height={100}/>
         </div>
           <div>Post</div>
         </Link>
         <Link href={"/Notifications"}>
         <div className="flex justify-center pt-2">
-          <Image className="h-8 w-8 dark:invert" src="../assets/bell.svg" alt="home" width={0} height={100}/>
+          <Image className="h-5 w-5 dark:invert" src="../assets/bell.svg" alt="home" width={0} height={100}/>
         </div>
           <div>Notifications</div>
         </Link>

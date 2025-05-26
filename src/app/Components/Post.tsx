@@ -89,7 +89,7 @@ useEffect(() => {
 
 
   return (
-    <div className="text-center max-w-[450px] md:max-w-[500px] mb-5 border-1 border-solid border-blue-100 shadow-blue-200/50 rounded-md shadow-sm">
+    <div className="text-center max-w-[360px] md:max-w-[500px] mb-5 border-1 border-solid border-blue-100 shadow-blue-200/50 rounded-md shadow-sm">
       <div className="flex justify-between items-center py-2 px-5">
         <div className="flex items-center">
         <div className="rounded-full bg-blue-200 w-10 h-10 overflow-hidden relative">
@@ -114,105 +114,116 @@ useEffect(() => {
         )}
       </div>
 
-      {blog.postType !== "recipe" ? (
+{blog.postType === "image" ? (
+  <Link href={`/Blog/${blog.id}`}>
+    <Image
+      src={String(blog.image)}
+      alt="post"
+      className="aspect-square object-cover object-center"
+      width={500}
+      height={500}
+      sizes="(max-width: 1080px) 100vw, 1080px"
+      loading="lazy"
+    />
+  </Link>
+) : blog.postType === "video" ? (
+  <div className="relative w-full h-auto">
+    <video
+      className="w-full h-auto max-h-[500px] object-cover"
+      controls
+      preload="metadata"
+      poster={String(blog.image) || "/assets/Placeholder.png"}
+    >
+      <source src={String(blog.image)} type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+  </div>
+) : (
+  // Fallback for "recipe" or others (default to swipeable views)
+  <div className="relative overflow-hidden max-w-[360px] md:max-w-[500px] h-[100%]" ref={containerRef}>
+    <div
+      className="flex transition-transform duration-500 ease-in-out"
+      style={{
+        width: '1500px',
+        transform: `translateX(-${["main", "ingredients", "steps"].indexOf(currentView) * 500}px)`,
+      }}
+    >
+      {/* Main View */}
+      <div className="w-[500px] max-h-[360px] shrink-0">
         <Link href={`/Blog/${blog.id}`}>
           <Image
-            src={String(blog.image)}
+            className="object-cover h-[300px] w-full"
+            src={blog.image !== "" ? String(blog.image) : "/assets/Placeholder.png"}
             alt="post"
-            className="aspect-square object-cover object-center"
             width={500}
             height={500}
-            sizes="(max-width: 1080px) 100vw, 1080px"
             loading="lazy"
           />
         </Link>
-      ) : (
-      <div className="relative overflow-hidden max-w-[450px] md:max-w-[500px] h-[100%]" ref={containerRef}>
-  <div
-    className="flex transition-transform duration-500 ease-in-out"
-    style={{
-      width: '1500px',
-      transform: `translateX(-${["main", "ingredients", "steps"].indexOf(currentView) * 500}px)`,
-    }}
-  >
-    {/* Main View */}
-    <div className="w-[500px] max-h-[450px] shrink-0">
-      <Link href={`/Blog/${blog.id}`}>
-        <Image
-          className="object-cover h-[300px] w-full"
-          src={blog.image !== "" ? String(blog.image) : "/assets/Placeholder.png"}
-          alt="post"
-          width={500}
-          height={500}
-          loading="lazy"
-        />
-      </Link>
-      <p className="font-semibold text-2xl p-2">{blog.recipeName}</p>
-      <div className="p-2 text-left">{blog.description}</div>
+        <p className="font-semibold text-2xl p-2">{blog.recipeName}</p>
+        <div className="p-2 text-left">{blog.description}</div>
+      </div>
+
+      {/* Ingredients View */}
+      <div className="w-[500px] max-h-[360px] shrink-0 px-10 overflow-y-auto">
+        <h3 className="font-bold text-lg px-2 pt-5">Ingredients:</h3>
+        {blog.ingredients.map((item, i) => (
+          <div key={i}>
+            <h1 className="font-bold">{item.title}</h1>
+            <ul className="list-disc text-left pl-6">
+              {item.ingredients.map((ingredient, j) => (
+                <li key={j}>{ingredient}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      {/* Steps View */}
+      <div className="w-[500px] max-h-[360px] shrink-0 px-10 overflow-y-auto">
+        <h3 className="font-bold text-lg px-2 pt-5">Steps:</h3>
+        {blog.steps.map((item, i) => (
+          <div key={i}>
+            <h1 className="font-semibold">{item.title}</h1>
+            <ol className="list-decimal text-left mx-6">
+              {item.steps.map((step, j) => (
+                <li key={j}>{step}</li>
+              ))}
+            </ol>
+          </div>
+        ))}
+      </div>
     </div>
 
-    {/* Ingredients View */}
-    <div className="w-[500px] max-h-[450px] shrink-0 px-10 overflow-y-auto">
-      <h3 className="font-bold text-lg px-2 pt-5">Ingredients:</h3>
-      {blog.ingredients.map((item, i) => (
-        <div key={i}>
-          <h1 className="font-bold">{item.title}</h1>
-          <ul className="list-disc text-left pl-6">
-            {item.ingredients.map((ingredient, j) => (
-              <li key={j}>{ingredient}</li>
-            ))}
-          </ul>
-        </div>
-      ))}
+    {/* Navigation Buttons */}
+    <div className="absolute inset-y-0 left-0">
+      <div
+        onClick={() => {
+          const views = ["main", "ingredients", "steps"];
+          const currentIndex = views.indexOf(currentView);
+          if (currentIndex > 0) setCurrentView(views[currentIndex - 1] as typeof currentView);
+        }}
+        className="bg-transparent h-full hover:opacity-50 hover:bg-black/10 p-2 rounded-r-xl flex flex-col justify-center"
+      >
+        <Image width={20} height={20} className="h-10 w-10 dark:invert" src="/assets/caret-left-fill.svg" alt="left" />
+      </div>
     </div>
 
-    {/* Steps View */}
-    <div className="w-[500px] max-h-[450px] shrink-0 px-10 overflow-y-auto">
-      <h3 className="font-bold text-lg px-2 pt-5">Steps:</h3>
-      {blog.steps.map((item, i) => (
-        <div key={i}>
-          <h1 className="font-semibold">{item.title}</h1>
-          <ol className="list-decimal text-left mx-6">
-            {item.steps.map((step, j) => (
-              <li key={j}>{step}</li>
-            ))}
-          </ol>
-        </div>
-      ))}
-    </div>
-  </div>
-
-  {/* Navigation Buttons */}
-  <div className="absolute inset-y-0 left-0">
-    <div
-      onClick={() => {
-        const views = ["main", "ingredients", "steps"];
-        const currentIndex = views.indexOf(currentView);
-        if (currentIndex > 0) setCurrentView(views[currentIndex - 1] as typeof currentView);
-      }}
-      className="bg-transparent h-full hover:opacity-50 hover:bg-black/10 p-2 rounded-r-xl flex flex-col justify-center"
-      // disabled={currentView === "main"}
-    >
-      <Image width={20} height={20} className="h-10 w-10 dark:invert" src="/assets/caret-left-fill.svg" alt="left" />
+    <div className="absolute inset-y-0 right-0">
+      <div
+        onClick={() => {
+          const views = ["main", "ingredients", "steps"];
+          const currentIndex = views.indexOf(currentView);
+          if (currentIndex < views.length - 1) setCurrentView(views[currentIndex + 1] as typeof currentView);
+        }}
+        className="bg-transparent h-full hover:opacity-50 hover:bg-black/10 p-2 rounded-l-xl flex flex-col justify-center"
+      >
+        <Image width={20} height={20} className="h-10 w-10 dark:invert" src="/assets/caret-right-fill.svg" alt="right" />
+      </div>
     </div>
   </div>
+)}
 
-  <div className="absolute inset-y-0 right-0">
-    <div
-      onClick={() => {
-        const views = ["main", "ingredients", "steps"];
-        const currentIndex = views.indexOf(currentView);
-        if (currentIndex < views.length - 1) setCurrentView(views[currentIndex + 1] as typeof currentView);
-      }}
-      className="bg-transparent h-full hover:opacity-50 hover:bg-black/10 p-2 rounded-l-xl flex flex-col justify-center"
-      // disabled={currentView === "steps"}
-    >
-      <Image width={20} height={20} className="h-10 w-10 dark:invert" src="/assets/caret-right-fill.svg" alt="right" />
-    </div>
-  </div>
-</div>
-
-      )}
 
 <div className='flex justify-evenly p-2 pt-5 text-xs font-blue-400'>
           <LikeButton

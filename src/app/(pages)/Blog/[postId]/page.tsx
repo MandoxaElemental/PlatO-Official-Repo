@@ -11,6 +11,7 @@ import { format } from 'date-fns';
 import Comment from '@/app/Components/Comment';
 import Link from 'next/link';
 import SaveButton from '@/app/Components/SaveButton';
+import BackButton from '@/app/Components/BackButton';
 
 const Blog = () => {
     const { postId } = useParams();
@@ -133,7 +134,9 @@ const Blog = () => {
     }
 
     return (
-        <div className="pt-10 w-min-full">
+        <>
+        <BackButton/>
+        <div className="w-min-full">
             <BlogPost
                 item={blogItem!}
                 profile={`${profilePic}`}
@@ -252,6 +255,7 @@ const Blog = () => {
                 )}
             />
         </div>
+        </>
     );
 };
 

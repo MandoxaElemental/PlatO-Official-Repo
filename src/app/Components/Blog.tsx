@@ -36,7 +36,7 @@ const BlogPost = ({ profile, post, username, id, comments, save, item }: {
       }
 
   return (
-    <div className='text-center max-w-[500px] border-1 border-solid border-blue-100 rounded-md'>
+    <div className='mb-10 text-center max-w-[500px] border-1 border-solid border-blue-100 rounded-md'>
       <div className='flex justify-between items-center py-2 px-5'>
         <div className='flex items-center'>
           <div className="rounded-full overflow-hidden w-10 h-10 relative bg-blue-200">

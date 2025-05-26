@@ -44,29 +44,29 @@ export function MobileHeader() {
                         <SidebarItemGroup>
                           <SidebarItem href="/Premium">
                           <div className="flex items-center">
-                            <Image className="h-8 w-8 dark:invert" src="../assets/award.svg" alt="notifications" width={100} height={100}/><p className="pl-4 text-xl">Premium</p>
+                            <Image className="h-5 w-5 dark:invert" src="../assets/award.svg" alt="notifications" width={100} height={100}/><p className="pl-4 text-xl">Premium</p>
                             </div>
                           </SidebarItem>
                           <SidebarItem href="/Messages" >
                           <div className="flex items-center">
-                            <Image className="h-8 w-8 dark:invert" src="../assets/envelope.svg" alt="messages"  width={100} height={100}/><p className="pl-4 text-xl">Messages</p>
+                            <Image className="h-5 w-5 dark:invert" src="../assets/envelope.svg" alt="messages"  width={100} height={100}/><p className="pl-4 text-xl">Messages</p>
                             </div>
                           </SidebarItem>
                           <SidebarItem href="/RecipeBook" >
                           <div className="flex items-center">
-                            <Image className="h-8 w-8 dark:invert" src="../assets/book.svg" alt="book" width={100} height={100} /><p className="pl-4 text-xl">Recipe Book</p>
+                            <Image className="h-5 w-5 dark:invert" src="../assets/book.svg" alt="book" width={100} height={100} /><p className="pl-4 text-xl">Recipe Book</p>
                             </div>
                           </SidebarItem>
                           <SidebarItem href={`/Profile/${username}`} >
                           <div className="flex items-center">
-                            <Image className="h-8 w-8 dark:invert" src="../assets/person.svg" alt="profile" width={100} height={100} /><p className="pl-4 text-xl">Profile</p>
+                            <Image className="h-5 w-5 dark:invert" src="../assets/person.svg" alt="profile" width={100} height={100} /><p className="pl-4 text-xl">Profile</p>
                             </div>
                           </SidebarItem>
                         </SidebarItemGroup>
                         <SidebarItemGroup>
                           <SidebarItem href="/Settings" >
                           <div className="flex items-center">
-                            <Image className="h-8 w-8 dark:invert" src="../assets/gear.svg" alt="profile" width={100} height={100} /><p className="pl-4 text-xl">Settings and Privacy</p>
+                            <Image className="h-5 w-5 dark:invert" src="../assets/gear.svg" alt="profile" width={100} height={100} /><p className="pl-4 text-xl">Settings and Privacy</p>
                             </div>
                           </SidebarItem>
                           <SidebarItem href="/"
