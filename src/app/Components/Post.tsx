@@ -165,6 +165,7 @@ useEffect(() => {
       </div>
 
       {/* Ingredients View */}
+        <Link href={`/Blog/${blog.id}`}>
       <div className="w-[500px] max-h-[360px] shrink-0 px-10 overflow-y-auto">
         <h3 className="font-bold text-lg px-2 pt-5">Ingredients:</h3>
         {blog.ingredients.map((item, i) => (
@@ -178,8 +179,10 @@ useEffect(() => {
           </div>
         ))}
       </div>
+        </Link>
 
       {/* Steps View */}
+        <Link href={`/Blog/${blog.id}`}>
       <div className="w-[500px] max-h-[360px] shrink-0 px-10 overflow-y-auto">
         <h3 className="font-bold text-lg px-2 pt-5">Steps:</h3>
         {blog.steps.map((item, i) => (
@@ -193,6 +196,7 @@ useEffect(() => {
           </div>
         ))}
       </div>
+        </Link>
     </div>
 
     {/* Navigation Buttons */}
