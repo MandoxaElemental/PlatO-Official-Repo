@@ -1,11 +1,14 @@
 'use client'
 import Link from 'next/link'
 import Image from 'next/image'
+import BackButton from '@/app/Components/BackButton'
 
 const Post = () => {
 
 
   return (
+    <>
+    <BackButton/>
     <div className='pt-10 px-5 w-min-full flex flex-col text-center'>
         <h1 className='font-2xl text-semibold pb-2'>New Post</h1>
         <Link href={"/NewPost/Default"}>
@@ -33,6 +36,7 @@ const Post = () => {
         </div>
         </Link>
     </div>
+    </>
   )
 }
 

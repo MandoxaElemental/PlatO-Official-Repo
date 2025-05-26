@@ -1,5 +1,5 @@
 'use client'
-import { Button, FileInput, TextInput, Modal, ModalBody, ModalFooter, ModalHeader} from 'flowbite-react'
+import { Button, FileInput, TextInput, Modal, ModalBody, ModalFooter, ModalHeader, Textarea} from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { Ingredient, IngredientGroup, StepGroup, tagArr } from '@/app/Utils/Interfaces'
 import Image from 'next/image'
@@ -7,6 +7,7 @@ import { addBlogItem, getToken } from '@/app/Utils/DataServices'
 import { format } from 'date-fns'
 import { useRouter } from 'next/navigation'
 import MeasurementDropdown from '@/app/Components/MeasurementDropdown'
+import BackButton from '@/app/Components/BackButton'
 
 const Recipe = () => {
     const [blogId, setBlogId] = useState<number>(0);
@@ -333,7 +334,9 @@ const Recipe = () => {
     
 
   return (
-    <div className='pt-10 px-5 w-full'>
+    <>
+    <BackButton/>
+    <div className='px-5 w-full'>
         <Modal show={openModal2} onClose={() => setOpenModal2(false)}>
         <ModalHeader>Paste Recipe</ModalHeader>
         <ModalBody>
@@ -423,13 +426,14 @@ const Recipe = () => {
     value={source}
     onChange={(e) => setSource(e.target.value)}
     placeholder="Paste recipe URL"
+    disabled
   />
   <Button disabled onClick={handleScrapeFromURL}>Scrape Recipe</Button>
 </div>
 
             <TextInput value={name} placeholder='[Recipe Name]' className='w-[200px] pb-2' onChange={(e) => setName(e.target.value)}></TextInput>
             <p className='text-center text-blue-600'>Description 200/{length}</p>
-            <TextInput value={description} onChange={(e) => setDescription(e.target.value)} className='w-[400px]'></TextInput>
+            <Textarea value={description} onChange={(e) => setDescription(e.target.value)} className='w-[350px]'/>
               <div className="mt-4 flex justify-between">    
             <div className="px-1">
               <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -455,7 +459,7 @@ const Recipe = () => {
                 Source
               </label>
               <TextInput
-                className="w-[400px]"
+                className="w-[350px]"
                 onChange={(e) => setSource(e.target.value)}
               />
             </div>
@@ -523,7 +527,7 @@ const Recipe = () => {
           </div>
           <div className="mb-4 px-1">
             <TextInput
-              className="w-[300px]"
+              className="w-[250px]"
               value={ing.ingredient}
               onChange={(e) =>
                 updateIngredient(groupIndex, index, 'ingredient', e.target.value)
@@ -554,7 +558,7 @@ const Recipe = () => {
             height={100}
         />
         <TextInput
-          className="w-[550px] font-bold"
+          className="w-[500px] font-bold"
           value={group.title}
           onChange={(e) => {
             const newGroups = [...stepGroups];
@@ -577,8 +581,8 @@ const Recipe = () => {
             <label className="block text-gray-700 text-sm font-bold mb-2">
               Step {stepIndex + 1}
             </label>
-            <TextInput
-              className="w-[550px]"
+            <Textarea
+              className="w-[450px]"
               value={step}
               onChange={(e) => updateStep(groupIndex, stepIndex, e.target.value)}
             />
@@ -615,6 +619,7 @@ const Recipe = () => {
             <Button onClick={handleSave} className='mx-1 w-[100px]'>Post</Button>
         </div>
     </div>
+    </>
   )
 }
 
