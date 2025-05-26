@@ -24,8 +24,8 @@ const Recipe = () => {
     const [query, setQuery] = useState<string>('');
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [totalTime, setTotalTime] = useState('');
-        const [servings, setServings] = useState('');
-        const [source, setSource] = useState('');
+    const [servings, setServings] = useState('');
+    const [source, setSource] = useState('');
     const [rating, setRating] = useState<number>(0);
     const [ratingNumber, setRatingNumber] = useState<number>(0);
     const [ratingAverage, setRatingAverage] = useState<number>(0);
@@ -41,7 +41,7 @@ const Recipe = () => {
       
         const data = await getBlogbyId(Number(postId), getToken());
 
-        setPostType(data.type);
+        setPostType(data.postType);
       
         const parseIngredients = (rawIngredients: string[]): Ingredient[] => {
           const measurements = [
