@@ -1,5 +1,5 @@
 'use client'
-import { Button, FileInput, TextInput, Modal, ModalBody, ModalFooter, ModalHeader} from 'flowbite-react'
+import { Button, FileInput, TextInput, Modal, ModalBody, ModalFooter, ModalHeader, Textarea} from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { Ingredient, IngredientGroup, StepGroup, tagArr } from '@/app/Utils/Interfaces'
 import Image from 'next/image'
@@ -11,7 +11,7 @@ import MeasurementDropdown from '@/app/Components/MeasurementDropdown'
 const Recipe = () => {
     const [id, setId] = useState<number>(0);
     const [username, setUsername] = useState<string>("");
-    const [recipeImage, setImage] = useState<string|ArrayBuffer|null>('');
+    const [recipeImage, setImage] = useState<string>('');
     const [length, setLength] = useState(200);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
@@ -31,6 +31,7 @@ const Recipe = () => {
     const [ratingAverage, setRatingAverage] = useState<number>(0);
     const [likes, setLikes] = useState<number>(0);
     const [openModal, setOpenModal] = useState(false);
+    const [postType, setPostType] = useState<'recipe' | 'image' | 'video'>('recipe');
     const router = useRouter();
     const { postId } = useParams();
 
@@ -39,6 +40,8 @@ const Recipe = () => {
         if (!postId) return;
       
         const data = await getBlogbyId(Number(postId), getToken());
+
+        setPostType(data.type);
       
         const parseIngredients = (rawIngredients: string[]): Ingredient[] => {
           const measurements = [
@@ -205,17 +208,18 @@ const Recipe = () => {
     };
 
     const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-  
-      const reader = new FileReader();
-      const file = e.target.files?.[0]
-  
-      if(file){
-        reader.onload = () => {
-          setImage(reader.result);
-        }
-        reader.readAsDataURL(file);
+  const file = e.target.files?.[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (typeof reader.result === 'string') {
+        setImage(reader.result);
       }
-    }
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
     const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
         const item = {
           id: Number(postId),
@@ -314,16 +318,33 @@ const Recipe = () => {
           <Button onClick={() => setOpenModal(false)}>Back</Button>
         </ModalFooter>
       </Modal>
-        <div className='border-b-1 border-solid border-slate-300 p-2 text-2xl font-semibold text-center'>
-            Edit Recipe
+        <div className='border-b-1 border-solid border-blue-100 p-2 text-2xl font-semibold text-center'>
+            Edit {postType === 'recipe' ? "Recipe" : "Post"}
         </div>
-        <div className='border-b-1 border-solid border-slate-300 p-2'>
+        <div className='border-b-1 border-solid border-blue-100 p-2'>
+          <div className="flex justify-center mb-2">
+                <div className="my-4">
+                    <Image
+                      src={recipeImage}
+                      alt="Uploaded preview"
+                      width={400}
+                      height={300}
+                      className="rounded-lg object-cover"
+                    />
+                  </div>
+                </div>
             <FileInput onChange={handleImage} id="Picture" accept="image/png, image/jpg" />
         </div>
-        <div className='border-b-1 border-solid border-slate-300 p-2 flex flex-col items-center'>
-            <TextInput value={name} placeholder='[Recipe Name]' className='w-[200px] pb-2' onChange={(e) => setName(e.target.value)}></TextInput>
+        <div className='border-b-1 border-solid border-blue-100 p-2 flex flex-col items-center'>
+          {postType === 'recipe' && (
+              <>
+                <TextInput value={name} placeholder='[Recipe Name]' className='w-[200px] pb-2' onChange={(e) => setName(e.target.value)}/>
+              </>
+            )}
             <p className='text-center text-blue-600'>Description 200/{length}</p>
-            <TextInput value={description} onChange={(e) => setDescription(e.target.value)} className='w-[400px]'></TextInput>
+            <Textarea value={description} onChange={(e) => setDescription(e.target.value)} className='w-[400px]'/>
+            {postType === 'recipe' && (
+              <>
                         <div className="mt-4 flex justify-between">    
                       <div className="px-1">
                         <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -353,8 +374,12 @@ const Recipe = () => {
                           onChange={(e) => setSource(e.target.value)}
                         />
                       </div>
+              </>
+            )}
         </div>
-        <div className='border-b-1 border-solid border-slate-300 p-2'>
+        {postType === 'recipe' && (
+              <>
+        <div className='border-b-1 border-solid border-blue-100 p-2'>
             <p className='font-semibold text-xl text-center'>Ingredients</p>
             {ingredientGroups.map((group, groupIndex) => (
               <div key={groupIndex}>
@@ -425,7 +450,7 @@ const Recipe = () => {
             ))}
               <div className='p-2 flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer' onClick={addIngredientGroup}><Image className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" width={100} height={100}/><p>Add Ingredient Group</p></div>
                     </div>
-                    <div className='border-b-1 border-solid border-slate-300 p-2'>
+                    <div className='border-b-1 border-solid border-blue-100 p-2'>
   <p className='font-semibold text-xl text-center'>Instructions</p>
   {stepGroups.map((group, groupIndex) => (
     <div key={groupIndex}>
@@ -474,9 +499,11 @@ const Recipe = () => {
     </div>
   ))}
   <div className='p-2 flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer' onClick={addStepGroup}><Image className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" width={100} height={100}/><p>Add Step Group</p></div>
-</div>
+        </div>
+              </>
+        )}
 
-        <div className='border-b-1 border-solid border-slate-300 p-2'>
+        <div className='border-b-1 border-solid border-blue-100 p-2'>
         <p className='font-semibold text-xl text-center'>Tags</p>
         <div className='flex flex-wrap gap-2 p-2'>
         {selectedTags.length > 0 ? (

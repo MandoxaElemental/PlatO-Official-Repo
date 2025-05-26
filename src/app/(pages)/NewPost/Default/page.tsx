@@ -1,7 +1,7 @@
 'use client'
 
 import { tagArr } from '@/app/Utils/Interfaces';
-import { Button, FileInput, Modal, ModalBody, ModalFooter, ModalHeader, TextInput } from 'flowbite-react'
+import { Button, FileInput, Modal, ModalBody, ModalFooter, ModalHeader, Textarea } from 'flowbite-react'
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
 import { format } from 'date-fns'
@@ -112,7 +112,7 @@ const Post = () => {
                 <ModalBody className="ScrollBar">
                   <div className="space-y-6">
                     Search for tags
-                    <TextInput value={query} onChange={(e) => setQuery(e.target.value)}/>
+                    <Textarea value={query} onChange={(e) => setQuery(e.target.value)}/>
                         <div className="flex flex-wrap gap-2">
                       {selectedTags.length > 0 ? (
                         selectedTags.map((tag, i) => (
@@ -127,7 +127,7 @@ const Post = () => {
                         <p className="text-sm text-gray-400">No tags selected</p>
                       )}
                     </div>
-                    <div className='w-screen-min'>                
+                    <div className='min-w-full'>                
               <div className="space-y-4">
               {filteredCategories.map((cat, i) => (
                 <div key={i}>
@@ -182,7 +182,7 @@ const Post = () => {
             </div>
             <div className='border-b-1 border-solid border-slate-300 p-2 flex flex-col items-center'>
                 <p className='text-center text-blue-600'>Description 200/{length}</p>
-            <TextInput onChange={(e) => setDescription(e.target.value)} className='w-[400px]'></TextInput>
+            <Textarea onChange={(e) => setDescription(e.target.value)} className='w-[400px]'></Textarea>
             </div>
             <div className='border-b-1 border-solid border-slate-300 p-2'>
         <p className='font-semibold text-xl text-center'>Tags</p>
