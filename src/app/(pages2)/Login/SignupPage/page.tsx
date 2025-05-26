@@ -122,7 +122,7 @@ const SignUpPage1 = () =>
 
   useEffect(() =>
   {
-    if (phoneNumber == "" || dateOfBirth == "")
+    if (dateOfBirth == "")
     {
       setNoEmptyFieldsPageTwo(true);
     }else
@@ -207,7 +207,7 @@ const SignUpPage1 = () =>
       <div className='flex items-center justify-center'>
         <div className='grid gap-3'>
           <div>
-            <h1 className=' text-gray-400'>Phone Number*</h1>
+            <h1 className=' text-gray-400'>Phone Number (optional)</h1>
             <TextInput onChange={(event) => setPhoneNumber(event.target.value)} type='text'/>
           </div>
           <div>
