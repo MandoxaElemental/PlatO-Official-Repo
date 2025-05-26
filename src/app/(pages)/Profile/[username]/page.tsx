@@ -128,13 +128,43 @@ const ProfilePage = () => {
         </div>
       </TabItem>
       <TabItem title="Photos">
-        2
+        <div className='grid grid-cols-3 gap-2'>
+      {blogItems
+        .filter(item => item.isPublished && !item.isDeleted && item.postType === "image")
+        .map((item, idx) => (
+          <div key={idx}>
+            <Link href={`/Blog/${item.id}`}>
+              <Image className='object-cover h-[200px] w-[200px]' src={item.image === null ? "/assets/Placeholder.png" : `${item.image}`} alt="post" width={50} height={20}/>
+            </Link>
+          </div>
+        ))}
+    </div>
       </TabItem>
       <TabItem title="Videos">
-        3
+                <div className='grid grid-cols-3 gap-2'>
+      {blogItems
+        .filter(item => item.isPublished && !item.isDeleted && item.postType === "video")
+        .map((item, idx) => (
+          <div key={idx}>
+            <Link href={`/Blog/${item.id}`}>
+              <Image className='object-cover h-[200px] w-[200px]' src={item.image === null ? "/assets/Placeholder.png" : `${item.image}`} alt="post" width={50} height={20}/>
+            </Link>
+          </div>
+        ))}
+    </div>
       </TabItem>
       <TabItem title="Recipes">
-        4
+                <div className='grid grid-cols-3 gap-2'>
+      {blogItems
+        .filter(item => item.isPublished && !item.isDeleted && item.postType === "recipe")
+        .map((item, idx) => (
+          <div key={idx}>
+            <Link href={`/Blog/${item.id}`}>
+              <Image className='object-cover h-[200px] w-[200px]' src={item.image === null ? "/assets/Placeholder.png" : `${item.image}`} alt="post" width={50} height={20}/>
+            </Link>
+          </div>
+        ))}
+    </div>
       </TabItem>
     </Tabs>
     </div>
