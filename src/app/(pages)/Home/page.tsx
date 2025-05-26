@@ -6,6 +6,7 @@ import { IBlogItems } from "@/app/Utils/Interfaces";
 import { getAllBlogs, getToken } from "@/app/Utils/DataServices";
 import { dummyBlogData } from "@/app/Utils/dummyData";
 import { Spinner } from "flowbite-react";
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 const BATCH_SIZE = 5;
 
@@ -65,8 +66,12 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="flex justify-center mt-15">
-        <Spinner aria-label="Loading blogs..." />
+      <div className="flex justify-center mt-15 rounded-full border-4 opacity-50 border-blue-100 h-[100px] w-[100px]">
+      <DotLottieReact className="h-[80px] w-auto dark:invert"
+      src="https://lottie.host/1362f106-3038-4bd3-960c-d2c553e0c317/LALyol5iRY.lottie"
+      loop
+      autoplay
+      />
       </div>
     );
   }

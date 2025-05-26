@@ -205,7 +205,9 @@ useEffect(() => {
         }}
         className="bg-transparent h-full hover:opacity-50 hover:bg-black/10 p-2 rounded-r-xl flex flex-col justify-center"
       >
-        <Image width={20} height={20} className="h-10 w-10 dark:invert" src="/assets/caret-left-fill.svg" alt="left" />
+                <div className="w-10 h-10 bg-white dark:invert rounded-full opacity-50">
+        <Image width={20} height={20} className="h-10 w-10 dark:invert" src="/assets/arrow-left-circle.svg" alt="left" />
+      </div>
       </div>
     </div>
 
@@ -218,7 +220,9 @@ useEffect(() => {
         }}
         className="bg-transparent h-full hover:opacity-50 hover:bg-black/10 p-2 rounded-l-xl flex flex-col justify-center"
       >
-        <Image width={20} height={20} className="h-10 w-10 dark:invert" src="/assets/caret-right-fill.svg" alt="right" />
+        <div className="w-10 h-10 bg-white dark:invert rounded-full opacity-50">
+          <Image width={20} height={20} className="h-10 w-10 dark:invert" src="/assets/arrow-right-circle.svg" alt="right" />
+        </div>
       </div>
     </div>
   </div>

@@ -36,6 +36,8 @@ const Blog = () => {
     const [hover, setHover] = useState<number>(0);
     const [currentUser, setCurrentUser] = useState<IUserData | null>(null);
     const [blogItem, setBlogItem] = useState<IBlogItems | null>(null);
+    const [checkedIngredients, setCheckedIngredients] = useState<Record<string, boolean>>({});
+
     
 
     useEffect(() => {
@@ -137,6 +139,13 @@ const Blog = () => {
         );
     }
 
+    const handleIngredientCheck = (key: string) => {
+  setCheckedIngredients((prev) => ({
+    ...prev,
+    [key]: !prev[key],
+  }));
+};
+
     return (
         <>
         <BackButton/>
@@ -201,15 +210,35 @@ const Blog = () => {
                                 <div className='border-t border-solid border-slate-300 py-2'>
                                     <p className='font-semibold'>Ingredients</p>
                                     {ingredients.map((item, i) => (
-                                        <div key={i}>
-                                            <h1 className="font-bold">{item.title}</h1>
-                                            <ul className='list-disc text-left pl-10'>
-                                                {item.ingredients.map((ingredient, j) => (
-                                                    <li key={j}>{ingredient}</li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    ))}
+  <div key={i}>
+    <h1 className="font-bold">{item.title}</h1>
+    <ul className='pl-10 space-y-1'>
+      {item.ingredients.map((ingredient, j) => {
+        const ingredientKey = `ingredient-${i}-${j}`;
+        const isChecked = checkedIngredients[ingredientKey] ?? false;
+
+        return (
+          <li key={ingredientKey} className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              className="form-checkbox h-4 w-4 text-blue-600"
+              id={ingredientKey}
+              checked={isChecked}
+              onChange={() => handleIngredientCheck(ingredientKey)}
+            />
+            <label
+              htmlFor={ingredientKey}
+              className={`cursor-pointer select-none ${isChecked ? 'line-through text-gray-500' : ''}`}
+            >
+              {ingredient}
+            </label>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+))}
+
                                 </div>
                                 <div className='border-t border-solid border-slate-300 py-2'>
                                     <p className='font-semibold'>Steps</p>
@@ -218,7 +247,7 @@ const Blog = () => {
                                             <h1>{item.title}</h1>
                                             <ol className="list-decimal text-left mx-8">
                                                 {item.steps.map((steps, j) => (
-                                                    <li key={j}>{steps}</li>
+                                                    <li key={j} className='hover:bg-blue-200 rounded-md p-2'>{steps}</li>
                                                 ))}
                                             </ol>
                                         </div>

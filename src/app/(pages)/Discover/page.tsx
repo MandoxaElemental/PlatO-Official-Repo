@@ -32,7 +32,6 @@ const Discover = () => {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
-  // Fetch blog data
   useEffect(() => {
     const getData = async () => {
       const data: IBlogItems[] = await getAllBlogs(getToken());
@@ -89,7 +88,7 @@ const Discover = () => {
             return (
               <div key={index} className={`relative group ${adjustedGridClass}`}>
                 <Link href={`/Blog/${item.id}`}>
-                    <Image className='object-cover h-[100px] w-[100px] md:w-[200px] md:h-[200px]' src={item.image === null ? "/assets/Placeholder.png" : `${item.image}`} alt="post" width={50} height={50}/>
+                    <Image className='object-cover w-full h-full aspect-square' src={item.image === null ? "/assets/Placeholder.png" : `${item.image}`} alt="post" width={50} height={50} sizes="(min-width: 768px) 200px, 100px"/>
                   <div className="absolute top-0 left-0 bg-blue-200 bg-opacity-50 text-white text-sm p-1.5 rounded-br-xl">
                     <Image
                       className="h-8 w-8 dark:invert"
@@ -111,7 +110,7 @@ const Discover = () => {
 
         {/* 👇 Sentinel for infinite scroll */}
         <div ref={sentinelRef} className="h-10 w-full mt-10 flex justify-center items-center text-sm text-gray-500">
-          {visibleCount < blogItems.length ? 'Loading more...' : 'No more posts'}
+          {visibleCount < blogItems.length && 'Loading more...'}
         </div>
       </div>
     </>
