@@ -5,7 +5,7 @@ import Image from "next/image";
 import BlogPost from '@/app/Components/Blog';
 import { addCommentItem, getBlogbyId, getCommentItemsByBlogId, getToken, getUserInfoByUsername } from '@/app/Utils/DataServices';
 import { useParams } from 'next/navigation';
-import { Button, TextInput, Spinner } from 'flowbite-react';
+import { Button, TextInput } from 'flowbite-react';
 import { IBlogItems, ICommentItems, IIngredientItems, IStepItems, IUserData } from '@/app/Utils/Interfaces';
 import { format } from 'date-fns';
 import Comment from '@/app/Components/Comment';

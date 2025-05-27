@@ -2,7 +2,6 @@
 import { checkToken, getAllBlogs, getToken, getUserInfoByUsername } from '@/app/Utils/DataServices';
 import { IBlogItems, IUserData } from '@/app/Utils/Interfaces';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import { Spinner } from 'flowbite-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
