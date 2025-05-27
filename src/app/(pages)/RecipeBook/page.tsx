@@ -62,11 +62,11 @@ const SavedRecipes = () => {
       <div className="border-b-1 border-solid border-slate-300 p-2 text-2xl font-semibold text-center">
         Saved Recipes
       </div>
-      <div className="py-4 grid grid-cols-2 gap-2">
+      <div className="py-4 grid grid-cols-1 md:grid-cols-2 gap-2">
         {savedBlogItems.length > 0 ? (
           savedBlogItems.map((item) => (
             <Link key={item.id} href={`/Blog/${item.id}`}>
-              <div className='border-2 border-blue-100 rounded-md w-[250px]'>
+              <div className='border-2 border-blue-100 shadow-blue-200/50 rounded-md shadow-sm w-[250px]'>
                 <Image className='object-cover h-[250px] w-[250px] rounded-t-md aspect-square' src={item.image === null ? "/assets/Placeholder.png" : `${item.image}`} alt="post" width={50} height={50}/>
               <div className="min-w-screentext-xl p-5 pt-2 max-w-[300px]">
                 <p className='font-semibold '>

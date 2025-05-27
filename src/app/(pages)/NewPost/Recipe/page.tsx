@@ -13,7 +13,7 @@ const Recipe = () => {
     const [blogId, setBlogId] = useState<number>(0);
     const [id, setId] = useState<number>(0);
     const [username, setUsername] = useState<string>("");
-    const [recipeImage, setImage] = useState<string|ArrayBuffer|null>('../assets/Placeholder.png');
+    const [recipeImage, setImage] = useState<string|ArrayBuffer|null>('/Placeholder.png');
     const [length, setLength] = useState(200);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
@@ -343,7 +343,7 @@ const Recipe = () => {
   return (
     <>
     <BackButton/>
-    <div className='px-5 w-full'>
+    <div className='px-5'>
       <Modal show={showCancelConfirm} onClose={() => setShowCancelConfirm(false)}>
   <ModalHeader>Are you sure you want to cancel?</ModalHeader>
   <ModalBody>
@@ -393,7 +393,6 @@ const Recipe = () => {
           <Button onClick={() => setOpenModal2(false)}>Back</Button>
         </ModalFooter>
       </Modal>
-
         <Modal show={openModal} onClose={() => setOpenModal(false)}>
         <ModalHeader>Tags</ModalHeader>
         <ModalBody className="">
@@ -458,8 +457,8 @@ const Recipe = () => {
             <FileInput onChange={handleImage} id="Picture" accept="image/png, image/jpg" />
         </div>
         <div className='border-b-1 border-solid border-slate-300 p-2 flex flex-col items-center'>
-        <Button disabled className="mb-2" onClick={() => setOpenModal2(true)}>Paste Recipe</Button>
-        <div className="flex items-center gap-2 my-2">
+        <Button disabled className="mb-2 hidden" onClick={() => setOpenModal2(true)}>Paste Recipe</Button>
+        <div className="flex items-center gap-2 my-2 hidden">
   <TextInput
     value={source}
     onChange={(e) => setSource(e.target.value)}
@@ -506,20 +505,12 @@ const Recipe = () => {
             <p className='font-semibold text-xl text-center'>Ingredients</p>
             {ingredientGroups.map((group, groupIndex) => (
   <div key={groupIndex}>
-            <label className="block text-gray-700 text-sm font-bold pl-15 mb-2">
+     <label className="block text-gray-700 text-sm font-bold mb-2">
               INGREDIENT GROUP {groupIndex + 1}
             </label>
     <div className='my-2 flex items-center px-2'>
-        <Image
-            className="h-10 w-10 pr-5 hover:opacity-50 dark:invert cursor-pointer"
-            src="../assets/x-lg.svg"
-            alt="remove"
-            onClick={() => removeIngredientGroup(groupIndex)}
-            width={100}
-            height={100}
-        />
       <TextInput
-        className="w-[550px] font-bold"
+        className="w-full font-bold"
         placeholder='ex. pie filling/piecrust'
         value={group.title}
         onChange={(e) => {
@@ -528,18 +519,9 @@ const Recipe = () => {
           setIngredientGroups(newGroups);
         }}
       />
+      <Image className="h-8 w-8 pt-2 pl-2 hover:opacity-50 dark:invert cursor-pointer" src="../assets/trash.svg" alt="remove" onClick={() => removeIngredientGroup(groupIndex)} width={100} height={100}/>
+
     </div>
-<div className="hidden md:flex pl-5">
-  <label className="block text-gray-700 text-sm pl-10 font-bold mb-2">
-    AMOUNT
-  </label>
-  <label className="block text-gray-700 text-sm font-bold pl-6 mb-2">
-    MEASUREMENT
-  </label>
-  <label className="block text-gray-700 text-sm font-bold pl-6 mb-2">
-    INGREDIENT
-  </label>
-</div>
 
 {group.ingredients.map((ing, index) => (
   <div
@@ -547,17 +529,9 @@ const Recipe = () => {
     className="flex flex-col md:flex-row md:items-center px-2 mb-2"
   >
 
-    {/* Row for amount and measurement */}
     <div className="flex flex-row md:flex-row gap-2 mb-2 md:mb-0">
-        <Image
-            className="h-10 w-10 pr-5 hover:opacity-50 dark:invert cursor-pointer"
-            src="../assets/x-lg.svg"
-            alt="remove"
-            onClick={() => removeIngredient(groupIndex, index)}
-            width={100}
-            height={100}
-        />
       <TextInput
+      placeholder="Amount"
         className="w-[80px]"
         value={ing.amount}
         onChange={(e) =>
@@ -572,14 +546,17 @@ const Recipe = () => {
       />
     </div>
 
-    <div className="mb-4 px-1 md:mb-0 md:px-1 md:ml-2 w-full md:w-[250px]">
+    <div className="flex mb-4 px-1 md:mb-0 md:px-1 md:ml-2 w-full">
       <TextInput
+      placeholder="Ingredient"
         className="w-full"
         value={ing.ingredient}
         onChange={(e) =>
           updateIngredient(groupIndex, index, 'ingredient', e.target.value)
         }
       />
+                <Image className="h-8 w-8 pt-2 pl-2 hover:opacity-50 dark:invert cursor-pointer" src="../assets/trash.svg" alt="remove" onClick={() => removeIngredient(groupIndex, index)} width={100} height={100}/>
+
     </div>
   </div>
 ))}
@@ -593,47 +570,35 @@ const Recipe = () => {
   <p className='font-semibold text-xl text-center'>Instructions</p>
   {stepGroups.map((group, groupIndex) => (
     <div key={groupIndex}>
-    <label className="block text-gray-700 text-sm font-bold pl-15 mb-2">
+     <label className="block text-gray-700 text-sm font-bold mb-2">
               STEP GROUP {groupIndex + 1}
-    </label>
-      <div className='my-2 flex items-center px-2'>
-      <Image
-            className="h-10 w-10 pr-5 hover:opacity-50 dark:invert cursor-pointer"
-            src="../assets/x-lg.svg"
-            alt="remove"
-            onClick={() => removeStepGroup(groupIndex)}
-            width={100}
-            height={100}
-        />
-        <TextInput
-          className="w-[500px] font-bold"
-          value={group.title}
+            </label>
+            <div className="flex px-2 mb-2">
+            <TextInput
+          className="w-full"
+              value={group.title}
           onChange={(e) => {
             const newGroups = [...stepGroups];
             newGroups[groupIndex].title = e.target.value;
             setStepGroups(newGroups);
           }}
-        />
-      </div>
+              />
+          <Image className="h-8 w-8 pt-2 pl-2 hover:opacity-50 dark:invert cursor-pointer" src="../assets/trash.svg" alt="remove" onClick={() => removeStepGroup(groupIndex)} width={100} height={100}/>
+            </div>
       {group.steps.map((step, stepIndex) => (
-        <div key={stepIndex} className="flex items-center px-2">
-          <Image
-            className="h-10 w-10 pr-5 hover:opacity-50 dark:invert cursor-pointer"
-            src="../assets/x-lg.svg"
-            alt="remove"
-            onClick={() => removeStep(groupIndex, stepIndex)}
-            width={100}
-            height={100}
-          />
-          <div className="mb-4 px-1">
+        <div key={stepIndex} className="flex items-center px-2 mb-4">
+          <div className="px-1 w-full">
             <label className="block text-gray-700 text-sm font-bold mb-2">
               Step {stepIndex + 1}
             </label>
-            <Textarea
-              className="w-[300px] md:w-[450px]"
+            <div className="flex">
+            <TextInput
+          className="w-full"
               value={step}
               onChange={(e) => updateStep(groupIndex, stepIndex, e.target.value)}
-            />
+              />
+          <Image className="h-8 w-8 pt-2 pl-2 hover:opacity-50 dark:invert cursor-pointer" src="../assets/trash.svg" alt="remove" onClick={() => removeStep(groupIndex, stepIndex)} width={100} height={100}/>
+            </div>
           </div>
         </div>
       ))}

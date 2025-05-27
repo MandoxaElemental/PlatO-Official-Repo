@@ -54,7 +54,7 @@ const MeasurementDropdown: React.FC<Props> = ({ selected, onSelect }) => {
     <div ref={dropdownRef} className="relative inline-block w-[140px]">
       <button
         type="button"
-        className="w-full bg-white border border-gray-300 text-sm px-3 py-2 rounded shadow"
+        className="w-full bg-white border border-gray-300 text-sm px-3 py-2 rounded shadow hover:cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
         {selected || ''}
