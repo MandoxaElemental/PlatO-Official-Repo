@@ -12,6 +12,7 @@ import Comment from '@/app/Components/Comment';
 import Link from 'next/link';
 import SaveButton from '@/app/Components/SaveButton';
 import BackButton from '@/app/Components/BackButton';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 const Blog = () => {
     const { postId } = useParams();
@@ -133,9 +134,13 @@ const Blog = () => {
 
     if (loading) {
         return (
-            <div className="flex justify-center mt-15">
-                <Spinner aria-label="Loading post..." size="xl" />
-            </div>
+              <div className="flex justify-center mt-15 rounded-full border-4 opacity-50 border-blue-100 h-[60px] w-[60px]">
+              <DotLottieReact className="w-[50px] h-auto dark:invert"
+              src="https://lottie.host/1362f106-3038-4bd3-960c-d2c553e0c317/LALyol5iRY.lottie"
+              loop
+              autoplay
+              />
+              </div>
         );
     }
 
@@ -247,7 +252,7 @@ const Blog = () => {
                                             <h1>{item.title}</h1>
                                             <ol className="list-decimal text-left mx-8">
                                                 {item.steps.map((steps, j) => (
-                                                    <li key={j} className='hover:bg-blue-200 rounded-md p-2'>{steps}</li>
+                                                    <li key={j} className='hover:bg-blue-200 dark:hover:bg-[#1f2937] rounded-md p-2'>{steps}</li>
                                                 ))}
                                             </ol>
                                         </div>

@@ -33,6 +33,7 @@ const Recipe = () => {
     const [pastedText, setPastedText] = useState('');
     const [isLoading, setIsLoading] = useState(false);
   const [postSuccess, setPostSuccess] = useState(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
 
     const router = useRouter();
   
@@ -343,12 +344,43 @@ const Recipe = () => {
     <>
     <BackButton/>
     <div className='px-5 w-full'>
+      <Modal show={showCancelConfirm} onClose={() => setShowCancelConfirm(false)}>
+  <ModalHeader>Are you sure you want to cancel?</ModalHeader>
+  <ModalBody>
+    <p className="text-sm text-gray-600">
+      Your current recipe will be lost unless you save it as a draft.
+    </p>
+  </ModalBody>
+  <ModalFooter>
+    <Button
+      color="gray"
+      onClick={() => {
+        setShowCancelConfirm(false);
+        router.push("/Home"); // Navigate away
+      }}
+    >
+      Leave Without Saving
+    </Button>
+    <Button
+      color="yellow"
+      onClick={(e) => {
+        handleSave(e);
+        setShowCancelConfirm(false);
+      }}
+    >
+      Draft
+    </Button>
+    <Button onClick={() => setShowCancelConfirm(false)} color="light">
+      Stay
+    </Button>
+  </ModalFooter>
+</Modal>
         <Modal show={openModal2} onClose={() => setOpenModal2(false)}>
         <ModalHeader>Paste Recipe</ModalHeader>
         <ModalBody>
                 <div className='my-4'>
           <p className='font-bold mb-2'>Paste Recipe</p>
-          <textarea
+          <Textarea
             className='w-full p-2 border rounded h-60'
             placeholder='Paste full recipe here...'
             value={pastedText}
@@ -497,51 +529,61 @@ const Recipe = () => {
         }}
       />
     </div>
-    <div className="flex pl-5">
-            <label className="block text-gray-700 text-sm pl-10 font-bold mb-2">
-              AMOUNT
-            </label>
-            <label className="block text-gray-700 text-sm font-bold pl-6 mb-2">
-              MEASUREMENT
-            </label>
-            <label className="block text-gray-700 text-sm font-bold pl-6 mb-2">
-              INGREDIENT
-            </label>
-    </div>
-    {group.ingredients.map((ing, index) => (
-        <div key={index} className="flex items-center px-2">
-          <Image
+<div className="hidden md:flex pl-5">
+  <label className="block text-gray-700 text-sm pl-10 font-bold mb-2">
+    AMOUNT
+  </label>
+  <label className="block text-gray-700 text-sm font-bold pl-6 mb-2">
+    MEASUREMENT
+  </label>
+  <label className="block text-gray-700 text-sm font-bold pl-6 mb-2">
+    INGREDIENT
+  </label>
+</div>
+
+{group.ingredients.map((ing, index) => (
+  <div
+    key={index}
+    className="flex flex-col md:flex-row md:items-center px-2 mb-2"
+  >
+
+    {/* Row for amount and measurement */}
+    <div className="flex flex-row md:flex-row gap-2 mb-2 md:mb-0">
+        <Image
             className="h-10 w-10 pr-5 hover:opacity-50 dark:invert cursor-pointer"
             src="../assets/x-lg.svg"
             alt="remove"
             onClick={() => removeIngredient(groupIndex, index)}
             width={100}
             height={100}
-          />
-          <div className="mb-4 px-1">
-            <TextInput
-              className="w-[80px]"
-              value={ing.amount}
-              onChange={(e) => updateIngredient(groupIndex, index, 'amount', e.target.value)}
-            />
-          </div>
-          <div className="mb-4 px-1">
-            <MeasurementDropdown
-              selected={ing.measurement}
-              onSelect={(val) => updateIngredient(groupIndex, index, 'measurement', val)}
-            />
-          </div>
-          <div className="mb-4 px-1">
-            <TextInput
-              className="w-[250px]"
-              value={ing.ingredient}
-              onChange={(e) =>
-                updateIngredient(groupIndex, index, 'ingredient', e.target.value)
-              }
-            />
-          </div>
-        </div>
-    ))}
+        />
+      <TextInput
+        className="w-[80px]"
+        value={ing.amount}
+        onChange={(e) =>
+          updateIngredient(groupIndex, index, 'amount', e.target.value)
+        }
+      />
+      <MeasurementDropdown
+        selected={ing.measurement}
+        onSelect={(val) =>
+          updateIngredient(groupIndex, index, 'measurement', val)
+        }
+      />
+    </div>
+
+    <div className="mb-4 px-1 md:mb-0 md:px-1 md:ml-2 w-full md:w-[250px]">
+      <TextInput
+        className="w-full"
+        value={ing.ingredient}
+        onChange={(e) =>
+          updateIngredient(groupIndex, index, 'ingredient', e.target.value)
+        }
+      />
+    </div>
+  </div>
+))}
+
     <div className='p-2 flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer' onClick={() => addIngredient(groupIndex)}><Image className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" width={100} height={100}/><p>Add Ingredient</p></div>
   </div>
 ))}
@@ -588,7 +630,7 @@ const Recipe = () => {
               Step {stepIndex + 1}
             </label>
             <Textarea
-              className="w-[450px]"
+              className="w-[300px] md:w-[450px]"
               value={step}
               onChange={(e) => updateStep(groupIndex, stepIndex, e.target.value)}
             />
@@ -621,6 +663,7 @@ const Recipe = () => {
         <div onClick={() => setOpenModal(true)} className='flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer'><Image className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" width={100} height={100}/><p>Add Tags</p></div>
         </div>
         <div className='p-2 flex justify-end'>
+            <Button color="gray" onClick={() => setShowCancelConfirm(true)}>Cancel</Button>
             <Button onClick={handleSave} outline className='mx-1 w-[100px]'>Draft</Button>
             <Button onClick={handleSave} className='mx-1 w-[100px]'>Post</Button>
         </div>

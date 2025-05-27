@@ -1,6 +1,7 @@
 'use client';
 import { checkToken, getAllBlogs, getToken, getUserInfoByUsername } from '@/app/Utils/DataServices';
 import { IBlogItems, IUserData } from '@/app/Utils/Interfaces';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { Spinner } from 'flowbite-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -45,13 +46,17 @@ const SavedRecipes = () => {
     }
   }, [username]);
 
-  if (loading) {
-          return (
-              <div className="flex justify-center mt-15">
-                  <Spinner aria-label="Loading post..." size="xl" />
-              </div>
-          );
-      }
+     if (loading) {
+         return (
+               <div className="flex justify-center mt-15 rounded-full border-4 opacity-50 border-blue-100 h-[60px] w-[60px]">
+               <DotLottieReact className="w-[50px] h-auto dark:invert"
+               src="https://lottie.host/1362f106-3038-4bd3-960c-d2c553e0c317/LALyol5iRY.lottie"
+               loop
+               autoplay
+               />
+               </div>
+         );
+     }
 
   return (
     <div className="pt-10 px-5 w-full">
@@ -69,9 +74,12 @@ const SavedRecipes = () => {
                 {item.recipeName}
                 </p>
                 <div className='flex'><p className="font-semibold">By: </p>{item.publisherName}</div>
-                {item.description}
+              {item.tags.map((tag, i) => (
+                <Link className='mt-2' key={i} href={`/Discover/${tag}`}>
+                  <span className="px-3 py-1 bg-blue-200 text-blue-900 rounded-full text-sm cursor-pointer hover:bg-blue-400">{tag}</span>
+                 </Link>
+              ))}
               </div>
-                <Image className='dark:invert' src="/assets/caret-right-fill.svg" alt="go" width={25} height={25}/>
               </div>
             </Link>
           ))

@@ -2,11 +2,21 @@
 import BackButton from '@/app/Components/BackButton';
 import { getAllBlogs, getToken } from '@/app/Utils/DataServices';
 import { IBlogItems } from '@/app/Utils/Interfaces';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useRef, useState } from 'react';
 
-const getPostTypeIcon = (type: string) => {
+
+const Discover = () => {
+  const ITEMS_PER_BATCH = 12;
+  const [blogItems, setBlogItems] = useState<IBlogItems[]>([]);
+  const [visibleCount, setVisibleCount] = useState<number>(ITEMS_PER_BATCH);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  
+  const getPostTypeIcon = (type: string) => {
   switch (type.toLowerCase()) {
     case "image": return "/assets/camera.svg";
     case "recipe": return "/assets/pot.svg";
@@ -24,14 +34,6 @@ const gridClasses = [
   "col-span-2 row-span-2 col-start-1 row-start-5", // 12
 ];
 
-const ITEMS_PER_BATCH = 12;
-
-const Discover = () => {
-  const [blogItems, setBlogItems] = useState<IBlogItems[]>([]);
-  const [visibleCount, setVisibleCount] = useState<number>(ITEMS_PER_BATCH);
-  const observerRef = useRef<IntersectionObserver | null>(null);
-  const sentinelRef = useRef<HTMLDivElement | null>(null);
-
   useEffect(() => {
     const getData = async () => {
       const data: IBlogItems[] = await getAllBlogs(getToken());
@@ -42,6 +44,7 @@ const Discover = () => {
       setBlogItems(filteredData);
     };
     getData();
+    setLoading(false);
   }, []);
 
   // Infinite scroll handler
@@ -68,6 +71,7 @@ const Discover = () => {
 
   const visibleItems = blogItems.slice(0, visibleCount);
 
+
   return (
     <>
       <BackButton />
@@ -75,7 +79,16 @@ const Discover = () => {
         <div className='border-b border-slate-300 p-2 text-2xl font-semibold text-center'>
           Discover
         </div>
-
+ {loading ? (
+                <div className="flex justify-center mb-4">
+                    <DotLottieReact
+                        className="w-[50px] h-auto dark:invert"
+                        src="https://lottie.host/1362f106-3038-4bd3-960c-d2c553e0c317/LALyol5iRY.lottie"
+                        loop
+                        autoplay
+                    />
+                </div>
+            ) : (
         <div className="grid grid-cols-3 auto-rows-[100px] md:auto-rows-[200px] gap-4 pt-5">
           {visibleItems.map((item, index) => {
             const gridClass = gridClasses[index % 12];
@@ -107,6 +120,7 @@ const Discover = () => {
             );
           })}
         </div>
+            )}
 
         {/* 👇 Sentinel for infinite scroll */}
         <div ref={sentinelRef} className="h-10 w-full mt-10 flex justify-center items-center text-sm text-gray-500">
