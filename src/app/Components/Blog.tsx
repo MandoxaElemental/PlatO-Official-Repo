@@ -7,13 +7,14 @@ import { IBlogItems } from '../Utils/Interfaces';
 import { deleteBlogItem, getToken } from '../Utils/DataServices';
 import { useRouter } from 'next/navigation';
 
-const BlogPost = ({ profile, post, username, id, comments, save, item }: {
+const BlogPost = ({ profile, post, username, id, comments, save, like, item }: {
   profile: string;
   post: React.ReactNode;
   username: string;
   id: string;
   comments: React.ReactNode;
   save: React.ReactNode;
+  like: React.ReactNode;
   item: IBlogItems; }) => {
   
   const [showModal, setShowModal] = useState(false);
@@ -42,7 +43,7 @@ const BlogPost = ({ profile, post, username, id, comments, save, item }: {
           <div className="rounded-full overflow-hidden w-10 h-10 relative bg-blue-200">
             <Image src={profile} alt="profilePic" fill className="object-cover" />
           </div>
-          <Link href={`/Profile/${username}`} className='pl-3 cursor-pointer'>{username}</Link>
+          <Link href={`/Profile/${username}`} className="pl-3 cursor-pointer font-semibold text-blue-600">{username}</Link>
         </div>
 
         {username === localStorage.getItem("Username") ?
@@ -70,7 +71,7 @@ const BlogPost = ({ profile, post, username, id, comments, save, item }: {
                     </>
                 }
             >
-        <Image className='h-5 w-5 cursor-pointer dark:inverted' src="../assets/three-dots-vertical.svg" alt="edit" width={100} height={100}/> 
+        <Image className='h-5 w-5 cursor-pointer dark:invert' src="../assets/three-dots-vertical.svg" alt="edit" width={100} height={100}/> 
       </Popover>{" "}
           </div>
           : <Button className="rounded-full h-8 bg-blue-200 hover:bg-blue-400 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200">Follow</Button>
@@ -80,9 +81,7 @@ const BlogPost = ({ profile, post, username, id, comments, save, item }: {
       <div>{post}</div>
 
       <div className='flex justify-evenly p-2 pt-5 border-t-1 border-solid border-blue-200'>
-        <div className="flex items-center">
-          <Image width={50} height={50} className="h-5 w-5 dark:invert" src="../assets/heart.svg" alt="like" /><p className="pl-2">Like</p>
-        </div>
+        {like}
         <div className="flex items-center">
           <Image width={50} height={50} className="h-5 w-5 dark:invert" src="../assets/repeat.svg" alt="share" /><p className="pl-2">Share</p>
         </div>
