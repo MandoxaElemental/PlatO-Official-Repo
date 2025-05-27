@@ -6,6 +6,7 @@ import { NavbarComponent } from '../Components/NavbarComponentLeft';
 import { NavbarComponentRight } from '../Components/NavbarComponentRight';
 import { MobileFooter } from '../Components/MobileFooter';
 import { MobileHeader } from '../Components/MobileNavbar';
+import { SearchProvider } from '../Context/SearchContext';
 
 const Layout = ({
   children,
@@ -22,7 +23,7 @@ const Layout = ({
   }, [router]);
 
   return (
-    <>
+    <SearchProvider>
       <MobileHeader />
       <div className="flex md:justify-between justify-center px-2 md:px-25 z-5 max-h-[100vh]">
         <div className="max-h-screen overflow-y-auto scrollbar-hide lg:block hidden">
@@ -36,7 +37,7 @@ const Layout = ({
         </div>
       </div>
       <MobileFooter />
-    </>
+    </SearchProvider>
   );
 };
 

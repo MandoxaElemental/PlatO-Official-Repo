@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Button, Sidebar, SidebarItemGroup, SidebarItems, TextInput } from "flowbite-react";
 import Image from "next/image";
 import { tagArr } from "../Utils/Interfaces";
 import Link from "next/link";
+import { useSearch } from "../Context/SearchContext";
 
 function getRandomElements<T>(arr: T[], count: number): T[] {
   const shuffled = [...arr].sort(() => 0.5 - Math.random());
@@ -12,6 +13,18 @@ function getRandomElements<T>(arr: T[], count: number): T[] {
 }
 
 export function NavbarComponentRight() {
+  const [searchInput, setSearchInput] = useState("");
+  const { setSearchQuery } = useSearch();
+
+  // Debounce search input
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setSearchQuery(searchInput);
+    }, 300); // 300ms delay
+
+    return () => clearTimeout(timeoutId);
+  }, [searchInput, setSearchQuery]);
+
   const randomTags = useMemo(() => {
     const randomCategories = getRandomElements(tagArr, 3);
     return randomCategories.map(category => {
@@ -26,7 +39,11 @@ export function NavbarComponentRight() {
   return (
     <Sidebar aria-label="Default sidebar example">
       <SidebarItems>
-        <TextInput placeholder="Search" />
+        <TextInput 
+          onChange={(event) => setSearchInput(event.target.value)} 
+          placeholder="Search blogs..." 
+          value={searchInput}
+        />
         <div className="flex flex-col items-center py-5 gap-2">
           {randomTags.map((item, idx) => (
             <Link key={idx} href={`/Discover/${item.tag}`}>
