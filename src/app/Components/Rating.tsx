@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IBlogItems, IUserData } from "../Utils/Interfaces";
 import { getToken, updateBlogItem, updateUserItem } from "../Utils/DataServices";
 
@@ -22,13 +22,14 @@ const StarRating = ({ currentRating, onRate, blog, setBlog, user, setUser }: {
       ...user,
       ratedBlogs: [...user.ratedBlogs, blog.id]
     };
-
+    const totalRating = blog.averageRating * blog.numberOfRatings + rating;
+const newNumberOfRatings = blog.numberOfRatings + 1;
     const updatedBlog: IBlogItems = {
-      ...blog,
-      rating: blog.rating + rating,
-      numberOfRatings: blog.numberOfRatings + 1,
-      averageRating: (blog.rating + rating) / (blog.numberOfRatings + 1)
-    };
+  ...blog,
+  rating: totalRating / newNumberOfRatings,
+  numberOfRatings: newNumberOfRatings,
+  averageRating: totalRating / newNumberOfRatings
+};
 
     try {
       const blogSuccess = await updateBlogItem(updatedBlog, token);
@@ -49,6 +50,10 @@ const StarRating = ({ currentRating, onRate, blog, setBlog, user, setUser }: {
 
   const stars = [1, 2, 3, 4, 5];
 
+  useEffect(() => {
+  setRated(user.ratedBlogs.includes(blog.id));
+}, [user, blog.id]);
+
   return (
     <div className="flex items-center justify-center">
       {stars.map((star) => (
@@ -57,8 +62,8 @@ const StarRating = ({ currentRating, onRate, blog, setBlog, user, setUser }: {
           className={`h-8 w-8 px-1 cursor-pointer dark:invert transition-transform duration-100 ${rated ? 'opacity-50 cursor-not-allowed' : 'hover:scale-110'}`}
           src={star <= (hovered || currentRating) ? "/star-fill.svg" : "/star.svg"}
           alt={`star-${star}`}
-          width={500}
-          height={500}
+          width={32}
+          height={32}
           onMouseEnter={() => !rated && setHovered(star)}
           onMouseLeave={() => setHovered(0)}
           onClick={() => handleRating(star)}

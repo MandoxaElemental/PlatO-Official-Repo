@@ -35,11 +35,10 @@ const Blog = () => {
     const [comment, setComment] = useState<string>('');
     const [commentSection, setCommentSection] = useState<ICommentItems[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [rating, setRating] = useState<number>(0);
-    const [hover, setHover] = useState<number>(0);
     const [currentUser, setCurrentUser] = useState<IUserData | null>(null);
     const [blogItem, setBlogItem] = useState<IBlogItems | null>(null);
     const [checkedIngredients, setCheckedIngredients] = useState<Record<string, boolean>>({});
+    const [, setRating] = useState<number>(0);
     const handleRate = (rating: number) => {setRating(rating);};
     
 
