@@ -19,7 +19,7 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
     const getData = async () => {
       try {
         const data = await getUserInfoById(String(blog.userId));
-        setProfilePic(data?.profilePicture || "/assets/person-circle.svg");
+        setProfilePic(data.profilePicture || "/assets/person-circle.svg");
       } catch (error) {
         console.error("Failed to load profile picture", error);
         setProfilePic("/assets/person-circle.svg");
@@ -27,7 +27,7 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
     };
   
     getData();
-  }, [blog.userId]);
+  }, [profilePic]);
 
   useEffect(() => {
     const storedUsername = localStorage.getItem("Username");

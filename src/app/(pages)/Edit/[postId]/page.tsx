@@ -382,116 +382,101 @@ const Recipe = () => {
         <div className='border-b-1 border-solid border-blue-100 p-2'>
             <p className='font-semibold text-xl text-center'>Ingredients</p>
             {ingredientGroups.map((group, groupIndex) => (
-              <div key={groupIndex}>
-                <div className='my-2 flex items-center px-2'>
-                  <Image
-                    className="h-10 w-10 pr-5 hover:opacity-50 dark:invert cursor-pointer"
-                              src="../assets/x-lg.svg"
-                              alt="remove"
-                              onClick={() => removeIngredientGroup(groupIndex)}
-                              width={100}
-                              height={100}
-                          />
-                <TextInput
-                  className="w-[400px] font-bold"
-                  value={group.title}
-                  onChange={(e) => {
-                    const newGroups = [...ingredientGroups];
-                    newGroups[groupIndex].title = e.target.value;
-                    setIngredientGroups(newGroups);
-                  }}
-                />
-                </div>
-                {group.ingredients.map((ing, index) => (
-                    <div key={index} className="flex items-center px-2">
-                      <Image
-                        className="h-10 w-10 pr-5 hover:opacity-50 dark:invert cursor-pointer"
-                        src="../assets/x-lg.svg"
-                        alt="remove"
-                        onClick={() => removeIngredient(groupIndex, index)}
-                        width={100}
-                        height={100}
-                      />
-                      <div className="mb-4 px-1">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">
-                          AMOUNT
-                        </label>
-                        <TextInput
-                          className="w-[80px]"
-                          value={ing.amount}
-                          onChange={(e) => updateIngredient(groupIndex, index, 'amount', e.target.value)}
-                        />
-                      </div>
-                      <div className="mb-4 px-1">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">
-                          MEASUREMENT
-                        </label>
-                        <MeasurementDropdown
-                          selected={ing.measurement}
-                          onSelect={(val) => updateIngredient(groupIndex, index, 'measurement', val)}
-                        />
-                      </div>
-                      <div className="mb-4 px-1">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">
-                          INGREDIENT
-                        </label>
-                        <TextInput
-                          className="w-[300px]"
-                          value={ing.ingredient}
-                          onChange={(e) =>
-                            updateIngredient(groupIndex, index, 'ingredient', e.target.value)
-                          }
-                        />
-                      </div>
-                    </div>
-                ))}
-                <div className='p-2 flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer' onClick={() => addIngredient(groupIndex)}><Image className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" width={100} height={100}/><p>Add Ingredient</p></div>
-              </div>
-            ))}
+  <div key={groupIndex}>
+     <label className="block text-gray-700 text-sm font-bold mb-2">
+              INGREDIENT GROUP {groupIndex + 1}
+            </label>
+    <div className='my-2 flex items-center px-2'>
+      <TextInput
+        className="w-full font-bold"
+        placeholder='ex. pie filling/piecrust'
+        value={group.title}
+        onChange={(e) => {
+          const newGroups = [...ingredientGroups];
+          newGroups[groupIndex].title = e.target.value;
+          setIngredientGroups(newGroups);
+        }}
+      />
+      <Image className="h-8 w-8 pt-2 pl-2 hover:opacity-50 dark:invert cursor-pointer" src="../assets/trash.svg" alt="remove" onClick={() => removeIngredientGroup(groupIndex)} width={100} height={100}/>
+
+    </div>
+
+{group.ingredients.map((ing, index) => (
+  <div
+    key={index}
+    className="flex flex-col md:flex-row md:items-center px-2 mb-2"
+  >
+
+    <div className="flex flex-row md:flex-row gap-2 mb-2 md:mb-0">
+      <TextInput
+      placeholder="Amount"
+        className="w-[80px]"
+        value={ing.amount}
+        onChange={(e) =>
+          updateIngredient(groupIndex, index, 'amount', e.target.value)
+        }
+      />
+      <MeasurementDropdown
+        selected={ing.measurement}
+        onSelect={(val) =>
+          updateIngredient(groupIndex, index, 'measurement', val)
+        }
+      />
+    </div>
+
+    <div className="flex mb-4 px-1 md:mb-0 md:px-1 md:ml-2 w-full">
+      <TextInput
+      placeholder="Ingredient"
+        className="w-full"
+        value={ing.ingredient}
+        onChange={(e) =>
+          updateIngredient(groupIndex, index, 'ingredient', e.target.value)
+        }
+      />
+                <Image className="h-8 w-8 pt-2 pl-2 hover:opacity-50 dark:invert cursor-pointer" src="../assets/trash.svg" alt="remove" onClick={() => removeIngredient(groupIndex, index)} width={100} height={100}/>
+
+    </div>
+  </div>
+))}
+
+    <div className='p-2 flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer' onClick={() => addIngredient(groupIndex)}><Image className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" width={100} height={100}/><p>Add Ingredient</p></div>
+  </div>
+))}
               <div className='p-2 flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer' onClick={addIngredientGroup}><Image className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" width={100} height={100}/><p>Add Ingredient Group</p></div>
                     </div>
                     <div className='border-b-1 border-solid border-blue-100 p-2'>
   <p className='font-semibold text-xl text-center'>Instructions</p>
   {stepGroups.map((group, groupIndex) => (
     <div key={groupIndex}>
-      <div className='my-2 flex items-center px-2'>
-        <Image
-          className="h-10 w-10 pr-5 hover:opacity-50 dark:invert cursor-pointer"
-          src="../assets/x-lg.svg"
-                    alt="remove"
-                    onClick={() => removeStepGroup(groupIndex)}
-                    width={100}
-                    height={100}
-                />
-        <TextInput
-          className="w-[400px] font-bold"
-          value={group.title}
+     <label className="block text-gray-700 text-sm font-bold mb-2">
+              STEP GROUP {groupIndex + 1}
+            </label>
+            <div className="flex px-2 mb-2">
+            <TextInput
+          className="w-full"
+              value={group.title}
           onChange={(e) => {
             const newGroups = [...stepGroups];
             newGroups[groupIndex].title = e.target.value;
             setStepGroups(newGroups);
           }}
-        />
-      </div>
+              />
+          <Image className="h-8 w-8 pt-2 pl-2 hover:opacity-50 dark:invert cursor-pointer" src="../assets/trash.svg" alt="remove" onClick={() => removeStepGroup(groupIndex)} width={100} height={100}/>
+            </div>
       {group.steps.map((step, stepIndex) => (
-        <div key={stepIndex} className="flex items-center px-2">
-          <Image
-            className="h-10 w-10 pr-5 hover:opacity-50 dark:invert cursor-pointer"
-            src="../assets/x-lg.svg"
-            alt="remove"
-            onClick={() => removeStep(groupIndex, stepIndex)}
-            width={100}
-            height={100}
-          />
-          <div className="mb-4 px-1">
+        <div key={stepIndex} className="flex items-center px-2 mb-4">
+          <div className="px-1 w-full">
             <label className="block text-gray-700 text-sm font-bold mb-2">
               Step {stepIndex + 1}
             </label>
+            <div className="flex">
             <TextInput
-              className="w-[550px]"
+          className="w-full"
               value={step}
               onChange={(e) => updateStep(groupIndex, stepIndex, e.target.value)}
-            />
+              />
+          <Image className="h-8 w-8 pt-2 pl-2 hover:opacity-50 dark:invert cursor-pointer" src="../assets/trash.svg" alt="remove" onClick={() => removeStep(groupIndex, stepIndex)} width={100} height={100}/>
+            </div>
           </div>
         </div>
       ))}

@@ -12,7 +12,9 @@ import Comment from '@/app/Components/Comment';
 import Link from 'next/link';
 import SaveButton from '@/app/Components/SaveButton';
 import BackButton from '@/app/Components/BackButton';
+import StarRating from '@/app/Components/Rating';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import LikeButton from '@/app/Components/LikeButton';
 
 const Blog = () => {
     const { postId } = useParams();
@@ -33,12 +35,11 @@ const Blog = () => {
     const [comment, setComment] = useState<string>('');
     const [commentSection, setCommentSection] = useState<ICommentItems[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [rating, setRating] = useState<number>(0);
-    const [hover, setHover] = useState<number>(0);
     const [currentUser, setCurrentUser] = useState<IUserData | null>(null);
     const [blogItem, setBlogItem] = useState<IBlogItems | null>(null);
     const [checkedIngredients, setCheckedIngredients] = useState<Record<string, boolean>>({});
-
+    const [, setRating] = useState<number>(0);
+    const handleRate = (rating: number) => {setRating(rating);};
     
 
     useEffect(() => {
@@ -179,28 +180,21 @@ const Blog = () => {
                                 <div className='font-semibold text-2xl pb-2'>- Recipe -</div>
                                 <Image className='h-48 w-full object-cover' src={`${image}`} alt="post" width={500} height={500} />
                                 <p className='font-semibold text-2xl p-2'>{name}</p>
-                                <div className='flex items-center justify-center'>
-                                  {[...Array(5)].map((_, index) => {
-                                    const starValue = index + 1;
-                                    return (
-                                      <button
-                                        key={index}
-                                        type="button"
-                                        onClick={() => setRating(starValue)}
-                                        onMouseEnter={() => setHover(starValue)}
-                                        onMouseLeave={() => setHover(0)}
-                                        className='px-1'
-                                      >
-                                        <Image
-                                          src={starValue <= (hover || rating) ? "/assets/star-fill.svg" : "/assets/star.svg"}
-                                          alt={`star-${starValue}`}
-                                          width={32}
-                                          height={32}
-                                        />
-                                      </button>
-                                    );
-                                  })}
-                                </div>
+                                {blogItem && currentUser && (
+                                  <div className="flex flex-col items-center">
+                                    <StarRating
+                                      currentRating={Math.round(blogItem.averageRating)}
+                                      onRate={handleRate}
+                                      blog={blogItem}
+                                      setBlog={setBlogItem}
+                                      user={currentUser}
+                                      setUser={setCurrentUser}
+                                    />
+                                    <p className="text-sm mt-2 text-gray-500 dark:text-gray-400">
+                                      Average Rating: {blogItem.averageRating.toFixed(1)} ({blogItem.numberOfRatings} ratings)
+                                    </p>
+                                  </div>
+                                )}
                                 <div className="p-2 flex justify-around">
                                   <div className="text-center">
                                     <p className="font-semibold">Time</p>
@@ -276,11 +270,18 @@ const Blog = () => {
                     onUpdate={setCurrentUser}
                     />
                 )}
+                like={(
+                  <LikeButton
+                  blog={blogItem!}
+                  currentUser={currentUser}
+                  onUserUpdate={setCurrentUser}
+                />
+                )}
                 comments={(
                     <div>
                         <div className='p-5 border-t border-solid border-slate-300 flex items-center justify-between'>
                         <div className="rounded-full overflow-hidden w-10 h-10 relative bg-blue-200">
-                            <Image src={`${profilePic}`} alt="profilePic" fill className="object-cover"/>
+                            {/* <Image src="" alt="profilePic" fill className="object-cover"/> */}
                           </div>
                             <TextInput value={comment} onChange={(e) => setComment(e.target.value)} className='w-[320px]' />
                             <Button onClick={handleComment} className="rounded-full h-8 bg-blue-200 hover:bg-blue-400 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200">Post</Button>

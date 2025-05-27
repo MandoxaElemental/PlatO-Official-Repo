@@ -26,7 +26,7 @@ export function NavbarComponentRight() {
   }, [searchInput, setSearchQuery]);
 
   const randomTags = useMemo(() => {
-    const randomCategories = getRandomElements(tagArr, 3);
+    const randomCategories = getRandomElements(tagArr, 4);
     return randomCategories.map(category => {
       const randomTag = getRandomElements(category.tags, 1)[0];
       return {
@@ -44,11 +44,13 @@ export function NavbarComponentRight() {
           placeholder="Search blogs..." 
           value={searchInput}
         />
-        <div className="flex flex-col items-center py-5 gap-2">
+        <div className="grid grid-cols-2 items-center py-5 gap-2">
           {randomTags.map((item, idx) => (
             <Link key={idx} href={`/Discover/${item.tag}`}>
-            <div className="h-[40px] w-[170px] rounded-2xl text-sm bg-blue-200 hover:bg-blue-400 cursor-pointer flex justify-center items-center font-bold text-white">
-              {item.tag}
+            <div className="h-[50px] rounded-2xl text-sm bg-blue-200 hover:bg-blue-400 cursor-pointer flex justify-center items-center font-bold text-white">
+              <p className="text-black">
+                {item.tag}
+              </p>
             </div>
             </Link>
           ))}

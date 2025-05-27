@@ -71,6 +71,18 @@ const gridClasses = [
 
   const visibleItems = blogItems.slice(0, visibleCount);
 
+      if (loading) {
+          return (
+                <div className="flex justify-center mt-15 rounded-full border-4 opacity-50 border-blue-100 h-[60px] w-[60px]">
+                <DotLottieReact className="w-[50px] h-auto dark:invert"
+                src="https://lottie.host/1362f106-3038-4bd3-960c-d2c553e0c317/LALyol5iRY.lottie"
+                loop
+                autoplay
+                />
+                </div>
+          );
+      }
+
 
   return (
     <>
@@ -79,16 +91,7 @@ const gridClasses = [
         <div className='border-b border-slate-300 p-2 text-2xl font-semibold text-center'>
           Discover
         </div>
- {loading ? (
-                <div className="flex justify-center mb-4">
-                    <DotLottieReact
-                        className="w-[50px] h-auto dark:invert"
-                        src="https://lottie.host/1362f106-3038-4bd3-960c-d2c553e0c317/LALyol5iRY.lottie"
-                        loop
-                        autoplay
-                    />
-                </div>
-            ) : (
+
         <div className="grid grid-cols-3 auto-rows-[100px] md:auto-rows-[200px] gap-4 pt-5">
           {visibleItems.map((item, index) => {
             const gridClass = gridClasses[index % 12];
@@ -120,7 +123,7 @@ const gridClasses = [
             );
           })}
         </div>
-            )}
+            
 
         {/* 👇 Sentinel for infinite scroll */}
         <div ref={sentinelRef} className="h-10 w-full mt-10 flex justify-center items-center text-sm text-gray-500">
