@@ -183,7 +183,7 @@ const Blog = () => {
                                 {blogItem && currentUser && (
                                   <div className="flex flex-col items-center">
                                     <StarRating
-                                      currentRating={Math.round(blogItem.averageRating)}
+                                      currentRating={blogItem?.averageRating || 0}
                                       onRate={handleRate}
                                       blog={blogItem}
                                       setBlog={setBlogItem}

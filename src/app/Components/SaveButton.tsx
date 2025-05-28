@@ -28,8 +28,6 @@ const SaveButton = ({ postId, currentUser, onUpdate }: SaveButtonProps) => {
     const updatedUser: IUserData = {
       ...currentUser,
       savedRecipes: updatedSavedRecipes,
-      salt: currentUser.salt,
-      hash: currentUser.hash,
     };
 
     try {

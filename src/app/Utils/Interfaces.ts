@@ -79,8 +79,6 @@ export interface IUserData
     savedRecipes: number[]
     following: number[]
     followers: number[]
-    salt?: string;
-    hash?: string;
 }
 export interface ICommentItems
 {

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { IBlogItems, ICommentItems, IConversation, IIngredientItems, IMessage, IReplyItems, IStepItems, IUserData, IUserInfoCreate, IUserInfoLogin } from "./Interfaces"
 
-// backup const url = "https://plato-backend-service-ckfsdddugkazhmgz.westus-01.azurewebsites.net"
+// const url = "https://plato-backend-service-ckfsdddugkazhmgz.westus-01.azurewebsites.net"
 const url = "https://platobackend-a7hagaahdvdfesgm.westus-01.azurewebsites.net"
 
 let userData: IUserData
@@ -311,6 +311,7 @@ export const deleteBlogItem = async (blog: IBlogItems, token: string) =>
 export const getToken = () => {
     return localStorage.getItem("Token") ?? '';
 }
+
 
 export const likeBlog = async (userId: number, blogId: number, token: string ): Promise<boolean> => {
   try {

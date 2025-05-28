@@ -15,7 +15,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ blog, currentUser, onUserUpdate
 
   useEffect(() => {
     if (!currentUser) return;
-    setLiked(currentUser.likedBlogs.includes(blog.id));
+    setLiked(currentUser.likedBlogs?.includes(blog.id) || false);
   }, [currentUser, blog.id]);
 
   const handleLikeToggle = async () => {

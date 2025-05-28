@@ -174,4 +174,156 @@ export const dummyBlogData: IBlogItems[] = [
     isPublished: true,
     isDeleted: false,
   },
+  {
+  id: 7,
+  userId: 6,
+  publisherName: "GlobalGrub",
+  date: new Date().toISOString(),
+  image: "/assets/DummyData/tikka.png",
+  recipeName: "Chicken Tikka Skewers",
+  description: "Flavorful Indian-style skewers perfect for grilling.",
+  ingredients: [
+    {
+      title: "Marinade",
+      ingredients: [
+        "500g chicken breast",
+        "1/2 cup yogurt",
+        "1 tbsp garam masala",
+        "1 tsp turmeric",
+        "Salt",
+        "Lemon juice"
+      ],
+    },
+  ],
+  steps: [
+    {
+      title: "Cooking Instructions",
+      steps: [
+        "Marinate chicken for 2 hours",
+        "Skewer and grill on medium heat",
+        "Serve with chutney"
+      ],
+    },
+  ],
+  tags: ["indian", "grill", "spicy"],
+  rating: 0,
+  numberOfRatings: 0,
+  averageRating: 0,
+  numberOfLikes: 0,
+  postType: "recipe",
+  totalTime: "2 hr 20 min (with marination)",
+  servings: "4",
+  source: "Global Grub",
+  isPublished: true,
+  isDeleted: false,
+},
+{
+  id: 8,
+  userId: 7,
+  publisherName: "VeggieVibes",
+  date: new Date().toISOString(),
+  image: "/assets/DummyData/stirfry.png",
+  recipeName: "Rainbow Veggie Stir-Fry",
+  description: "A quick and colorful vegan stir-fry.",
+  ingredients: [
+    {
+      title: "Ingredients",
+      ingredients: [
+        "Bell peppers (3 colors)",
+        "1 zucchini",
+        "1 red onion",
+        "Soy sauce",
+        "Garlic",
+        "Olive oil"
+      ],
+    },
+  ],
+  steps: [
+    {
+      title: "Instructions",
+      steps: [
+        "Chop all veggies",
+        "Stir-fry in pan with oil and garlic",
+        "Add soy sauce to taste"
+      ],
+    },
+  ],
+  tags: ["vegan", "quick", "dinner"],
+  rating: 0,
+  numberOfRatings: 0,
+  averageRating: 0,
+  numberOfLikes: 0,
+  postType: "recipe",
+  totalTime: "15 min",
+  servings: "2",
+  source: "Veggie Vibes",
+  isPublished: true,
+  isDeleted: false,
+},
+{
+  id: 9,
+  userId: 8,
+  publisherName: "SweetCrumbs",
+  date: new Date().toISOString(),
+  image: "/assets/DummyData/cookies.png",
+  recipeName: "Chocolate Chip Cookies",
+  description: "Soft and chewy cookies with gooey chocolate.",
+  ingredients: [
+    {
+      title: "What You'll Need",
+      ingredients: [
+        "2 cups flour",
+        "1 cup sugar",
+        "1/2 cup butter",
+        "2 eggs",
+        "1 tsp vanilla",
+        "1 cup chocolate chips"
+      ],
+    },
+  ],
+  steps: [
+    {
+      title: "Bake Like This",
+      steps: [
+        "Preheat oven to 350°F",
+        "Mix ingredients",
+        "Scoop onto tray",
+        "Bake for 12 minutes"
+      ],
+    },
+  ],
+  tags: ["dessert", "cookies", "baking"],
+  rating: 0,
+  numberOfRatings: 0,
+  averageRating: 0,
+  numberOfLikes: 0,
+  postType: "recipe",
+  totalTime: "25 min",
+  servings: "12 cookies",
+  source: "Sweet Crumbs",
+  isPublished: true,
+  isDeleted: false,
+},
+{
+  id: 10,
+  userId: 9,
+  publisherName: "InstaBites",
+  date: new Date().toISOString(),
+  image: "/assets/DummyData/sandwich.png",
+  recipeName: "Lunchbox Stack",
+  description: "A stacked sandwich ready for your lunchbox.",
+  ingredients: [],
+  steps: [],
+  tags: ["photo", "lunch", "sandwich"],
+  rating: 0,
+  numberOfRatings: 0,
+  averageRating: 0,
+  numberOfLikes: 0,
+  postType: "image",
+  totalTime: "",
+  servings: "",
+  source: "",
+  isPublished: true,
+  isDeleted: false,
+}
 ];
