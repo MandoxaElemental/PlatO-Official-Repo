@@ -19,7 +19,7 @@ const Recipe = () => {
       { title: "", ingredients: [{ amount: '', measurement: 'Measurement', ingredient: '' }] }
         ]);
     const [stepGroups, setStepGroups] = useState<StepGroup[]>([
-      { title: "", steps: [] }
+      { title: "", steps: [""] }
     ]);
     const [query, setQuery] = useState<string>('');
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -404,7 +404,7 @@ const Recipe = () => {
 {group.ingredients.map((ing, index) => (
   <div
     key={index}
-    className="flex flex-col md:flex-row md:items-center px-2 mb-2"
+    className="ml-5 flex flex-col md:flex-row md:items-center px-2 mb-2"
   >
 
     <div className="flex flex-row md:flex-row gap-2 mb-2 md:mb-0">
@@ -464,7 +464,7 @@ const Recipe = () => {
           <Image className="h-8 w-8 pt-2 pl-2 hover:opacity-50 dark:invert cursor-pointer" src="../assets/trash.svg" alt="remove" onClick={() => removeStepGroup(groupIndex)} width={100} height={100}/>
             </div>
       {group.steps.map((step, stepIndex) => (
-        <div key={stepIndex} className="flex items-center px-2 mb-4">
+        <div key={stepIndex} className="ml-5 flex items-center px-2 mb-4">
           <div className="px-1 w-full">
             <label className="block text-gray-700 text-sm font-bold mb-2">
               Step {stepIndex + 1}
