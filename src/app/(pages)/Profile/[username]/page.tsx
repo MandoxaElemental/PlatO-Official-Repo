@@ -98,11 +98,11 @@ const ProfilePage = () => {
           <div className='flex text-center flex-grid gap-3'>
             <div>
               <p className='font-semibold'>Following</p>
-              <p>{followers}</p>
+              <p>{following}</p>
             </div>
             <div>
               <p className='font-semibold'>Followers</p>
-              <p>{following}</p>
+              <p>{followers}</p>
             </div>
           </div>
         </div>

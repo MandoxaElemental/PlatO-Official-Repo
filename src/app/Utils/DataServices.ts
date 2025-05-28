@@ -129,6 +129,34 @@ export const checkToken = () =>
     return result;
 }
 
+export const followUser = async (
+  followerId: number,
+  targetUserId: number,
+  token: string
+): Promise<boolean> => {
+  try {
+    const response = await fetch(url + `/User/FollowUser/${followerId}/${targetUserId}`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData?.Message || 'Follow action failed.');
+    }
+
+    return true;
+  } catch (error) {
+    console.error('followUser error:', error);
+    return false;
+  }
+};
+
+
 //----------BLOG ENDPOINTS----------//
 
 export const getAllBlogs = async (token: string) =>

@@ -11,6 +11,7 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
   const [currentUser, setCurrentUser] = useState<IUserData | null>(null);
   const [username, setUsername] = useState('');
   const [profilePic, setProfilePic] = useState('');
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
   const [currentView, setCurrentView] = useState<"main" | "ingredients" | "steps">("main");
   const containerRef = useRef<HTMLDivElement>(null);
   
@@ -87,6 +88,9 @@ useEffect(() => {
   };
 }, [currentView]);
 
+const handleFollowUpdate = (isNowFollowing: boolean) => {
+  setIsFollowing(isNowFollowing);
+};
 
   return (
     <div className="text-center max-w-[360px] md:max-w-[500px] mb-5 border-1 border-solid border-blue-100 shadow-blue-200/50 rounded-md shadow-sm">
@@ -109,7 +113,7 @@ useEffect(() => {
           <FollowButton
             targetUserId={Number(blog.userId)}
             currentUser={currentUser}
-            onUpdate={setCurrentUser}
+            onUpdate={handleFollowUpdate}
           />
         )}
       </div>

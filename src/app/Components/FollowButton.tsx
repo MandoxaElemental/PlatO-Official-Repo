@@ -1,12 +1,12 @@
 import { Button } from 'flowbite-react';
 import { useState, useEffect } from 'react';
-import { getToken, updateUserItem } from '../Utils/DataServices';
+import { getToken, followUser } from '../Utils/DataServices';
 import { IUserData } from '../Utils/Interfaces';
 
 interface FollowButtonProps {
   targetUserId: number;
   currentUser: IUserData | null;
-  onUpdate?: (user: IUserData) => void;
+  onUpdate: (isNowFollowing: boolean) => void;
 }
 
 const FollowButton = ({ targetUserId, currentUser, onUpdate }: FollowButtonProps) => {
@@ -21,30 +21,21 @@ const FollowButton = ({ targetUserId, currentUser, onUpdate }: FollowButtonProps
   const handleFollow = async () => {
     if (!currentUser) return;
 
-    const updatedFollowing = isFollowing
-      ? currentUser.following.filter((id) => id !== targetUserId)
-      : [...new Set([...(currentUser.following || []), targetUserId])];
+    const success = await followUser(currentUser.id, targetUserId, getToken());
 
-    const updatedUser: IUserData = {
-      ...currentUser,
-      following: updatedFollowing,
-    };
-
-    try {
-      const success = await updateUserItem(updatedUser, getToken());
-      if (success) {
-        setIsFollowing(!isFollowing);
-        if (onUpdate) onUpdate(updatedUser);
-        alert(isFollowing ? "Unfollowed" : "Following");
-      }
-    } catch (error) {
-      console.error('Error updating follow status:', error);
+    if (success) {
+      const nowFollowing = !isFollowing;
+      setIsFollowing(nowFollowing);
+      if (onUpdate) onUpdate(nowFollowing);
+      alert(nowFollowing ? "Following" : "Unfollowed");
     }
   };
 
   return (
     <Button
-      className={`rounded-md ${isFollowing ? "hover:bg-blue-400 bg-white border-2 border-blue-200" : "bg-blue-200 hover:bg-blue-400"} rounded-full h-8 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200`}
+      className={`rounded-md ${
+        isFollowing ? "hover:bg-blue-400 bg-white border-2 border-blue-200" : "bg-blue-200 hover:bg-blue-400"
+      } rounded-full h-8 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200`}
       onClick={handleFollow}
     >
       {isFollowing ? "Unfollow" : "Follow"}
