@@ -129,11 +129,7 @@ export const checkToken = () =>
     return result;
 }
 
-export const followUser = async (
-  followerId: number,
-  targetUserId: number,
-  token: string
-): Promise<boolean> => {
+export const followUser = async (followerId: number, targetUserId: number, token: string ): Promise<boolean> => {
   try {
     const response = await fetch(url + `/User/FollowUser/${followerId}/${targetUserId}`,
       {
@@ -314,6 +310,29 @@ export const deleteBlogItem = async (blog: IBlogItems, token: string) =>
 export const getToken = () => {
     return localStorage.getItem("Token") ?? '';
 }
+
+export const likeBlog = async (userId: number, blogId: number, token: string ): Promise<boolean> => {
+  try {
+    const response = await fetch(url + `/Blog/Like/${userId}/${blogId}`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData?.Message || 'Follow action failed.');
+    }
+
+    return true;
+  } catch (error) {
+    console.error('likeBlog error:', error);
+    return false;
+  }
+};
 
 //----------COMMENT ENDPOINTS----------//
 export const getAllComments = async (token: string) =>

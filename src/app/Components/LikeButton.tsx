@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { IBlogItems, IUserData } from '../Utils/Interfaces';
-import { getToken, updateBlogItem, updateUserItem } from '../Utils/DataServices';
+import { getToken, likeBlog } from '../Utils/DataServices';
 
 interface LikeButtonProps {
   blog: IBlogItems;
@@ -21,16 +21,14 @@ const LikeButton: React.FC<LikeButtonProps> = ({ blog, currentUser, onUserUpdate
   const handleLikeToggle = async () => {
     if (!currentUser) return;
 
-    const updatedLikes = liked ? likes - 1 : likes + 1;
-    const updatedBlog: IBlogItems = { ...blog, numberOfLikes: updatedLikes };
+    const token = getToken();
+    const success = await likeBlog(currentUser.id, blog.id, token);
 
-    try {
-      await updateBlogItem(updatedBlog, getToken());
-      setLikes(updatedLikes);
-      setLiked(!liked);
-    } catch (error) {
-      console.error('Error updating blog like count:', error);
-    }
+    if (!success) return;
+
+    const updatedLikes = liked ? likes - 1 : likes + 1;
+    setLikes(updatedLikes);
+    setLiked(!liked);
 
     const updatedUser: IUserData = {
       ...currentUser,
@@ -39,14 +37,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ blog, currentUser, onUserUpdate
         : [...currentUser.likedBlogs, blog.id],
     };
 
-    try {
-      await updateUserItem(updatedUser, getToken());
-      if (onUserUpdate) {
-        onUserUpdate(updatedUser);
-      }
-    } catch (error) {
-      console.error('Error updating user likedBlogs:', error);
-    }
+    onUserUpdate?.(updatedUser);
   };
 
   return (

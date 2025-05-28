@@ -11,7 +11,7 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
   const [currentUser, setCurrentUser] = useState<IUserData | null>(null);
   const [username, setUsername] = useState('');
   const [profilePic, setProfilePic] = useState('');
-  const [isFollowing, setIsFollowing] = useState<boolean>(false);
+  const [, setIsFollowing] = useState<boolean>(false);
   const [currentView, setCurrentView] = useState<"main" | "ingredients" | "steps">("main");
   const containerRef = useRef<HTMLDivElement>(null);
   
