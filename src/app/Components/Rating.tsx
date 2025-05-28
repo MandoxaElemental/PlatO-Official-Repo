@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { IBlogItems, IUserData } from "../Utils/Interfaces";
-import { getToken, updateBlogItem, updateUserItem } from "../Utils/DataServices";
+import { getToken, ratingBlog } from "../Utils/DataServices";
 
 const StarRating = ({ currentRating, onRate, blog, setBlog, user, setUser }: {
   currentRating: number;
@@ -18,41 +18,37 @@ const StarRating = ({ currentRating, onRate, blog, setBlog, user, setUser }: {
     if (rated) return;
 
     const token = getToken();
-    const updatedUser: IUserData = {
-      ...user,
-      ratedBlogs: [...user.ratedBlogs, blog.id]
-    };
-    const totalRating = blog.averageRating * blog.numberOfRatings + rating;
-const newNumberOfRatings = blog.numberOfRatings + 1;
-    const updatedBlog: IBlogItems = {
-  ...blog,
-  rating: totalRating / newNumberOfRatings,
-  numberOfRatings: newNumberOfRatings,
-  averageRating: totalRating / newNumberOfRatings
-};
+    const success = await ratingBlog(user.id, blog.id, rating, token);
 
-    try {
-      const blogSuccess = await updateBlogItem(updatedBlog, token);
-      const userSuccess = await updateUserItem(updatedUser, token);
+    if (success) {
+      const updatedUser: IUserData = {
+        ...user,
+        ratedBlogs: [...user.ratedBlogs, blog.id],
+      };
 
-      if (blogSuccess && userSuccess) {
-        setBlog(updatedBlog);
-        setUser(updatedUser);
-        onRate(rating);
-        setRated(true);
-      } else {
-        console.error("Failed to update blog or user.");
-      }
-    } catch (err) {
-      console.error("Error during rating update:", err);
+      const totalRating = blog.averageRating * blog.numberOfRatings + rating;
+      const newNumberOfRatings = blog.numberOfRatings + 1;
+      const updatedBlog: IBlogItems = {
+        ...blog,
+        rating: totalRating / newNumberOfRatings,
+        numberOfRatings: newNumberOfRatings,
+        averageRating: totalRating / newNumberOfRatings,
+      };
+
+      setUser(updatedUser);
+      setBlog(updatedBlog);
+      onRate(rating);
+      setRated(true);
+    } else {
+      console.error("Failed to rate blog.");
     }
   };
 
-  const stars = [1, 2, 3, 4, 5];
-
   useEffect(() => {
-  setRated(user.ratedBlogs.includes(blog.id));
-}, [user, blog.id]);
+    setRated(user.ratedBlogs.includes(blog.id));
+  }, [user, blog.id]);
+
+  const stars = [1, 2, 3, 4, 5];
 
   return (
     <div className="flex items-center justify-center">

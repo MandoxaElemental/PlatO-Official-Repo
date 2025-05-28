@@ -1,4 +1,5 @@
-import { IBlogItems, ICommentItems, IIngredientItems, IReplyItems, IStepItems, IUserData, IUserInfoCreate, IUserInfoLogin } from "./Interfaces"
+import axios from "axios";
+import { IBlogItems, ICommentItems, IConversation, IIngredientItems, IMessage, IReplyItems, IStepItems, IUserData, IUserInfoCreate, IUserInfoLogin } from "./Interfaces"
 
 // backup const url = "https://plato-backend-service-ckfsdddugkazhmgz.westus-01.azurewebsites.net"
 const url = "https://platobackend-a7hagaahdvdfesgm.westus-01.azurewebsites.net"
@@ -313,7 +314,7 @@ export const getToken = () => {
 
 export const likeBlog = async (userId: number, blogId: number, token: string ): Promise<boolean> => {
   try {
-    const response = await fetch(url + `/Blog/Like/${userId}/${blogId}`,
+    const response = await fetch(url + `/Blog/Likes/${userId}/${blogId}`,
       {
         method: 'PUT',
         headers: {
@@ -330,6 +331,29 @@ export const likeBlog = async (userId: number, blogId: number, token: string ): 
     return true;
   } catch (error) {
     console.error('likeBlog error:', error);
+    return false;
+  }
+};
+
+export const ratingBlog = async (userId: number, blogId: number, rating: number, token: string ): Promise<boolean> => {
+  try {
+    const response = await fetch(url + `/Blog/Rating/${userId}/${blogId}/${rating}`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData?.Message || 'Follow action failed.');
+    }
+
+    return true;
+  } catch (error) {
+    console.error('ratingBlog error:', error);
     return false;
   }
 };
@@ -755,3 +779,53 @@ export const getAllReplies = async (token: string) =>
             const data = await response.json();
             return data;
         }
+//----------MESSAGES ENDPOINTS----------//
+export const getAllConversations = async () => {
+  const res = await axios.get(`${url}/GetAllConversations`);
+  return res.data;
+};
+
+export const getConversationById = async (id: number) => {
+  const res = await axios.get(`${url}/GetConversationById/${id}`);
+  return res.data;
+};
+
+export const getConversationsByUserOneId = async (userId: number) => {
+  const res = await axios.get(`${url}/GetConversationsByUserOneId/${userId}`);
+  return res.data;
+};
+
+export const getConversationsByUserTwoId = async (userId: number) => {
+  const res = await axios.get(`${url}/GetConversationsByUserTwoId/${userId}`);
+  return res.data;
+};
+
+export const addConversation = async (conversation: IConversation) => {
+  const res = await axios.post(`${url}/AddConversation`, conversation);
+  return res.data;
+};
+
+export const editConversation = async (conversation: IConversation) => {
+  const res = await axios.put(`${url}/EditConversations`, conversation);
+  return res.data;
+};
+
+export const addMessage = async (message: IMessage) => {
+  const res = await axios.post(`${url}/AddMessage`, message);
+  return res.data;
+};
+
+export const getMessagesByUserAndConversation = async (userId: number, conversationId: number) => {
+  const res = await axios.get(`${url}/GetMessagesByUserIdAndConversationId/${userId}/${conversationId}`);
+  return res.data;
+};
+
+export const getMessageById = async (id: number) => {
+  const res = await axios.get(`${url}/GetMessageById/${id}`);
+  return res.data;
+};
+
+export const editMessage = async (message: IMessage) => {
+  const res = await axios.put(`${url}/EditMessage`, message);
+  return res.data;
+};

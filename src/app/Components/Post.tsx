@@ -175,7 +175,7 @@ const handleFollowUpdate = (isNowFollowing: boolean) => {
         {blog.ingredients.map((item, i) => (
           <div key={i}>
             <h1 className="font-bold">{item.title}</h1>
-            <ul className="list-disc text-left pl-6">
+            <ul className="list-disc text-left pl-8">
               {item.ingredients.map((ingredient, j) => (
                 <li key={j}>{ingredient}</li>
               ))}
@@ -192,7 +192,7 @@ const handleFollowUpdate = (isNowFollowing: boolean) => {
         {blog.steps.map((item, i) => (
           <div key={i}>
             <h1 className="font-semibold">{item.title}</h1>
-            <ol className="list-decimal text-left mx-6">
+            <ol className="list-decimal text-left px-8">
               {item.steps.map((step, j) => (
                 <li key={j}>{step}</li>
               ))}
@@ -204,35 +204,40 @@ const handleFollowUpdate = (isNowFollowing: boolean) => {
     </div>
 
     {/* Navigation Buttons */}
-    <div className="absolute inset-y-0 left-0">
-      <div
-        onClick={() => {
-          const views = ["main", "ingredients", "steps"];
-          const currentIndex = views.indexOf(currentView);
-          if (currentIndex > 0) setCurrentView(views[currentIndex - 1] as typeof currentView);
-        }}
-        className="bg-transparent h-full hover:opacity-50 hover:bg-black/10 p-2 rounded-r-xl flex flex-col justify-center"
-      >
-                <div className="w-10 h-10 bg-[#FFFFFF80] dark:bg-[#00000080] rounded-full">
+<div className="absolute inset-y-0 left-0">
+  {currentView !== "main" && (
+    <div
+      onClick={() => {
+        const views = ["main", "ingredients", "steps"];
+        const currentIndex = views.indexOf(currentView);
+        if (currentIndex > 0) setCurrentView(views[currentIndex - 1] as typeof currentView);
+      }}
+      className="bg-transparent h-full hover:opacity-50 hover:bg-black/10 p-2 rounded-r-xl flex flex-col justify-center cursor-pointer"
+    >
+      <div className="w-10 h-10 bg-[#FFFFFF80] dark:bg-[#00000080] rounded-full flex items-center justify-center">
         <Image width={20} height={20} className="h-10 w-10 dark:invert opacity-100" src="/assets/arrow-left-circle.svg" alt="left" />
       </div>
-      </div>
     </div>
+  )}
+</div>
 
-    <div className="absolute inset-y-0 right-0">
-      <div
-        onClick={() => {
-          const views = ["main", "ingredients", "steps"];
-          const currentIndex = views.indexOf(currentView);
-          if (currentIndex < views.length - 1) setCurrentView(views[currentIndex + 1] as typeof currentView);
-        }}
-        className="bg-transparent h-full hover:opacity-50 hover:bg-black/10 p-2 rounded-l-xl flex flex-col justify-center"
-      >
-        <div className="w-10 h-10 bg-[#FFFFFF80] dark:bg-[#00000080] rounded-full">
-          <Image width={20} height={20} className="h-10 w-10 dark:invert opacity-100" src="/assets/arrow-right-circle.svg" alt="right" />
-        </div>
+<div className="absolute inset-y-0 right-0">
+  {currentView !== "steps" && (
+    <div
+      onClick={() => {
+        const views = ["main", "ingredients", "steps"];
+        const currentIndex = views.indexOf(currentView);
+        if (currentIndex < views.length - 1) setCurrentView(views[currentIndex + 1] as typeof currentView);
+      }}
+      className="bg-transparent h-full hover:opacity-50 hover:bg-black/10 p-2 rounded-l-xl flex flex-col justify-center cursor-pointer"
+    >
+      <div className="w-10 h-10 bg-[#FFFFFF80] dark:bg-[#00000080] rounded-full flex items-center justify-center">
+        <Image width={20} height={20} className="h-10 w-10 dark:invert opacity-100" src="/assets/arrow-right-circle.svg" alt="left" />
       </div>
     </div>
+  )}
+</div>
+
   </div>
 )}
 

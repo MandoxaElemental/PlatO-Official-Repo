@@ -327,3 +327,18 @@ export interface StarRatingProps {
     currentRating: number;
     onRate: (rating: number) => void;
   }
+
+  export interface IConversation {
+  id: number;
+  userOneId: number;
+  userTwoId: number;
+  creationDate?: string;
+}
+
+export interface IMessage {
+  id: number;
+  conversationId: number;
+  userId: number;
+  message?: string;
+  dateSent?: string;
+}

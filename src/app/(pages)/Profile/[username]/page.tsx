@@ -7,6 +7,7 @@ import { checkToken, getBlogItemsByUserId, getUserInfoByUsername, getToken, upda
 import { IBlogItems, IUserData } from '@/app/Utils/Interfaces';
 import { Button, TabItem, Tabs } from 'flowbite-react';
 import Link from 'next/link';
+import StartConversationButton from '@/app/Components/MessageStart';
 
 const ProfilePage = () => {
   const { username } = useParams();
@@ -92,9 +93,16 @@ const ProfilePage = () => {
 
         <div className='p-5'>
             <div className='flex gap-4'>
-                  <h1 className='text-3xl font-bold'>{username}</h1> {username === localStorage.getItem("Username") ? '' : <Button className="rounded-full h-8 bg-blue-200 hover:bg-blue-400 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200">Follow</Button>
-                  }
-            </div>
+  <h1 className='text-3xl font-bold'>{username}</h1>
+  {username === localStorage.getItem("Username") ? (
+    ''
+  ) : (
+    <>
+      <Button className="rounded-full h-8 bg-blue-200 hover:bg-blue-400 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200">Follow</Button>
+      {userData && <StartConversationButton targetUserId={String(userData.id)} />}
+    </>
+  )}
+</div>
           <div className='flex text-center flex-grid gap-3'>
             <div>
               <p className='font-semibold'>Following</p>
@@ -111,59 +119,73 @@ const ProfilePage = () => {
       <Tabs className='flex justify-between' aria-label="Tabs with underline" variant="underline">
       <TabItem active title="All">
         <div className='grid grid-cols-3 gap-2'>
-          {blogItems.map((item, ibx) => {
-            return(
-              <div key={ibx} className=''>
-                {
-                  item.isPublished && !item.isDeleted && (
-                    <Link href={`/Blog/${item.id}`}>
-                    <Image className='object-cover h-[200px] w-[200px]' src={item.image === null ? "/assets/Placeholder.png" : `${item.image}`} alt="post" width={50} height={20}/>
-                    </Link>
-                  )
-                }
-              </div>
-            )
-          }
-          )}
+          {blogItems.filter(item => item.isPublished && !item.isDeleted).length === 0 ? (
+  <p className="text-center col-span-3 text-gray-500 text-lg font-semibold py-10">Nothing to See Here</p>
+) : (
+  blogItems
+    .filter(item => item.isPublished && !item.isDeleted)
+    .map((item, ibx) => (
+      <div key={ibx}>
+        <Link href={`/Blog/${item.id}`}>
+          <Image className='object-cover h-[200px] w-[200px]' src={item.image === null ? "/assets/Placeholder.png" : `${item.image}`} alt="post" width={50} height={20}/>
+        </Link>
+      </div>
+    ))
+)}
+
         </div>
       </TabItem>
       <TabItem title="Photos">
         <div className='grid grid-cols-3 gap-2'>
-      {blogItems
-        .filter(item => item.isPublished && !item.isDeleted && item.postType === "image")
-        .map((item, idx) => (
-          <div key={idx}>
-            <Link href={`/Blog/${item.id}`}>
-              <Image className='object-cover h-[200px] w-[200px]' src={item.image === null ? "/assets/Placeholder.png" : `${item.image}`} alt="post" width={50} height={20}/>
-            </Link>
-          </div>
-        ))}
+      {blogItems.filter(item => item.isPublished && !item.isDeleted && item.postType === "image").length === 0 ? (
+  <p className="text-center col-span-3 text-gray-500 text-lg font-semibold py-10">Nothing to See Here</p>
+) : (
+  blogItems
+    .filter(item => item.isPublished && !item.isDeleted && item.postType === "image")
+    .map((item, ibx) => (
+      <div key={ibx}>
+        <Link href={`/Blog/${item.id}`}>
+          <Image className='object-cover h-[200px] w-[200px]' src={item.image === null ? "/assets/Placeholder.png" : `${item.image}`} alt="post" width={50} height={20}/>
+        </Link>
+      </div>
+    ))
+)}
+
     </div>
       </TabItem>
       <TabItem title="Videos">
-                <div className='grid grid-cols-3 gap-2'>
-      {blogItems
-        .filter(item => item.isPublished && !item.isDeleted && item.postType === "video")
-        .map((item, idx) => (
-          <div key={idx}>
-            <Link href={`/Blog/${item.id}`}>
-              <Image className='object-cover h-[200px] w-[200px]' src={item.image === null ? "/assets/Placeholder.png" : `${item.image}`} alt="post" width={50} height={20}/>
-            </Link>
-          </div>
-        ))}
+      <div className='grid grid-cols-3 gap-2'>
+      {blogItems.filter(item => item.isPublished && !item.isDeleted && item.postType === "video").length === 0 ? (
+  <p className="text-center col-span-3 text-gray-500 text-lg font-semibold py-10">Nothing to See Here</p>
+) : (
+  blogItems
+    .filter(item => item.isPublished && !item.isDeleted && item.postType === "video")
+    .map((item, ibx) => (
+      <div key={ibx}>
+        <Link href={`/Blog/${item.id}`}>
+          <Image className='object-cover h-[200px] w-[200px]' src={item.image === null ? "/assets/Placeholder.png" : `${item.image}`} alt="post" width={50} height={20}/>
+        </Link>
+      </div>
+    ))
+)}
     </div>
       </TabItem>
       <TabItem title="Recipes">
                 <div className='grid grid-cols-3 gap-2'>
-      {blogItems
-        .filter(item => item.isPublished && !item.isDeleted && item.postType === "recipe")
-        .map((item, idx) => (
-          <div key={idx}>
-            <Link href={`/Blog/${item.id}`}>
-              <Image className='object-cover h-[200px] w-[200px]' src={item.image === null ? "/assets/Placeholder.png" : `${item.image}`} alt="post" width={50} height={20}/>
-            </Link>
-          </div>
-        ))}
+      {blogItems.filter(item => item.isPublished && !item.isDeleted && item.postType === "recipe").length === 0 ? (
+  <p className="text-center col-span-3 text-gray-500 text-lg font-semibold py-10">Nothing to See Here</p>
+) : (
+  blogItems
+    .filter(item => item.isPublished && !item.isDeleted && item.postType === "recipe")
+    .map((item, ibx) => (
+      <div key={ibx}>
+        <Link href={`/Blog/${item.id}`}>
+          <Image className='object-cover h-[200px] w-[200px]' src={item.image === null ? "/assets/Placeholder.png" : `${item.image}`} alt="post" width={50} height={20}/>
+        </Link>
+      </div>
+    ))
+)}
+
     </div>
       </TabItem>
     </Tabs>

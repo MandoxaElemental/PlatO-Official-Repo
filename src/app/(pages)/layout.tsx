@@ -29,7 +29,7 @@ const Layout = ({
         <div className="max-h-screen overflow-y-auto scrollbar-hide lg:block hidden">
           <NavbarComponent />
         </div>
-        <div className="min-h-screen min-h-screen overflow-y-auto scrollbar-hide">
+        <div className="min-h-screen px-2 overflow-y-auto scrollbar-hide">
           {children}
         </div>
         <div className="max-h-screen overflow-y-auto scrollbar-hide z-5 lg:block hidden">
