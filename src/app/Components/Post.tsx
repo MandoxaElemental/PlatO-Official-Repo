@@ -214,8 +214,8 @@ const handleFollowUpdate = (isNowFollowing: boolean) => {
       }}
       className="bg-transparent h-full hover:opacity-50 hover:bg-black/10 p-2 rounded-r-xl flex flex-col justify-center cursor-pointer"
     >
-      <div className="w-10 h-10 bg-[#FFFFFF80] dark:bg-[#00000080] rounded-full flex items-center justify-center">
-        <Image width={20} height={20} className="h-10 w-10 dark:invert opacity-100" src="/assets/arrow-left-circle.svg" alt="left" />
+      <div className="w-6 h-6 bg-[#FFFFFF80] dark:bg-[#00000080] rounded-full flex items-center justify-center">
+        <Image width={20} height={20} className="w-6 h-6 dark:invert opacity-100" src="/assets/arrow-left-circle.svg" alt="left" />
       </div>
     </div>
   )}
@@ -231,8 +231,8 @@ const handleFollowUpdate = (isNowFollowing: boolean) => {
       }}
       className="bg-transparent h-full hover:opacity-50 hover:bg-black/10 p-2 rounded-l-xl flex flex-col justify-center cursor-pointer"
     >
-      <div className="w-10 h-10 bg-[#FFFFFF80] dark:bg-[#00000080] rounded-full flex items-center justify-center">
-        <Image width={20} height={20} className="h-10 w-10 dark:invert opacity-100" src="/assets/arrow-right-circle.svg" alt="left" />
+      <div className="w-6 h-6 bg-[#FFFFFF80] dark:bg-[#00000080] rounded-full flex items-center justify-center">
+        <Image width={20} height={20} className="w-6 h-6 dark:invert opacity-100" src="/assets/arrow-right-circle.svg" alt="left" />
       </div>
     </div>
   )}
