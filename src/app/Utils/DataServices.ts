@@ -1,5 +1,6 @@
 import { IBlogItems, ICommentItems, IIngredientItems, IReplyItems, IStepItems, IUserData, IUserInfoCreate, IUserInfoLogin } from "./Interfaces"
 
+// backup const url = "https://plato-backend-service-ckfsdddugkazhmgz.westus-01.azurewebsites.net"
 const url = "https://platobackend-a7hagaahdvdfesgm.westus-01.azurewebsites.net"
 
 let userData: IUserData
@@ -9,10 +10,11 @@ export const createAccount = async (user: IUserInfoCreate) =>
     const response = await fetch(`${url}/User/CreateUser`,
     {
         method: "POST",
-        headers: {
+        headers:
+        {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(user)
+        body: JSON.stringify(user),
     });
 
     if (!response.ok)

@@ -42,9 +42,9 @@ const gridClasses = [
         data.filter(item => item.isPublished && !item.isDeleted)
       );
       setBlogItems(filteredData);
+      setLoading(false);
     };
     getData();
-    setLoading(false);
   }, []);
 
   // Infinite scroll handler

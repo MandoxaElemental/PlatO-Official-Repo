@@ -16,11 +16,10 @@ export function NavbarComponentRight() {
   const [searchInput, setSearchInput] = useState("");
   const { setSearchQuery } = useSearch();
 
-  // Debounce search input
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setSearchQuery(searchInput);
-    }, 300); // 300ms delay
+    }, 300);
 
     return () => clearTimeout(timeoutId);
   }, [searchInput, setSearchQuery]);
@@ -47,11 +46,13 @@ export function NavbarComponentRight() {
         <div className="grid grid-cols-2 items-center py-5 gap-2">
           {randomTags.map((item, idx) => (
             <Link key={idx} href={`/Discover/${item.tag}`}>
-            <div className="h-[50px] rounded-2xl text-sm bg-blue-200 hover:bg-blue-400 cursor-pointer flex justify-center items-center font-bold text-white">
-              <p className="text-black">
-                {item.tag}
-              </p>
-            </div>
+              <div className="h-[50px] rounded-2xl text-sm bg-blue-200 hover:bg-blue-400 cursor-pointer flex justify-center items-center font-bold text-white text-center px-2">
+                <div className="text-black leading-tight">
+                  {item.tag.split(" ").map((word, i) => (
+                    <p key={i}>{word}</p>
+                  ))}
+                </div>
+              </div>
             </Link>
           ))}
         </div>
