@@ -9,7 +9,7 @@ import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 
 const Discover = () => {
-    const { tag } = useParams();
+    const { tag } = useParams() as { tag: string };;
     const [blogItems, setBlogItems] = useState<IBlogItems[]>([])
 
     const getPostTypeIcon = (type: string) => {
@@ -45,7 +45,7 @@ const Discover = () => {
             <p>Discover</p>
         <div className="text-xl font-normal">{tag}</div>
         </div>
-        <div className='grid grid-cols-3 gap-2 pt-5'>
+        <div className='grid grid-cols-3 gap-1 pt-5'>
         {blogItems.map((item, ibx) => (
           <div key={ibx} className='relative group h-[100px] w-[100px] md:w-[200px] md:h-[200px]'>
             {item.isPublished && !item.isDeleted && (

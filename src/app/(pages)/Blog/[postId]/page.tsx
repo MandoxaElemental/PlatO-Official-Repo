@@ -17,7 +17,7 @@ import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import LikeButton from '@/app/Components/LikeButton';
 
 const Blog = () => {
-    const { postId } = useParams();
+    const { postId } = useParams() as { postId: string };;
     const [name, setName] = useState<string>('');
     const [id, setId] = useState<string>('');
     const [userId, setUserId] = useState<number>(0);

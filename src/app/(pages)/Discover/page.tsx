@@ -150,7 +150,7 @@ const Discover = () => {
         <div className='flex justify-center md:hidden'>
           <SearchBar/>
         </div>
-        <div className="grid grid-cols-3 auto-rows-[100px] md:auto-rows-[200px] gap-4 pt-5">
+        <div className="grid grid-cols-3 auto-rows-[100px] md:auto-rows-[200px] gap-1 pt-5">
           {visibleItems.map((item, index) => {
             const gridClass = gridClasses[index % 12];
             const rowOffset = Math.floor(index / 12) * 6;

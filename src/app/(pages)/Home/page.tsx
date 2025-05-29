@@ -20,7 +20,6 @@ export default function Home() {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const { searchQuery } = useSearch();
 
-  // Filter blogs based on search query
   const filteredBlogs = useMemo(() => {
     if (!searchQuery.trim()) {
       return blogItems;

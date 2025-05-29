@@ -25,7 +25,7 @@ const Layout = ({
   return (
     <SearchProvider>
       <MobileHeader />
-      <div className="flex md:justify-between justify-center px-2 md:px-20 z-5 max-h-[100vh]">
+      <div className="min-w-screen flex md:justify-between justify-center px-2 md:px-10 z-5 max-h-[100vh]">
         <div className="max-h-screen overflow-y-auto scrollbar-hide lg:block hidden">
           <NavbarComponent />
         </div>

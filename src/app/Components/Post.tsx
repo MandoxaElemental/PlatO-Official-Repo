@@ -14,6 +14,17 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
   const [, setIsFollowing] = useState<boolean>(false);
   const [currentView, setCurrentView] = useState<"main" | "ingredients" | "steps">("main");
   const containerRef = useRef<HTMLDivElement>(null);
+  const [slideWidth, setSlideWidth] = useState(500);
+
+useEffect(() => {
+  const updateSlideWidth = () => {
+    setSlideWidth(window.innerWidth < 768 ? 400 : 500);
+  };
+
+  updateSlideWidth();
+  window.addEventListener('resize', updateSlideWidth);
+  return () => window.removeEventListener('resize', updateSlideWidth);
+}, []);
   
   
   useEffect(() => {
@@ -93,7 +104,7 @@ const handleFollowUpdate = (isNowFollowing: boolean) => {
 };
 
   return (
-    <div className="text-center max-w-[360px] md:max-w-[500px] mb-5 border-1 border-solid border-blue-100 shadow-blue-200/50 rounded-md shadow-sm">
+    <div className="text-center max-w-[400px] md:max-w-[500px] mb-5 border-1 border-solid border-blue-100 shadow-blue-200/50 rounded-md shadow-sm">
       <div className="flex justify-between items-center py-2 px-5">
         <div className="flex items-center">
         <div className="rounded-full bg-blue-200 w-10 h-10 overflow-hidden relative">
@@ -144,16 +155,16 @@ const handleFollowUpdate = (isNowFollowing: boolean) => {
   </div>
 ) : (
   // Fallback for "recipe" or others (default to swipeable views)
-  <div className="relative overflow-hidden max-w-[360px] md:max-w-[500px] h-[100%]" ref={containerRef}>
+  <div className="relative overflow-hidden max-w-[400px] md:max-w-[500px] h-[100%]" ref={containerRef}>
     <div
       className="flex transition-transform duration-500 ease-in-out"
       style={{
-        width: '1500px',
-        transform: `translateX(-${["main", "ingredients", "steps"].indexOf(currentView) * 500}px)`,
+        width: `${slideWidth * 3}px`,
+        transform: `translateX(-${["main", "ingredients", "steps"].indexOf(currentView) * slideWidth}px)`,
       }}
     >
       {/* Main View */}
-      <div className="w-[500px] max-h-[360px] shrink-0">
+      <div className="w-[400px] md:w-[500px] max-h-[400px] shrink-0">
         <Link href={`/Blog/${blog.id}`}>
           <Image
             className="object-cover h-[300px] w-full"
@@ -170,12 +181,12 @@ const handleFollowUpdate = (isNowFollowing: boolean) => {
 
       {/* Ingredients View */}
         <Link href={`/Blog/${blog.id}`}>
-      <div className="w-[500px] max-h-[360px] shrink-0 px-10 overflow-y-auto">
+      <div className="w-[400px] md:w-[500px] max-h-[400px] shrink-0 overflow-y-auto">
         <h3 className="font-bold text-lg px-2 pt-5">Ingredients:</h3>
         {blog.ingredients.map((item, i) => (
           <div key={i}>
             <h1 className="font-bold">{item.title}</h1>
-            <ul className="list-disc text-left pl-8">
+            <ul className="list-disc text-left pl-8 mx-5">
               {item.ingredients.map((ingredient, j) => (
                 <li key={j}>{ingredient}</li>
               ))}
@@ -187,12 +198,12 @@ const handleFollowUpdate = (isNowFollowing: boolean) => {
 
       {/* Steps View */}
         <Link href={`/Blog/${blog.id}`}>
-      <div className="w-[500px] max-h-[360px] shrink-0 px-10 overflow-y-auto">
+      <div className="w-[400px] md:w-[500px] max-h-[400px] shrink-0 overflow-y-auto">
         <h3 className="font-bold text-lg px-2 pt-5">Steps:</h3>
         {blog.steps.map((item, i) => (
           <div key={i}>
             <h1 className="font-semibold">{item.title}</h1>
-            <ol className="list-decimal text-left px-8">
+            <ol className="list-decimal text-left px-8 mx-5">
               {item.steps.map((step, j) => (
                 <li key={j}>{step}</li>
               ))}
@@ -215,7 +226,7 @@ const handleFollowUpdate = (isNowFollowing: boolean) => {
       className="bg-transparent h-full hover:opacity-50 hover:bg-black/10 p-2 rounded-r-xl flex flex-col justify-center cursor-pointer"
     >
       <div className="w-6 h-6 bg-[#FFFFFF80] dark:bg-[#00000080] rounded-full flex items-center justify-center">
-        <Image width={20} height={20} className="w-6 h-6 dark:invert opacity-100" src="/assets/arrow-left-circle.svg" alt="left" />
+        <Image width={20} height={20} className="h-5 w-5 dark:invert opacity-100" src="/assets/arrow-left-circle.svg" alt="left" />
       </div>
     </div>
   )}
@@ -231,8 +242,8 @@ const handleFollowUpdate = (isNowFollowing: boolean) => {
       }}
       className="bg-transparent h-full hover:opacity-50 hover:bg-black/10 p-2 rounded-l-xl flex flex-col justify-center cursor-pointer"
     >
-      <div className="w-6 h-6 bg-[#FFFFFF80] dark:bg-[#00000080] rounded-full flex items-center justify-center">
-        <Image width={20} height={20} className="w-6 h-6 dark:invert opacity-100" src="/assets/arrow-right-circle.svg" alt="left" />
+      <div className="w-5 h-5 bg-[#FFFFFF80] dark:bg-[#00000080] rounded-full flex items-center justify-center">
+        <Image width={20} height={20} className="h-5 w-5 dark:invert opacity-100" src="/assets/arrow-right-circle.svg" alt="left" />
       </div>
     </div>
   )}
