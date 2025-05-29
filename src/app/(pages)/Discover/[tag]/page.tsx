@@ -9,7 +9,7 @@ import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 
 const Discover = () => {
-    const { tag } = useParams() as { tag: string };;
+    const { tag } = useParams();
     const [blogItems, setBlogItems] = useState<IBlogItems[]>([])
 
     const getPostTypeIcon = (type: string) => {

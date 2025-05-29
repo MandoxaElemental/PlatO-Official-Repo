@@ -33,7 +33,7 @@ const Recipe = () => {
     const [openModal, setOpenModal] = useState(false);
     const [postType, setPostType] = useState<'recipe' | 'image' | 'video'>('recipe');
     const router = useRouter();
-    const { postId } = useParams() as { postId: string };;
+    const { postId } = useParams();
 
     useEffect(() => {
       const getData = async () => {

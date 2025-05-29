@@ -10,7 +10,7 @@ import Link from 'next/link';
 import StartConversationButton from '@/app/Components/MessageStart';
 
 const ProfilePage = () => {
-  const { username } = useParams() as { username: string };;
+  const { username } = useParams();
   const [userData, setUserData] = useState<IUserData | null>(null);
   const [blogItems, setBlogItems] = useState<IBlogItems[]>([]);
   const [followers, setFollowers] = useState(0)
