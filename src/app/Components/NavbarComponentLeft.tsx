@@ -62,7 +62,7 @@ export function NavbarComponent() {
             <Image className="h-5 w-5 dark:invert" src="../assets/person.svg" alt="profile" width={100} height={100} /><p className="pl-2">{username}</p>
             </div>
           </SidebarItem>
-          <Button disabled={username === "Guest"} className="rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full h-8 cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200" href="/NewPost">Post</Button>
+          <Button disabled={username === "Guest"} className="rounded-md bg-orange-200 hover:bg-orange-400 text-black w-full h-8 cursor-pointer dark:bg-orange-100 dark:hover:bg-orange-200" href="/NewPost">Post</Button>
         </SidebarItemGroup>
         <SidebarItemGroup>
           <SidebarItem href="/Settings" >

@@ -72,7 +72,7 @@ const ProfilePage = () => {
 
   return (
     <div className='pt-10 px-5 w-min-full'>
-      <div className='flex flex-grid gap-5 border-b-1 border-solid border-slate-300 pb-2'>
+<     div className='flex flex-col md:flex-row items-center md:items-start gap-5 border-b-1 border-solid border-slate-300 pb-2 text-center md:text-left'>
       <div className='relative rounded-full bg-blue-200 w-30 h-30 flex justify-center items-center cursor-pointer' onClick={handleImageClick}>
   <Image
     className='h-30 w-30 rounded-full object-cover'
@@ -98,7 +98,7 @@ const ProfilePage = () => {
     ''
   ) : (
     <>
-      <Button className="rounded-full h-8 bg-blue-200 hover:bg-blue-400 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200">Follow</Button>
+      <Button className="rounded-full h-8 bg-orange-200 hover:bg-orange-400 text-black cursor-pointer dark:bg-orange-100 dark:hover:bg-orange-200">Follow</Button>
       {userData && <StartConversationButton targetUserId={String(userData.id)} />}
     </>
   )}

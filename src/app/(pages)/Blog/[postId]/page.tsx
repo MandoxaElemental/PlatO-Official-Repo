@@ -126,7 +126,6 @@ const Blog = () => {
         if (result) {
             const userCommentItems = await getCommentItemsByBlogId(Number(postId), getToken());
             setCommentSection(userCommentItems);
-            alert('Comment Added');
         } else {
             alert('Comment was not Added');
         }

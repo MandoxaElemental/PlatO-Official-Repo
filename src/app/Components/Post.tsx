@@ -164,20 +164,26 @@ const handleFollowUpdate = (isNowFollowing: boolean) => {
       }}
     >
       {/* Main View */}
-      <div className="w-[400px] md:w-[500px] max-h-[400px] shrink-0">
-        <Link href={`/Blog/${blog.id}`}>
-          <Image
-            className="object-cover h-[300px] w-full"
-            src={blog.image !== "" ? String(blog.image) : "/assets/Placeholder.png"}
-            alt="post"
-            width={500}
-            height={500}
-            loading="lazy"
-          />
-        </Link>
-        <p className="font-semibold text-2xl p-2">{blog.recipeName}</p>
-        <div className="p-2 text-left">{blog.description}</div>
+<div className="w-[400px] md:w-[500px] max-h-[400px] shrink-0">
+  <Link href={`/Blog/${blog.id}`}>
+    <div className="relative group">
+      <Image
+        className="object-cover h-[300px] w-full"
+        src={blog.image !== "" ? String(blog.image) : "/assets/Placeholder.png"}
+        alt="post"
+        width={500}
+        height={500}
+        loading="lazy"
+      />
+      <div className="absolute bottom-0 left-0 w-full h-[60px] bg-blue-200 bg-opacity-90 font-semibold text-md text-black flex items-center justify-center transform translate-y-full group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+        Cook it
       </div>
+    </div>
+  </Link>
+
+  <p className="font-semibold text-2xl p-2">{blog.recipeName}</p>
+  <div className="p-2 text-left">{blog.description}</div>
+</div>
 
       {/* Ingredients View */}
         <Link href={`/Blog/${blog.id}`}>

@@ -143,14 +143,14 @@ const Discover = () => {
   return (
     <>
       <BackButton />
-      <div className="pb-5 px-5 w-full">
+      <div className="px-5 w-full">
         <div className="border-b border-slate-300 p-2 text-2xl font-semibold text-center">
           Discover
         </div>
         <div className='flex justify-center md:hidden'>
           <SearchBar/>
         </div>
-        <div className="grid grid-cols-3 auto-rows-[100px] md:auto-rows-[200px] gap-1 pt-5">
+        <div className="grid grid-cols-3 auto-rows-[150px] md:auto-rows-[200px] gap-1 pt-5">
           {visibleItems.map((item, index) => {
             const gridClass = gridClasses[index % 12];
             const rowOffset = Math.floor(index / 12) * 6;
@@ -168,11 +168,11 @@ const Discover = () => {
                     alt="post"
                     width={50}
                     height={50}
-                    sizes="(min-width: 768px) 200px, 100px"
+                    sizes="(min-width: 768px) 200px, 150px"
                   />
                   <div className="absolute top-0 left-0 bg-blue-200 bg-opacity-50 text-white text-sm p-1.5 rounded-br-xl">
                     <Image
-                      className="h-8 w-8 dark:invert"
+                      className="h-5 w-5 md:h-8 md:w-8"
                       src={getPostTypeIcon(item.postType)}
                       alt="type"
                       width={100}

@@ -181,7 +181,6 @@ const Recipe = () => {
     }, 1500);
   } else {
     setIsLoading(false);
-    alert("Post Error");
   }
 };
 
@@ -269,7 +268,6 @@ const Recipe = () => {
 
     const handleScrapeFromURL = async () => {
       if (!source) {
-        alert("Please enter a source URL.");
         return;
       }
     
@@ -313,10 +311,6 @@ const Recipe = () => {
         alert('Failed to scrape recipe from the URL.');
       }
     };
-
-    useEffect(()=> {
-      console.log(stepGroups)
-    }, [stepGroups])
     
     const parseIngredientLine = (line: string): Ingredient => {
       const fractionRegex = /^((?:\d+\s)?[\d\/⅓⅔¼¾½⅛⅜⅝⅞]+)\s+([a-zA-Z]+)\s+(.+)$/;
@@ -560,11 +554,14 @@ const Recipe = () => {
                   </div>
                 </div>
               ))}
-              
-                  <div className='p-2 flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer' onClick={() => addIngredient(groupIndex)}><Image className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" width={100} height={100}/><p>Add Ingredient</p></div>
+              <div className="flex justify-center">
+                <div className="w-[250px}">
+                <Button className="m-2 rounded-md bg-orange-200 hover:bg-orange-400 text-black w-full h-8 cursor-pointer dark:bg-orange-100 dark:hover:bg-orange-200 font-semibold" onClick={() => addIngredient(groupIndex)}>Add Ingredient</Button>
+                </div>
+              </div>
                 </div>
               ))}
-  <div className='p-2 flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer' onClick={addIngredientGroup}><Image className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" width={100} height={100}/><p>Add Ingredient Group</p></div>
+              <Button className="m-2 rounded-md bg-orange-200 hover:bg-orange-400 text-black w-full h-8 cursor-pointer dark:bg-orange-100 dark:hover:bg-orange-200 font-semibold" onClick={addIngredientGroup}>Add Ingredient Group</Button>
         </div>
         <div className='border-b-1 border-solid border-slate-300 p-2'>
   <p className='font-semibold text-xl text-center'>Instructions</p>
@@ -602,10 +599,14 @@ const Recipe = () => {
           </div>
         </div>
       ))}
-      <div className='p-2 flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer' onClick={() => addStep(groupIndex)}><Image className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" width={100} height={100}/><p>Add</p></div>
-    </div>
-  ))}
-  <div className='p-2 flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer' onClick={addStepGroup}><Image className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" width={100} height={100}/><p>Add Step Group</p></div>
+              <div className="flex justify-center">
+                <div className="w-[250px}">
+                <Button className="m-2 rounded-md bg-orange-200 hover:bg-orange-400 text-black w-full h-8 cursor-pointer dark:bg-orange-100 dark:hover:bg-orange-200 font-semibold" onClick={() => addStep(groupIndex)}>Add Step</Button>
+                </div>
+              </div>
+                </div>
+              ))}
+              <Button className="m-2 rounded-md bg-orange-200 hover:bg-orange-400 text-black w-full h-8 cursor-pointer dark:bg-orange-100 dark:hover:bg-orange-200 font-semibold" onClick={addStepGroup}>Add Step Group</Button>
   </div>
 
 
@@ -616,7 +617,7 @@ const Recipe = () => {
                 selectedTags.map((tag, i) => (
                   <span
                     key={i} onClick={() => toggleTag(tag)}
-                    className="px-3 py-1 bg-blue-200 text-blue-900 rounded-full text-sm cursor-pointer hover:bg-blue-400"
+                    className="px-3 py-1 bg-blue-200 hover:bg-blue-400 text-blue-900 rounded-full text-sm cursor-pointer"
                   >
                     {tag}
                   </span>
@@ -625,12 +626,16 @@ const Recipe = () => {
                 <p className="text-sm text-gray-400">No tags selected</p>
               )}
         </div>
-        <div onClick={() => setOpenModal(true)} className='flex justify-center items-center font-semibold hover:opacity-50 underline text-blue-600 cursor-pointer'><Image className='h-6 w-6 pr-2' src="../assets/plus-circle.svg" alt="add" width={100} height={100}/><p>Add Tags</p></div>
+                      <div className="flex justify-center">
+                <div className="w-[250px}">
+                <Button className="m-2 rounded-md bg-orange-200 hover:bg-orange-400 text-black w-full h-8 cursor-pointer dark:bg-orange-100 dark:hover:bg-orange-200 font-semibold" onClick={() => setOpenModal(true)}>Add Tags</Button>
+                </div>
+              </div>
         </div>
         <div className='p-2 flex justify-end'>
             <Button color="gray" onClick={() => setShowCancelConfirm(true)}>Cancel</Button>
-            <Button onClick={handleSave} outline className='mx-1 w-[100px]'>Draft</Button>
-            <Button onClick={handleSave} className='mx-1 w-[100px]'>Post</Button>
+            <Button onClick={handleSave} outline className='mx-1 w-[100px] hover:bg-blue-400'>Draft</Button>
+            <Button onClick={handleSave} className='mx-1 w-[100px] bg-blue-200 hover:bg-blue-400 text-black'>Post</Button>
         </div>
     </div>
     {isLoading && (

@@ -134,7 +134,7 @@ const SignUpPage1 = () =>
   return (
   <>
     {/* SignupPageOne START */}
-    <div className={`${switchBool ? "hidden" : ""}`}>
+    <div className={`${switchBool ? "hidden" : ""} px-4`}>
   <div className='flex justify-center mb-4'>
     <Image src={`/assets/4.svg`} alt="logo" width={300} height={300} />
   </div>
@@ -200,7 +200,7 @@ const SignUpPage1 = () =>
     {/* SignupPageOne END */}
 
     {/* SignupPageTwo START */}
-    <div className={`${switchBool && !switchBool2 ? "" : "hidden"}`}>
+    <div className={`${switchBool && !switchBool2 ? "" : "hidden"} px-4`}>
       <div className='justify-items-center'>
         <Image src={`/assets/4.svg`} alt="logo" width={300} height={300}/>
       </div>
@@ -242,7 +242,7 @@ const SignUpPage1 = () =>
     </div>
     {/* SignupPageTwo END */}
     {/* SignupPageThree Start */}
-    <div className={`${switchBool && switchBool2 ? "" : "hidden"}`}>
+    <div className={`${switchBool && switchBool2 ? "" : "hidden"} px-4`}>
       <div className='justify-items-center'>
         <Image src={`/assets/4.svg`} alt="logo" width={300} height={300}/>
       </div>

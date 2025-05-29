@@ -30,7 +30,7 @@ export default function RootLayout({
       <link rel="icon" type="image/x-icon" href="/favicon.png"/>
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
       >
         <div>
           <UserProvider>

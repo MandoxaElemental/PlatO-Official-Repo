@@ -1,8 +1,7 @@
 "use client";
 
 import { useMemo, useState, useEffect } from "react";
-import { Button, Sidebar, SidebarItemGroup, SidebarItems, TextInput } from "flowbite-react";
-import Image from "next/image";
+import { Button, Sidebar, SidebarItems, TextInput } from "flowbite-react";
 import { tagArr } from "../Utils/Interfaces";
 import Link from "next/link";
 import { useSearch } from "../Context/SearchContext";
@@ -40,10 +39,22 @@ export function NavbarComponentRight() {
       <SidebarItems>
         <TextInput 
           onChange={(event) => setSearchInput(event.target.value)} 
-          placeholder="Search blogs..." 
+          placeholder="Search" 
           value={searchInput}
         />
-        <div className="grid grid-cols-2 items-center py-5 gap-2">
+          <div className="border border-blue-300 rounded-2xl p-4 mt-4 text-center shadow-sm">
+    <h3 className="text-lg font-bold text-blue-900">Unlock Premium</h3>
+    <p className="text-sm text-blue-800 mt-1">Access exclusive content and features by upgrading to Premium.</p>
+    <Link href={"/Premium"}>
+    <Button 
+      className="mt-3 bg-blue-200 hover:bg-blue-400 text-black font-semibold rounded-full px-4 py-2 hover:cursor-pointer"
+    >
+      Go Premium
+    </Button>
+    </Link>
+  </div>
+          <p className="font-semibold mt-2">Recommended Tags</p>
+        <div className="grid grid-cols-2 items-center py-2 gap-2">
           {randomTags.map((item, idx) => (
             <Link key={idx} href={`/Discover/${item.tag}`}>
               <div className="h-[50px] rounded-2xl text-sm bg-blue-200 hover:bg-blue-400 cursor-pointer flex justify-center items-center font-bold text-white text-center px-2">
@@ -58,7 +69,7 @@ export function NavbarComponentRight() {
         </div>
       </SidebarItems>
 
-      <SidebarItemGroup>
+      {/* <SidebarItemGroup>
         <p className="font-semibold">Recommended Accounts</p>
         
         {[1, 2, 3].map((_, idx) => (
@@ -69,11 +80,11 @@ export function NavbarComponentRight() {
               </div>
               <p className='pl-3'>UserName</p>
             </div>
-            <Button className="rounded-full h-8 bg-blue-200 hover:bg-blue-400 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200">Follow</Button>
+            <Button className="rounded-full h-8 bg-orange-200 hover:bg-orange-400 text-black cursor-pointer dark:bg-orange-100 dark:hover:bg-orange-200">Follow</Button>
           </div>
         ))}
         
-      </SidebarItemGroup>
+      </SidebarItemGroup> */}
     </Sidebar>
   );
 }

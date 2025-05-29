@@ -67,7 +67,7 @@ const LogInPage = () =>
 
   return (
     <>
-      <div className='justify-items-center'>
+      <div className='justify-items-center px-2'>
         <Image src={`/assets/4.svg`} alt="logo" width={400} height={400}/>  
       </div>
       <div className='flex items-center justify-center'>

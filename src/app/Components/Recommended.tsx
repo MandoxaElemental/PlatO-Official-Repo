@@ -68,7 +68,7 @@ const Recommended = () => {
             />
             <p className='font-semibold'>{user.name}</p>
             <p className='text-sm text-gray-500'>@{user.username}</p>
-            <Button className="m-4 rounded-full h-8 bg-blue-200 hover:bg-blue-400 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200">
+            <Button className="m-4 rounded-full h-8 bg-orange-200 hover:bg-orange-400 text-black cursor-pointer dark:bg-orange-100 dark:hover:bg-orange-200">
               Follow
             </Button>
           </div>
@@ -95,17 +95,17 @@ export default Recommended;
 //         <div className='border-1 border-slate-300 border-solid rounded-xl flex flex-col items-center'>
 //             <Image width={50} height={50} className='w-[120px] h-[120px] object-cover object-center rounded-full p-2' src="../assets/person.svg" alt="profile" />
 //             <p className='font-semibold'>UserName</p>
-//             <Button className="m-4 rounded-full h-8 bg-blue-200 hover:bg-blue-400 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200">Follow</Button>
+//             <Button className="m-4 rounded-full h-8 bg-orange-200 hover:bg-orange-400 text-black cursor-pointer dark:bg-orange-100 dark:hover:bg-orange-200">Follow</Button>
 //         </div>
 //         <div className='border-1 border-slate-300 border-solid rounded-xl flex flex-col items-center'>
 //             <Image width={50} height={50} className='w-[120px] h-[120px] object-cover object-center rounded-full p-2' src="../assets/person.svg" alt="profile" />
 //             <p className='font-semibold'>UserName</p>
-//             <Button className="m-4 rounded-full h-8 bg-blue-200 hover:bg-blue-400 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200">Follow</Button>
+//             <Button className="m-4 rounded-full h-8 bg-orange-200 hover:bg-orange-400 text-black cursor-pointer dark:bg-orange-100 dark:hover:bg-orange-200">Follow</Button>
 //         </div>
 //         <div className='border-1 border-slate-300 border-solid rounded-xl flex flex-col items-center'>
 //             <Image width={50} height={50} className='w-[120px] h-[120px] object-cover object-center rounded-full p-2' src="../assets/person.svg" alt="profile" />
 //             <p className='font-semibold'>UserName</p>
-//             <Button className="m-4 rounded-full h-8 bg-blue-200 hover:bg-blue-400 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200">Follow</Button>
+//             <Button className="m-4 rounded-full h-8 bg-orange-200 hover:bg-orange-400 text-black cursor-pointer dark:bg-orange-100 dark:hover:bg-orange-200">Follow</Button>
 //         </div>
 //         </div>
 //     </div>
