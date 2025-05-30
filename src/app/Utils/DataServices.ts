@@ -1,8 +1,8 @@
 import axios from "axios";
 import { IBlogItems, ICommentItems, IConversation, IIngredientItems, IMessage, IReplyItems, IStepItems, IUserData, IUserInfoCreate, IUserInfoLogin } from "./Interfaces"
 
-// const url = "https://plato-backend-service-ckfsdddugkazhmgz.westus-01.azurewebsites.net"
-const url = "https://platobackend-a7hagaahdvdfesgm.westus-01.azurewebsites.net"
+const url = "https://plato-backend-service-ckfsdddugkazhmgz.westus-01.azurewebsites.net"
+// const url = "https://platobackend-a7hagaahdvdfesgm.westus-01.azurewebsites.net"
 
 let userData: IUserData
 
