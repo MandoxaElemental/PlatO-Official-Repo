@@ -321,6 +321,27 @@ export const tagArr: TagCategory[] = [
      
 ];
 
+export const onboardingArr: TagCategory[] = [
+    {
+        category: "Onboarding",
+        tags: [
+          "Italian",
+          "Baking",
+          "Vegan",
+          "Asian",
+          "Mexican",
+          "Desserts",
+          "Grilling",
+          "Healthy",
+          "Indian",
+          "Breakfast",
+          "Seafood",
+          "Street Food",
+        ],
+    },
+     
+];
+
 export interface StarRatingProps {
     currentRating: number;
     onRate: (rating: number) => void;

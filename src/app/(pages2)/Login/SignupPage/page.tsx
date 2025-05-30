@@ -2,7 +2,7 @@
 
 import { ButtonCancel} from '@/app/Components/LoginPageComponents'
 import { createAccount } from '@/app/Utils/DataServices'
-import { tagArr } from '@/app/Utils/Interfaces'
+import { onboardingArr } from '@/app/Utils/Interfaces'
 import { Button, Checkbox, Label, TextInput } from 'flowbite-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -30,7 +30,7 @@ const SignUpPage1 = () =>
   const [isChecked, setIsChecked] = useState(true);
 
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const filteredCategories = tagArr;
+  const filteredCategories = onboardingArr;
     
   const toggleTag = (tag: string) => {
     setSelectedTags((prevSelected) =>
@@ -247,32 +247,41 @@ const SignUpPage1 = () =>
         <Image src={`/assets/4.svg`} alt="logo" width={300} height={300}/>
       </div>
       <div className='text-center text-lg font-semibold p-2'>Pick up to three Interests:</div>
-      <div className='h-screen flex items-center flex-col'>
+      <div className='flex items-center flex-col'>
         <div className='w-screen-min'>                
-          <div className="space-y-4 h-[300px] overflow-auto">
             {filteredCategories.map((cat, i) => (
-              <div key={i}>
-                <div className="grid md:grid-cols-5 grid-cols-3 gap-3">
-                  {cat.tags.map((tag, j) => {
-                    const isSelected = selectedTags.includes(tag);
-                    return (
-                      <button
-                        key={j}
-                        onClick={() => toggleTag(tag)}
-                        className={`rounded-3xl border cursor-pointer h-10 w-28 ${
-                          isSelected
-                            ? 'bg-blue-400 text-white border-blue-600'
-                            : 'bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200'
-                        }`}
-                      >
-                        {tag}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
+  <div key={i}>
+    <div className="grid md:grid-cols-4 grid-cols-3 gap-3">
+      {cat.tags.map((tag, j) => {
+        const isSelected = selectedTags.includes(tag);
+        const imagePath = `/assets/${tag.toLowerCase().replace(/\s+/g, '-')}.png`;
+
+        return (
+          <button
+            key={j}
+            onClick={() => toggleTag(tag)}
+            style={{
+              backgroundImage: `url(${imagePath})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+            className={`relative rounded-3xl border cursor-pointer h-24 w-32 flex items-end justify-center text-sm p-2 transition-colors duration-200 ${
+              isSelected
+                ? 'border-blue-600 ring-4 ring-blue-300'
+                : 'border-gray-300 hover:ring-2 hover:ring-gray-400'
+            }`}
+          >
+            <div className={`bg-blue-300 text-black px-2 py-1 rounded-md font-semibold`}>
+              {tag}
+            </div>
+          </button>
+        );
+      })}
+    </div>
+  </div>
+))}
+
+
           <Button
             onClick={handleSubmit}
             className='my-5 rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200'
