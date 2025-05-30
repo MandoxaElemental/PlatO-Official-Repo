@@ -338,7 +338,7 @@ export const likeBlog = async (userId: number, blogId: number, token: string ): 
 
 export const ratingBlog = async (userId: number, blogId: number, rating: number, token: string ): Promise<boolean> => {
   try {
-    const response = await fetch(url + `/Blog/Rating/${userId}/${blogId}/${rating}`,
+    const response = await fetch(url + `/Blog/Rating/${blogId}/${userId}/${rating}`,
       {
         method: 'PUT',
         headers: {

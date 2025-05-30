@@ -9,7 +9,7 @@ import { Spinner } from "flowbite-react";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { useSearch } from "@/app/Context/SearchContext";
 
-const BATCH_SIZE = 5;
+const BATCH_SIZE = 3;
 
 export default function Home() {
   const [blogItems, setBlogItems] = useState<IBlogItems[]>([]);

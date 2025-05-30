@@ -175,7 +175,7 @@ const handleFollowUpdate = (isNowFollowing: boolean) => {
         height={500}
         loading="lazy"
       />
-      <div className="absolute bottom-0 left-0 w-full h-[60px] bg-blue-200 bg-opacity-90 font-semibold text-md text-black flex items-center justify-center transform translate-y-full group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+      <div className="absolute bottom-0 left-0 w-full h-[60px] bg-blue-200 bg-opacity-25 font-semibold text-md text-black flex items-center justify-center transform translate-y-full group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
         Cook it
       </div>
     </div>
