@@ -58,7 +58,7 @@ const Post = () => {
                 );
               };
 
-              const handleMedia = (e: React.ChangeEvent<HTMLInputElement>) => {
+const handleMedia = (e: React.ChangeEvent<HTMLInputElement>) => {
                 const reader = new FileReader();
                 const file = e.target.files?.[0];
               
