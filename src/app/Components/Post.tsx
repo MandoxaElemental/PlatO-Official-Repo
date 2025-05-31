@@ -129,10 +129,10 @@ const handleFollowUpdate = (isNowFollowing: boolean) => {
         )}
       </div>
 
-{blog.postType === "image" ? (
+{blog.postType != "video" && blog.postType != "recipe" ? (
   <Link href={`/Blog/${blog.id}`}>
     <Image
-      src={String(blog.image)}
+      src={blog.image ? String(blog.image) : "/assets/Placeholder.png"}
       alt="post"
       className="aspect-square object-cover object-center"
       width={500}

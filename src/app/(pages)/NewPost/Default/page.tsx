@@ -5,7 +5,7 @@ import { Button, FileInput, Modal, ModalBody, ModalFooter, ModalHeader, Textarea
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
 import { format } from 'date-fns'
-import { addBlogItem, getToken } from '@/app/Utils/DataServices';
+import { addBlogItem, getToken, uploadUserImage } from '@/app/Utils/DataServices';
 import { useRouter } from 'next/navigation'
 
 const Post = () => {
@@ -54,21 +54,23 @@ const Post = () => {
                 );
               };
 
-              const handleMedia = (e: React.ChangeEvent<HTMLInputElement>) => {
-                const reader = new FileReader();
-                const file = e.target.files?.[0];
-              
-                if (file) {
-                  const fileType = file.type.startsWith('video') ? 'video' : 'image';
-              
-                  reader.onload = () => {
-                    setMedia(reader.result);
-                    setMediaType(fileType);
-                  };
-              
-                  reader.readAsDataURL(file);
-                }
-              };
+const handleMedia = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  const fileType = file.type.startsWith('video') ? 'video' : 'image';
+  setMediaType(fileType);
+  console.log(getToken(), file)
+  const mediaUrl = await uploadUserImage(file, getToken());
+
+  if (mediaUrl) {
+    setMedia(mediaUrl);
+  } else {
+    alert(`Image upload failed.`);
+  }
+};
+
+
                   const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
                     setBlogId(0)
                     const item = {

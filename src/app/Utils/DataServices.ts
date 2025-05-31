@@ -1,8 +1,8 @@
 import axios from "axios";
 import { IBlogItems, ICommentItems, IConversation, IIngredientItems, IMessage, IReplyItems, IStepItems, IUserData, IUserInfoCreate, IUserInfoLogin } from "./Interfaces"
 
-const url = "https://plato-backend-service-ckfsdddugkazhmgz.westus-01.azurewebsites.net"
-// const url = "https://platobackend-a7hagaahdvdfesgm.westus-01.azurewebsites.net"
+// const url = "https://plato-backend-service-ckfsdddugkazhmgz.westus-01.azurewebsites.net"
+const url = "https://platobackend-a7hagaahdvdfesgm.westus-01.azurewebsites.net"
 
 let userData: IUserData
 
@@ -358,6 +358,34 @@ export const ratingBlog = async (userId: number, blogId: number, rating: number,
     return false;
   }
 };
+
+export const uploadUserImage = async (file: File, token: string) => {
+  const formData = new FormData();
+  formData.append('imageFile', file);
+
+  try {
+    const res = await fetch(`${url}/Blog/UploadImage`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error("Upload failed:", res.status, errorText);
+      return null;
+    }
+
+    const data = await res.json();
+    return data?.imageUrl || null; // matches your backend return
+  } catch (err) {
+    console.error("Image upload error:", err);
+    return null;
+  }
+};
+
 
 //----------COMMENT ENDPOINTS----------//
 export const getAllComments = async (token: string) =>
