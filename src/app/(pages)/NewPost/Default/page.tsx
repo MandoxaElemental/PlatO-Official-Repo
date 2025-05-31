@@ -5,7 +5,7 @@ import { Button, FileInput, Modal, ModalBody, ModalFooter, ModalHeader, Textarea
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
 import { format } from 'date-fns'
-import { addBlogItem, getToken, uploadUserImage } from '@/app/Utils/DataServices';
+import { addBlogItem, getToken } from '@/app/Utils/DataServices';
 import { useRouter } from 'next/navigation'
 
 const Post = () => {
@@ -20,6 +20,10 @@ const Post = () => {
         const [query, setQuery] = useState<string>('');
         const [selectedTags, setSelectedTags] = useState<string[]>([]);
         const router = useRouter();
+            const [isLoading, setIsLoading] = useState(false);
+              const [postSuccess, setPostSuccess] = useState(false);
+            
+        
         
         useEffect(() => {
               const storedUsername = localStorage.getItem("Username");
@@ -54,24 +58,24 @@ const Post = () => {
                 );
               };
 
-const handleMedia = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
-
-  const fileType = file.type.startsWith('video') ? 'video' : 'image';
-  setMediaType(fileType);
-  console.log(getToken(), file)
-  const mediaUrl = await uploadUserImage(file, getToken());
-
-  if (mediaUrl) {
-    setMedia(mediaUrl);
-  } else {
-    alert(`Image upload failed.`);
-  }
-};
-
-
+              const handleMedia = (e: React.ChangeEvent<HTMLInputElement>) => {
+                const reader = new FileReader();
+                const file = e.target.files?.[0];
+              
+                if (file) {
+                  const fileType = file.type.startsWith('video') ? 'video' : 'image';
+              
+                  reader.onload = () => {
+                    setMedia(reader.result);
+                    setMediaType(fileType);
+                  };
+              
+                  reader.readAsDataURL(file);
+                }
+              };
                   const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
+                    setIsLoading(true);
+                    setPostSuccess(false);
                     setBlogId(0)
                     const item = {
                       id: blogId,
@@ -97,17 +101,18 @@ const handleMedia = async (e: React.ChangeEvent<HTMLInputElement>) => {
                     }
                     let result = false
                     result = await addBlogItem(item, getToken())
-                    if (result)
-                    {
-                      alert('Success!')
-                      router.push("/Home");
-                    }else{
-                      alert('Post Error')
-                    }
+                      if (result) {
+    setPostSuccess(true);
+    setTimeout(() => {
+      router.push("/Home");
+    }, 1500);
+  } else {
+    setIsLoading(false);
+  }
                   }
 
     return (
-        
+        <>
        <div className='pt-10 px-5 w-full'>
         <Modal show={openModal} onClose={() => setOpenModal(false)}>
                 <ModalHeader>Tags</ModalHeader>
@@ -179,7 +184,7 @@ const handleMedia = async (e: React.ChangeEvent<HTMLInputElement>) => {
                     </video>
                   )}
                 </div>
-                <FileInput onChange={handleMedia} id="Media" accept="image/png, image/jpg, image/jpeg, video/mp4, video/webm" />
+                <FileInput onChange={handleMedia} id="Media" accept="image/png, image/jpg, image/jpeg" />
               </div>
             </div>
             <div className='border-b-1 border-solid border-slate-300 p-2 flex flex-col items-center'>
@@ -209,6 +214,34 @@ const handleMedia = async (e: React.ChangeEvent<HTMLInputElement>) => {
                 <Button onClick={handleSave} className='mx-1 w-[100px] rounded-md bg-blue-200 hover:bg-blue-400 text-black cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200'>Post</Button>
             </div>
         </div>
+            {isLoading && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#00000080]">
+    {!postSuccess ? (
+      <div className="flex flex-col items-center space-y-4">
+        <div className="w-16 h-16 border-4 border-white border-dashed rounded-full animate-spin"></div>
+        <span className="text-white text-xl font-medium">Posting...</span>
+      </div>
+    ) : (
+      <div className="flex flex-col items-center space-y-4">
+        <svg
+          className="w-16 h-16 text-green-500"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M5 13l4 4L19 7"
+          />
+        </svg>
+        <span className="text-white text-xl font-medium">Success!</span>
+      </div>
+    )}
+  </div>
+)}
+        </>
   )
 }
 

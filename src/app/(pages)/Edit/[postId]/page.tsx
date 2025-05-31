@@ -3,7 +3,7 @@ import { Button, FileInput, TextInput, Modal, ModalBody, ModalFooter, ModalHeade
 import React, { useEffect, useState } from 'react'
 import { Ingredient, IngredientGroup, StepGroup, tagArr } from '@/app/Utils/Interfaces'
 import Image from 'next/image'
-import {getBlogbyId, getToken, updateBlogItem, uploadUserImage } from '@/app/Utils/DataServices'
+import {getBlogbyId, getToken, updateBlogItem } from '@/app/Utils/DataServices'
 import { format } from 'date-fns'
 import { useParams, useRouter } from 'next/navigation'
 import MeasurementDropdown from '@/app/Components/MeasurementDropdown'
@@ -207,17 +207,16 @@ const Recipe = () => {
       );
     };
 
-const handleImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
   const file = e.target.files?.[0];
-  if (!file) return;
-
-  console.log(getToken(), file)
-  const mediaUrl = await uploadUserImage(file, getToken());
-
-  if (mediaUrl) {
-    setImage(mediaUrl);
-  } else {
-    alert(`Image upload failed.`);
+  if (file) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (typeof reader.result === 'string') {
+        setImage(reader.result);
+      }
+    };
+    reader.readAsDataURL(file);
   }
 };
 
