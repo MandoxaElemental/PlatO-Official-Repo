@@ -1,16 +1,15 @@
-"use client"
+"use client";
 
-import { ButtonCancel} from '@/app/Components/LoginPageComponents'
-import { createAccount } from '@/app/Utils/DataServices'
-import { onboardingArr } from '@/app/Utils/Interfaces'
-import { Button, Checkbox, Label, TextInput } from 'flowbite-react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import { ButtonCancel } from "@/app/Components/LoginPageComponents";
+import { createAccount } from "@/app/Utils/DataServices";
+import { onboardingArr } from "@/app/Utils/Interfaces";
+import { Button, Checkbox, Label, TextInput } from "flowbite-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
-const SignUpPage1 = () =>
-{
+const SignUpPage1 = () => {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -31,28 +30,25 @@ const SignUpPage1 = () =>
 
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const filteredCategories = onboardingArr;
-    
+
   const toggleTag = (tag: string) => {
     setSelectedTags((prevSelected) =>
       prevSelected.includes(tag)
         ? prevSelected.filter((t) => t !== tag)
-        : [...prevSelected, tag]
+        : [...prevSelected, tag],
     );
   };
 
   const router = useRouter();
 
-  const handleSwitch = () =>
-  {
+  const handleSwitch = () => {
     setSwitchBool(!switchBool);
-  }
-  const handleSwitch2 = () =>
-  {
+  };
+  const handleSwitch2 = () => {
     setSwitchBool2(!switchBool2);
-  }
+  };
 
-  const handleSubmit = async () =>
-  {
+  const handleSubmit = async () => {
     const userData = {
       email: email,
       username: username,
@@ -60,246 +56,281 @@ const SignUpPage1 = () =>
       name: name,
       phoneNumber: phoneNumber,
       dateOfBirth: dateOfBirth,
-      interests: selectedTags
-    }
+      interests: selectedTags,
+    };
 
     const result = await createAccount(userData);
 
-    if (result)
-    {
-      localStorage.setItem("Username", username);
-      alert("Account Created!");
+    if (result.success) {
+      localStorage.setItem("Username", username.trim().toLowerCase());
+      alert(result.message);
       router.push("/Login/LoginPage");
-    }else
-    {
-      alert("Username or Email already exists");
+    } else {
+      alert(result.message);
     }
-  }
+  };
 
-  const handleCheckBox = () =>
-  {
+  const handleCheckBox = () => {
     setIsChecked(!isChecked);
-  }
+  };
 
-  useEffect(() =>
-  {
-    if (username.includes("@"))
-    {
+  useEffect(() => {
+    if (username.includes("@")) {
       setBadUsername(true);
-    }else
-    {
+    } else {
       setBadUsername(false);
     }
-  },[username])
+  }, [username]);
 
-  useEffect(() =>
-  {
-    if (email !== "")
-    {
-      if (!email.includes("@"))
-      {
+  useEffect(() => {
+    if (email !== "") {
+      if (!email.includes("@")) {
         setBadEmail(true);
-      }else
-      {
+      } else {
         setBadEmail(false);
       }
-    }else
-    {
+    } else {
       setBadEmail(false);
     }
-  },[email])
+  }, [email]);
 
-  useEffect(() =>
-  {
-    if (email == "" || username == "" || password == "" || name == "")
-    {
+  useEffect(() => {
+    if (email == "" || username == "" || password == "" || name == "") {
       setNoEmptyFieldsPageOne(true);
-    }else
-    {
+    } else {
       setNoEmptyFieldsPageOne(false);
     }
-  },[email, username, password, name])
+  }, [email, username, password, name]);
 
-  useEffect(() =>
-  {
-    if (dateOfBirth == "")
-    {
+  useEffect(() => {
+    if (dateOfBirth == "") {
       setNoEmptyFieldsPageTwo(true);
-    }else
-    {
+    } else {
       setNoEmptyFieldsPageTwo(false);
     }
-  },[phoneNumber, dateOfBirth])
+  }, [phoneNumber, dateOfBirth]);
 
   return (
-  <>
-    {/* SignupPageOne START */}
-    <div className={`${switchBool ? "hidden" : ""} px-4`}>
-  <div className='flex justify-center mb-4'>
-    <Image src={`/assets/4.svg`} alt="logo" width={300} height={300} />
-  </div>
-
-  <div className='flex items-center justify-center'>
-    <div className='grid gap-3 w-full max-w-md'>
-      {/* Name */}
-      <div>
-        <h1 className='text-gray-400'>Name*</h1>
-        <TextInput onChange={(event) => setName(event.target.value)} type='text' />
-      </div>
-
-      <div>
-        <div className="flex gap-5">
-          <h1 className='text-gray-400'>Username*</h1>
-          <h1 className={`text-red-500 italic ${badUsername ? "" : "hidden"}`}>Cannot Include &quot;@&quot;</h1>
+    <>
+      {/* SignupPageOne START */}
+      <div className={`${switchBool ? "hidden" : ""} px-4`}>
+        <div className="flex justify-center mb-4">
+          <Image src={`/assets/4.svg`} alt="logo" width={300} height={300} />
         </div>
-        <TextInput
-          onChange={(event) => setUsername(event.target.value)}
-          type='text'
-          className={badUsername ? `outline-red-500 outline-[2px] rounded-[9px]` : ""}
-        />
-      </div>
 
-      <div>
-        <div className="flex gap-5">
-          <h1 className='text-gray-400'>Email*</h1>
-          <h1 className={`text-red-500 italic ${badEmail ? "" : "hidden"}`}>Must Include &quot;@&quot;</h1>
-        </div>
-        <TextInput
-          onChange={(event) => setEmail(event.target.value)}
-          type='text'
-          className={badEmail ? `outline-red-500 outline-[2px] rounded-[9px]` : ""}
-        />
-      </div>
-
-      <div>
-        <h1 className='text-gray-400'>Password*</h1>
-        <TextInput onChange={(event) => setPassword(event.target.value)} type='password' />
-      </div>
-
-      <div className='text-center text-blue-600 underline'>
-        <Link href={"/Login/LoginPage"}>Already have an Account? Sign In Here</Link>
-      </div>
-
-      <div className='mt-5'>
-        <Button
-          onClick={handleSwitch}
-          className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200'
-          disabled={(badUsername || noEmptyFieldsPageOne || badEmail)}
-        >
-          Continue
-        </Button>
-      </div>
-
-      <div className="my-2 w-full">
-        <ButtonCancel pageLink='' />
-      </div>
-    </div>
-  </div>
-</div>
-
-    {/* SignupPageOne END */}
-
-    {/* SignupPageTwo START */}
-    <div className={`${switchBool && !switchBool2 ? "" : "hidden"} px-4`}>
-      <div className='justify-items-center'>
-        <Image src={`/assets/4.svg`} alt="logo" width={300} height={300}/>
-      </div>
-      <div className='flex items-center justify-center'>
-        <div className='grid gap-3'>
-          <div>
-            <h1 className=' text-gray-400'>Phone Number (optional)</h1>
-            <TextInput onChange={(event) => setPhoneNumber(event.target.value)} type='text'/>
-          </div>
-          <div>
-            <h1 className=' text-gray-400'>Date of Birth*</h1>
-            <TextInput onChange={(event) => setDateOfBirth(event.target.value)} type='date'/>
-          </div>
-          <div className='flex justify-items-start space-x-2'>
-            <Checkbox onChange={handleCheckBox} checked={!isChecked} id='rememberme'/>
-            <Label htmlFor='rememberme' className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>I have read and agreed to PlatO <a
-  href="/Login/TermsOfService"
-  onClick={(e) => {
-    e.preventDefault();
-    window.open(
-      '/Login/TermsOfService',
-      'TermsWindow',
-      'width=600,height=700,resizable=yes,scrollbars=yes'
-    );
-  }}
-  className='text-blue-500 hover:text-blue-300 focus:text-purple-500 underline'
->
-  Terms and Conditions
-</a></Label>
-          </div>
-          <div className='mb-1.5 mt-10'>
-            <Button onClick={handleSwitch2} className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200' disabled={(noEmptyFieldsPageTwo || isChecked) ? true : false}>Signup and Continue</Button>
-          </div>
-          <div className='mb-1.5'>
-            <Button onClick={handleSwitch} className='rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200'>Back</Button>
-          </div>
-        </div>
-      </div>
-    </div>
-    {/* SignupPageTwo END */}
-    {/* SignupPageThree Start */}
-    <div className={`${switchBool && switchBool2 ? "" : "hidden"} px-4`}>
-      <div className='justify-items-center'>
-        <Image src={`/assets/4.svg`} alt="logo" width={300} height={300}/>
-      </div>
-      <div className='text-center text-lg font-semibold p-2'>Pick up to three Interests:</div>
-      <div className='flex items-center flex-col'>
-        <div className='w-screen-min'>                
-            {filteredCategories.map((cat, i) => (
-  <div key={i}>
-    <div className="grid md:grid-cols-4 grid-cols-3 gap-3">
-      {cat.tags.map((tag, j) => {
-        const isSelected = selectedTags.includes(tag);
-        const imagePath = `/assets/${tag.toLowerCase().replace(/\s+/g, '-')}.png`;
-
-        return (
-          <button
-            key={j}
-            onClick={() => toggleTag(tag)}
-            style={{
-              backgroundImage: `url(${imagePath})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-            className={`relative rounded-3xl border cursor-pointer h-24 w-32 flex items-end justify-center text-sm p-2 transition-colors duration-200 ${
-              isSelected
-                ? 'border-blue-600 ring-4 ring-blue-300'
-                : 'border-gray-300 hover:ring-2 hover:ring-gray-400'
-            }`}
-          >
-            <div className={`bg-blue-300 text-black px-2 py-1 rounded-md font-semibold`}>
-              {tag}
+        <div className="flex items-center justify-center">
+          <div className="grid gap-3 w-full max-w-md">
+            {/* Name */}
+            <div>
+              <h1 className="text-gray-400">Name*</h1>
+              <TextInput
+                onChange={(event) => setName(event.target.value)}
+                type="text"
+              />
             </div>
-          </button>
-        );
-      })}
-    </div>
-  </div>
-))}
 
+            <div>
+              <div className="flex gap-5">
+                <h1 className="text-gray-400">Username*</h1>
+                <h1
+                  className={`text-red-500 italic ${badUsername ? "" : "hidden"}`}
+                >
+                  Cannot Include &quot;@&quot;
+                </h1>
+              </div>
+              <TextInput
+                onChange={(event) => setUsername(event.target.value)}
+                type="text"
+                className={
+                  badUsername
+                    ? `outline-red-500 outline-[2px] rounded-[9px]`
+                    : ""
+                }
+              />
+            </div>
 
-          <Button
-            onClick={handleSubmit}
-            className='my-5 rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200'
-            disabled={selectedTags.length < 3}
-          >
-            Continue
-          </Button>
-          <Button
-            onClick={handleSubmit}
-            className='my-5 rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200'
-          >
-            Skip
-          </Button>
+            <div>
+              <div className="flex gap-5">
+                <h1 className="text-gray-400">Email*</h1>
+                <h1
+                  className={`text-red-500 italic ${badEmail ? "" : "hidden"}`}
+                >
+                  Must Include &quot;@&quot;
+                </h1>
+              </div>
+              <TextInput
+                onChange={(event) => setEmail(event.target.value)}
+                type="text"
+                className={
+                  badEmail ? `outline-red-500 outline-[2px] rounded-[9px]` : ""
+                }
+              />
+            </div>
+
+            <div>
+              <h1 className="text-gray-400">Password*</h1>
+              <TextInput
+                onChange={(event) => setPassword(event.target.value)}
+                type="password"
+              />
+            </div>
+
+            <div className="text-center text-blue-600 underline">
+              <Link href={"/Login/LoginPage"}>
+                Already have an Account? Sign In Here
+              </Link>
+            </div>
+
+            <div className="mt-5">
+              <Button
+                onClick={handleSwitch}
+                className="rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200"
+                disabled={badUsername || noEmptyFieldsPageOne || badEmail}
+              >
+                Continue
+              </Button>
+            </div>
+
+            <div className="my-2 w-full">
+              <ButtonCancel pageLink="" />
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </>
-  )
-}
 
-export default SignUpPage1
+      {/* SignupPageOne END */}
+
+      {/* SignupPageTwo START */}
+      <div className={`${switchBool && !switchBool2 ? "" : "hidden"} px-4`}>
+        <div className="justify-items-center">
+          <Image src={`/assets/4.svg`} alt="logo" width={300} height={300} />
+        </div>
+        <div className="flex items-center justify-center">
+          <div className="grid gap-3">
+            <div>
+              <h1 className=" text-gray-400">Phone Number (optional)</h1>
+              <TextInput
+                onChange={(event) => setPhoneNumber(event.target.value)}
+                type="text"
+              />
+            </div>
+            <div>
+              <h1 className=" text-gray-400">Date of Birth*</h1>
+              <TextInput
+                onChange={(event) => setDateOfBirth(event.target.value)}
+                type="date"
+              />
+            </div>
+            <div className="flex justify-items-start space-x-2">
+              <Checkbox
+                onChange={handleCheckBox}
+                checked={!isChecked}
+                id="rememberme"
+              />
+              <Label
+                htmlFor="rememberme"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                I have read and agreed to PlatO{" "}
+                <a
+                  href="/Login/TermsOfService"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.open(
+                      "/Login/TermsOfService",
+                      "TermsWindow",
+                      "width=600,height=700,resizable=yes,scrollbars=yes",
+                    );
+                  }}
+                  className="text-blue-500 hover:text-blue-300 focus:text-purple-500 underline"
+                >
+                  Terms and Conditions
+                </a>
+              </Label>
+            </div>
+            <div className="mb-1.5 mt-10">
+              <Button
+                onClick={handleSwitch2}
+                className="rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200"
+                disabled={noEmptyFieldsPageTwo || isChecked ? true : false}
+              >
+                Signup and Continue
+              </Button>
+            </div>
+            <div className="mb-1.5">
+              <Button
+                onClick={handleSwitch}
+                className="rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200"
+              >
+                Back
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* SignupPageTwo END */}
+      {/* SignupPageThree Start */}
+      <div className={`${switchBool && switchBool2 ? "" : "hidden"} px-4`}>
+        <div className="justify-items-center">
+          <Image src={`/assets/4.svg`} alt="logo" width={300} height={300} />
+        </div>
+        <div className="text-center text-lg font-semibold p-2">
+          Pick up to three Interests:
+        </div>
+        <div className="flex items-center flex-col">
+          <div className="w-screen-min">
+            {filteredCategories.map((cat, i) => (
+              <div key={i}>
+                <div className="grid md:grid-cols-4 grid-cols-3 gap-3">
+                  {cat.tags.map((tag, j) => {
+                    const isSelected = selectedTags.includes(tag);
+                    const imagePath = `/assets/${tag.toLowerCase().replace(/\s+/g, "-")}.png`;
+
+                    return (
+                      <button
+                        key={j}
+                        onClick={() => toggleTag(tag)}
+                        style={{
+                          backgroundImage: `url(${imagePath})`,
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
+                        }}
+                        className={`relative rounded-3xl border cursor-pointer h-24 w-32 flex items-end justify-center text-sm p-2 transition-colors duration-200 ${
+                          isSelected
+                            ? "border-blue-600 ring-4 ring-blue-300"
+                            : "border-gray-300 hover:ring-2 hover:ring-gray-400"
+                        }`}
+                      >
+                        <div
+                          className={`bg-blue-300 text-black px-2 py-1 rounded-md font-semibold`}
+                        >
+                          {tag}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+
+            <Button
+              onClick={handleSubmit}
+              className="my-5 rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200"
+              disabled={selectedTags.length < 3}
+            >
+              Continue
+            </Button>
+            <Button
+              onClick={handleSubmit}
+              className="my-5 rounded-md bg-blue-200 hover:bg-blue-400 text-black w-full cursor-pointer dark:bg-blue-100 dark:hover:bg-blue-200"
+            >
+              Skip
+            </Button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default SignUpPage1;
