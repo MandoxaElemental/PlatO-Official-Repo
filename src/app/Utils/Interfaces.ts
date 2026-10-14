@@ -57,6 +57,19 @@ export interface IUserInfoCreate {
   interests: string[];
 }
 
+export interface ISupabaseProfile {
+  id: string;
+  username: string;
+  email: string | null;
+  name: string | null;
+  phone_number: string | null;
+  date_of_birth: string | null;
+  profile_picture: string | null;
+  date_created: string;
+  premium_member: boolean;
+  interests: string[];
+}
+
 export interface IUserData {
   id: number;
   name: string;

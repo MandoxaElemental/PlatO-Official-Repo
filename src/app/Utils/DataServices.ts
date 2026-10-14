@@ -131,24 +131,86 @@ export const login = async (user: IUserInfoLogin) => {
   }
 };
 
-export const updateUserItem = async (user: IUserData, token: string) => {
-  const response = await fetch(`${url}/User/EditUser`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
-    },
-    body: JSON.stringify(user),
-  });
-  if (!response.ok) {
-    const errorData = await response.json();
-    const message = errorData.message;
-    console.log(message);
+export const updateUserItem = async (
+  user: Partial<IUserData>,
+  _token?: string,
+): Promise<boolean> => {
+  try {
+    const {
+      data: { user: authUser },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !authUser) {
+      console.error("Profile update requires a signed-in user.");
+      return false;
+    }
+
+    const updates: Record<string, unknown> = {};
+
+    if (user.name !== undefined) {
+      updates.name = user.name;
+    }
+
+    if (user.username !== undefined) {
+      updates.username = user.username.trim().toLowerCase();
+    }
+
+    if (user.phoneNumber !== undefined) {
+      updates.phone_number = user.phoneNumber;
+    }
+
+    if (user.dateOfBirth !== undefined) {
+      updates.date_of_birth = user.dateOfBirth || null;
+    }
+
+    if (user.profilePicture !== undefined) {
+      updates.profile_picture = user.profilePicture;
+    }
+
+    if (user.interests !== undefined) {
+      updates.interests = user.interests;
+    }
+
+    if (Object.keys(updates).length === 0) {
+      return false;
+    }
+
+    const { error } = await supabase
+      .from("profiles")
+      .update(updates)
+      .eq("id", authUser.id);
+
+    if (error) {
+      console.error("Profile update failed:", error.message);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Unexpected profile update error:", error);
     return false;
   }
-  const data = await response.json();
-  return data.success;
 };
+
+// export const updateUserItem = async (user: IUserData, token: string) => {
+//   const response = await fetch(`${url}/User/EditUser`, {
+//     method: "PUT",
+//     headers: {
+//       "Content-Type": "application/json",
+//       Authorization: "Bearer " + token,
+//     },
+//     body: JSON.stringify(user),
+//   });
+//   if (!response.ok) {
+//     const errorData = await response.json();
+//     const message = errorData.message;
+//     console.log(message);
+//     return false;
+//   }
+//   const data = await response.json();
+//   return data.success;
+// };
 
 export const getUserInfoByUsername = async (username: string) => {
   const response = await fetch(`${url}/User/GetUserByUsername/${username}`);
