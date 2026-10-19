@@ -1,6 +1,6 @@
 export interface IBlogItems {
   id: number;
-  userId: number;
+  userId: string | number;
   publisherName: string;
   date: string;
   image: string | ArrayBuffer | null;

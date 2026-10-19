@@ -4,12 +4,7 @@ import {
   ButtonCancel,
   RememberCheck,
 } from "@/app/Components/LoginPageComponents";
-import {
-  getUserInfoByEmail,
-  getUserInfoByUsername,
-  login,
-} from "@/app/Utils/DataServices";
-import { IToken } from "@/app/Utils/Interfaces";
+import { login } from "@/app/Utils/DataServices";
 import { Button, TextInput } from "flowbite-react";
 import Image from "next/image";
 import Link from "next/link";

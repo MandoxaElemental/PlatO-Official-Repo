@@ -25,7 +25,7 @@ export function NavbarComponentRight() {
 
   const randomTags = useMemo(() => {
     const randomCategories = getRandomElements(tagArr, 4);
-    return randomCategories.map(category => {
+    return randomCategories.map((category) => {
       const randomTag = getRandomElements(category.tags, 1)[0];
       return {
         category: category.category,
@@ -37,23 +37,23 @@ export function NavbarComponentRight() {
   return (
     <Sidebar aria-label="Default sidebar example">
       <SidebarItems>
-        <TextInput 
-          onChange={(event) => setSearchInput(event.target.value)} 
-          placeholder="Search" 
+        <TextInput
+          onChange={(event) => setSearchInput(event.target.value)}
+          placeholder="Search"
           value={searchInput}
         />
-          <div className="border border-blue-300 rounded-2xl p-4 mt-4 text-center shadow-sm">
-    <h3 className="text-lg font-bold text-blue-900">Unlock Premium</h3>
-    <p className="text-sm text-blue-800 mt-1">Access exclusive content and features by upgrading to Premium.</p>
-    <Link href={"/Premium"}>
-    <Button 
-      className="mt-3 bg-blue-200 hover:bg-blue-400 text-black font-semibold rounded-full px-4 py-2 hover:cursor-pointer"
-    >
-      Go Premium
-    </Button>
-    </Link>
-  </div>
-          <p className="font-semibold mt-2">Recommended Tags</p>
+        <div className="border border-blue-300 rounded-2xl p-4 mt-4 text-center shadow-sm">
+          <h3 className="text-lg font-bold text-blue-900">Unlock Premium</h3>
+          <p className="text-sm text-blue-800 mt-1">
+            Access exclusive content and features by upgrading to Premium.
+          </p>
+          <Link href={"/Premium"}>
+            <Button className="mt-3 bg-blue-200 hover:bg-blue-400 text-black font-semibold rounded-full px-4 py-2 hover:cursor-pointer">
+              Go Premium
+            </Button>
+          </Link>
+        </div>
+        <p className="font-semibold mt-2">Recommended Tags</p>
         <div className="grid grid-cols-2 items-center py-2 gap-2">
           {randomTags.map((item, idx) => (
             <Link key={idx} href={`/Discover/${item.tag}`}>

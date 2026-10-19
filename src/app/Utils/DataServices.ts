@@ -133,7 +133,6 @@ export const login = async (user: IUserInfoLogin) => {
 
 export const updateUserItem = async (
   user: Partial<IUserData>,
-  _token?: string,
 ): Promise<boolean> => {
   try {
     const {
@@ -290,23 +289,86 @@ export const followUser = async (
 
 //----------BLOG ENDPOINTS----------//
 
-export const getAllBlogs = async (token: string) => {
-  const response = await fetch(`${url}/Blog/GetAllBlogs`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
-    },
-  });
-  if (!response.ok) {
-    const errorData = await response.json();
-    const message = errorData.message;
-    console.log(message);
+export const getAllBlogs = async (): Promise<IBlogItems[]> => {
+  // 1. Fetch recipes visible under the blogs table's RLS policies.
+  const { data: recipes, error: recipesError } = await supabase
+    .from("blogs")
+    .select("*")
+    .order("date", { ascending: false });
+
+  if (recipesError) {
+    throw recipesError;
+  }
+
+  if (!recipes || recipes.length === 0) {
     return [];
   }
 
-  const data = await response.json();
-  return data;
+  const blogIds = recipes.map((recipe) => recipe.id);
+
+  // 2. Fetch ingredient groups and instruction groups.
+  const [
+    { data: ingredientRows, error: ingredientsError },
+    { data: stepRows, error: stepsError },
+  ] = await Promise.all([
+    supabase
+      .from("ingredients")
+      .select("id, blog_id, title, ingredients")
+      .in("blog_id", blogIds)
+      .order("id", { ascending: true }),
+
+    supabase
+      .from("steps")
+      .select("id, blog_id, title, steps")
+      .in("blog_id", blogIds)
+      .order("id", { ascending: true }),
+  ]);
+
+  if (ingredientsError) throw ingredientsError;
+  if (stepsError) throw stepsError;
+
+  // 3. Convert Supabase rows into the existing IBlogItems format.
+  return recipes.map((recipe) => ({
+    id: Number(recipe.id),
+
+    // Supabase user IDs are UUIDs, not the old numeric IDs.
+    userId: recipe.user_id,
+
+    publisherName: recipe.publisher_name ?? "PlatO User",
+    date: recipe.date ?? recipe.created_at ?? "",
+    image: recipe.image ?? null,
+    recipeName: recipe.recipe_name ?? "",
+    description: recipe.description ?? "",
+
+    ingredients: (ingredientRows ?? [])
+      .filter((row) => row.blog_id === recipe.id)
+      .map((row) => ({
+        title: row.title ?? "",
+        ingredients: row.ingredients ?? [],
+      })),
+
+    steps: (stepRows ?? [])
+      .filter((row) => row.blog_id === recipe.id)
+      .map((row) => ({
+        title: row.title ?? "",
+        steps: row.steps ?? [],
+      })),
+
+    tags: recipe.tags ?? [],
+
+    // Ratings and likes haven't been migrated in the schema described so far.
+    rating: 0,
+    numberOfRatings: 0,
+    averageRating: 0,
+    numberOfLikes: 0,
+
+    postType: recipe.post_type ?? "recipe",
+    totalTime: recipe.total_time ?? "",
+    servings: recipe.servings ?? "",
+    source: recipe.source ?? "",
+    isPublished: recipe.is_published ?? false,
+    isDeleted: recipe.is_deleted ?? false,
+  }));
 };
 
 export const getBlogItemsByUserId = async (userId: number, token: string) => {
@@ -327,23 +389,66 @@ export const getBlogItemsByUserId = async (userId: number, token: string) => {
   const data = await response.json();
   return data;
 };
-export const getBlogbyId = async (blogId: number, token: string) => {
-  const response = await fetch(`${url}/Blog/GetBlogById/${blogId}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
-    },
-  });
-  if (!response.ok) {
-    const errorData = await response.json();
-    const message = errorData.message;
-    console.log(message);
-    return [];
-  }
+export const getBlogbyId = async (blogId: number) => {
+  try {
+    const { data: blog, error } = await supabase
+      .from("blogs")
+      .select("*")
+      .eq("id", blogId)
+      .maybeSingle();
 
-  const data = await response.json();
-  return data;
+    if (error) throw error;
+    if (!blog) {
+      console.error("Recipe not found.");
+      return null;
+    }
+
+    const { data: ingredients, error: ingredientsError } = await supabase
+      .from("ingredients")
+      .select("title, ingredients")
+      .eq("blog_id", blogId);
+
+    if (ingredientsError) throw ingredientsError;
+
+    const { data: steps, error: stepsError } = await supabase
+      .from("steps")
+      .select("title, steps")
+      .eq("blog_id", blogId);
+
+    if (stepsError) throw stepsError;
+
+    return {
+      id: blog.id,
+      userId: blog.user_id,
+      publisherName: blog.publisher_name,
+      date: blog.date ?? blog.created_at ?? "",
+      image: blog.image,
+      recipeName: blog.recipe_name,
+      description: blog.description,
+      ingredients: (ingredients ?? []).map((group) => ({
+        title: group.title,
+        ingredients: group.ingredients ?? [],
+      })),
+      steps: (steps ?? []).map((group) => ({
+        title: group.title,
+        steps: group.steps ?? [],
+      })),
+      tags: blog.tags ?? [],
+      rating: 0,
+      numberOfRatings: 0,
+      averageRating: 0,
+      numberOfLikes: 0,
+      postType: blog.post_type,
+      totalTime: blog.total_time,
+      servings: blog.servings,
+      source: blog.source,
+      isPublished: blog.is_published,
+      isDeleted: blog.is_deleted,
+    };
+  } catch (error) {
+    console.error("Failed to fetch recipe:", error);
+    return null;
+  }
 };
 export const getBlogbyTag = async (tag: string, token: string) => {
   const response = await fetch(`${url}/Blog/GetBlogsByTags/${tag}`, {
@@ -364,42 +469,274 @@ export const getBlogbyTag = async (tag: string, token: string) => {
   return data;
 };
 
-export const addBlogItem = async (blog: IBlogItems, token: string) => {
-  const response = await fetch(`${url}/Blog/AddBlog`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
-    },
-    body: JSON.stringify(blog),
-  });
-  if (!response.ok) {
-    const errorData = await response.json();
-    const message = errorData.message;
-    console.log(message);
+export const addBlogItem = async (
+  blog: IBlogItems,
+  imageFile: File | null,
+): Promise<boolean> => {
+  let uploadedImagePath: string | null = null;
+  let newBlogId: number | null = null;
+
+  try {
+    // 1. Get the real authenticated Supabase user.
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      throw new Error("Please sign in before posting a recipe.");
+    }
+
+    // 2. Get the user's profile and username.
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("username")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (profileError) {
+      console.error("Profile lookup failed:", profileError.message);
+      throw profileError;
+    }
+
+    if (!profile) {
+      throw new Error(
+        "Your user profile was not found. Please check the profiles table.",
+      );
+    }
+
+    // 3. Upload the image, if one was selected.
+    let imageUrl: string | null = null;
+
+    if (imageFile) {
+      const extension = imageFile.type === "image/png" ? "png" : "jpg";
+
+      uploadedImagePath = `${user.id}/${crypto.randomUUID()}.${extension}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("blog-images")
+        .upload(uploadedImagePath, imageFile, {
+          contentType: imageFile.type,
+          upsert: false,
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: publicUrlData } = supabase.storage
+        .from("blog-images")
+        .getPublicUrl(uploadedImagePath);
+
+      imageUrl = publicUrlData.publicUrl;
+    }
+
+    // 4. Insert the main recipe.
+    const { data: recipe, error: recipeError } = await supabase
+      .from("blogs")
+      .insert({
+        user_id: user.id,
+        publisher_name: profile.username,
+        image: imageUrl,
+        recipe_name: blog.recipeName,
+        description: blog.description,
+        tags: blog.tags ?? [],
+        post_type: blog.postType ?? "recipe",
+        total_time: blog.totalTime,
+        servings: blog.servings,
+        source: blog.source,
+        is_published: blog.isPublished,
+        is_deleted: false,
+      })
+      .select("id")
+      .single();
+
+    if (recipeError) throw recipeError;
+
+    newBlogId = recipe.id;
+
+    // 5. Save ingredient groups.
+    const ingredientRows = (blog.ingredients ?? []).map((group) => ({
+      blog_id: newBlogId,
+      title: group.title,
+      ingredients: group.ingredients,
+    }));
+
+    if (ingredientRows.length > 0) {
+      const { error } = await supabase
+        .from("ingredients")
+        .insert(ingredientRows);
+
+      if (error) throw error;
+    }
+
+    // 6. Save instruction groups.
+    const stepRows = (blog.steps ?? []).map((group) => ({
+      blog_id: newBlogId,
+      title: group.title,
+      steps: group.steps,
+    }));
+
+    if (stepRows.length > 0) {
+      const { error } = await supabase.from("steps").insert(stepRows);
+
+      if (error) throw error;
+    }
+
+    return true;
+  } catch (error: unknown) {
+    console.error("Failed to save recipe:", error);
+
+    if (error && typeof error === "object") {
+      const supabaseError = error as {
+        message?: string;
+        code?: string;
+        details?: string;
+        hint?: string;
+      };
+
+      console.error("Recipe error details:", {
+        message: supabaseError.message,
+        code: supabaseError.code,
+        details: supabaseError.details,
+        hint: supabaseError.hint,
+      });
+    }
+    if (newBlogId !== null) {
+      const ingredientCleanup = await supabase
+        .from("ingredients")
+        .delete()
+        .eq("blog_id", newBlogId);
+
+      const stepCleanup = await supabase
+        .from("steps")
+        .delete()
+        .eq("blog_id", newBlogId);
+
+      const blogCleanup = await supabase
+        .from("blogs")
+        .delete()
+        .eq("id", newBlogId);
+
+      console.error("Cleanup results:", {
+        ingredientCleanup: ingredientCleanup.error?.message,
+        stepCleanup: stepCleanup.error?.message,
+        blogCleanup: blogCleanup.error?.message,
+      });
+    }
+
+    if (uploadedImagePath) {
+      const { error: imageCleanupError } = await supabase.storage
+        .from("blog-images")
+        .remove([uploadedImagePath]);
+
+      if (imageCleanupError) {
+        console.error("Image cleanup failed:", imageCleanupError.message);
+      }
+    }
+
     return false;
   }
-  const data = await response.json();
-  return data.success;
 };
 
-export const updateBlogItem = async (blog: IBlogItems, token: string) => {
-  const response = await fetch(`${url}/Blog/EditBlog`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
-    },
-    body: JSON.stringify(blog),
-  });
-  if (!response.ok) {
-    const errorData = await response.json();
-    const message = errorData.message;
-    console.log(message);
+export const updateBlogItem = async (blog: IBlogItems): Promise<boolean> => {
+  try {
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      throw authError ?? new Error("Please sign in to edit this recipe.");
+    }
+
+    // Only allow editing a recipe owned by the signed-in user.
+    const { data: existingBlog, error: lookupError } = await supabase
+      .from("blogs")
+      .select("id, image")
+      .eq("id", blog.id)
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (lookupError) throw lookupError;
+
+    if (!existingBlog) {
+      throw new Error(
+        "Recipe not found or you don't have permission to edit it.",
+      );
+    }
+
+    // Keep the existing image if the editor hasn't uploaded a new one.
+    // A new data:image URL must be uploaded to Storage separately.
+    const imageUrl =
+      typeof blog.image === "string" && blog.image.startsWith("data:")
+        ? existingBlog.image
+        : blog.image || existingBlog.image;
+
+    const { error: updateError } = await supabase
+      .from("blogs")
+      .update({
+        publisher_name: blog.publisherName,
+        image: imageUrl,
+        recipe_name: blog.recipeName,
+        description: blog.description,
+        tags: blog.tags,
+        post_type: blog.postType,
+        total_time: blog.totalTime,
+        servings: blog.servings,
+        source: blog.source,
+        is_published: blog.isPublished,
+        is_deleted: blog.isDeleted,
+      })
+      .eq("id", blog.id)
+      .eq("user_id", user.id);
+
+    if (updateError) throw updateError;
+
+    // Remove the previous ingredient and instruction groups.
+    const { error: ingredientDeleteError } = await supabase
+      .from("ingredients")
+      .delete()
+      .eq("blog_id", blog.id);
+
+    if (ingredientDeleteError) throw ingredientDeleteError;
+
+    const { error: stepsDeleteError } = await supabase
+      .from("steps")
+      .delete()
+      .eq("blog_id", blog.id);
+
+    if (stepsDeleteError) throw stepsDeleteError;
+
+    // Insert the current ingredient groups.
+    if (blog.ingredients.length > 0) {
+      const { error } = await supabase.from("ingredients").insert(
+        blog.ingredients.map((group) => ({
+          blog_id: blog.id,
+          title: group.title,
+          ingredients: group.ingredients,
+        })),
+      );
+
+      if (error) throw error;
+    }
+
+    // Insert the current instruction groups.
+    if (blog.steps.length > 0) {
+      const { error } = await supabase.from("steps").insert(
+        blog.steps.map((group) => ({
+          blog_id: blog.id,
+          title: group.title,
+          steps: group.steps,
+        })),
+      );
+
+      if (error) throw error;
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Failed to update recipe:", error);
     return false;
   }
-  const data = await response.json();
-  return data.success;
 };
 
 export const deleteBlogItem = async (blog: IBlogItems, token: string) => {

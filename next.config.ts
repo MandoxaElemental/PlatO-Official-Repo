@@ -2,12 +2,19 @@ import type { NextConfig } from "next";
 import withFlowbiteReact from "flowbite-react/plugin/nextjs";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
-
-module.exports = {
   images: {
-    domains: ['platobackendblob.blob.core.windows.net'],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "wdmsqswrjzkmfuuyemfs.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
+      {
+        protocol: "https",
+        hostname: "platobackendblob.blob.core.windows.net",
+        pathname: "/**",
+      },
+    ],
   },
 };
 
