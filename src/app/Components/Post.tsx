@@ -149,7 +149,7 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
       </div>
 
       {blog.postType != "video" && blog.postType != "recipe" ? (
-        <Link href={`/Blog/${blog.id}`}>
+        <Link href={`${blog.id}`}>
           <Image
             className="object-cover h-[300px] w-full"
             src={blog.image ? String(blog.image) : "/assets/Placeholder.png"}
