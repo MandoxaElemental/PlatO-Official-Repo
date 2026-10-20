@@ -5,7 +5,7 @@ import {
   getAllBlogs,
   getUserInfoByUsername,
 } from "@/app/Utils/DataServices";
-import { IBlogItems, IUserData } from "@/app/Utils/Interfaces";
+import { IBlogItems } from "@/app/Utils/Interfaces";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -27,16 +27,25 @@ const SavedRecipes = () => {
     const fetchSavedData = async () => {
       if (!checkToken()) {
         alert("You must be logged in to view saved recipes.");
+        setLoading(false);
         return;
       }
 
       try {
-        const user: IUserData = await getUserInfoByUsername(username);
+        const user = await getUserInfoByUsername(username);
+
+        if (!user) {
+          console.error("User profile not found.");
+          setSavedBlogItems([]);
+          return;
+        }
+
         const allBlogs: IBlogItems[] = await getAllBlogs();
 
         const savedIdsSet = new Set(
           (user.savedRecipes || []).map((id) => String(id)),
         );
+
         const savedItems = allBlogs.filter((blog) =>
           savedIdsSet.has(String(blog.id)),
         );
@@ -53,7 +62,6 @@ const SavedRecipes = () => {
       fetchSavedData();
     }
   }, [username]);
-
   if (loading) {
     return (
       <div className="flex justify-center mt-15 rounded-full border-4 opacity-50 border-blue-100 h-[60px] w-[60px]">

@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { getToken, updateUserItem } from '../Utils/DataServices';
-import { IUserData } from '../Utils/Interfaces';
-import Image from 'next/image';
+import { useState, useEffect } from "react";
+import { updateUserItem } from "../Utils/DataServices";
+import { IUserData } from "../Utils/Interfaces";
+import Image from "next/image";
 
 interface SaveButtonProps {
   postId: number;
@@ -31,7 +31,7 @@ const SaveButton = ({ postId, currentUser, onUpdate }: SaveButtonProps) => {
     };
 
     try {
-      const success = await updateUserItem(updatedUser, getToken());
+      const success = await updateUserItem(updatedUser);
       if (success) {
         setIsSaved(!isSaved);
         if (onUpdate) onUpdate(updatedUser);
@@ -44,8 +44,14 @@ const SaveButton = ({ postId, currentUser, onUpdate }: SaveButtonProps) => {
 
   return (
     <div className="flex items-center cursor-pointer" onClick={handleSave}>
-        <Image width={20} height={20} className="h-5 w-5 dark:invert" src={isSaved ? "/assets/bookmark-fill.svg" : "/assets/bookmark.svg"} alt="save"/>
-        <p className="pl-2">{isSaved ? "Saved" : "Save"}</p>
+      <Image
+        width={20}
+        height={20}
+        className="h-5 w-5 dark:invert"
+        src={isSaved ? "/assets/bookmark-fill.svg" : "/assets/bookmark.svg"}
+        alt="save"
+      />
+      <p className="pl-2">{isSaved ? "Saved" : "Save"}</p>
     </div>
   );
 };

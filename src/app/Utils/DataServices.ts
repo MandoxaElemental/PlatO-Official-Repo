@@ -211,10 +211,40 @@ export const updateUserItem = async (
 //   return data.success;
 // };
 
-export const getUserInfoByUsername = async (username: string) => {
-  const response = await fetch(`${url}/User/GetUserByUsername/${username}`);
-  userData = await response.json();
-  return userData;
+export const getUserInfoByUsername = async (
+  username: string,
+): Promise<IUserData | null> => {
+  try {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("username", username.trim().toLowerCase())
+      .maybeSingle();
+
+    if (error) {
+      console.error("Error fetching user profile:", error.message);
+      return null;
+    }
+
+    if (!data) {
+      return null;
+    }
+
+    return {
+      id: data.id,
+      username: data.username,
+      email: data.email,
+      name: data.name,
+      phoneNumber: data.phone_number,
+      dateOfBirth: data.date_of_birth,
+      profilePicture: data.profile_picture,
+      premiumMember: data.premium_member,
+      interests: data.interests,
+    } as IUserData;
+  } catch (error) {
+    console.error("Unexpected profile fetch error:", error);
+    return null;
+  }
 };
 
 export const getUserInfoById = async (userId: string) => {
@@ -371,24 +401,96 @@ export const getAllBlogs = async (): Promise<IBlogItems[]> => {
   }));
 };
 
-export const getBlogItemsByUserId = async (userId: number, token: string) => {
-  const response = await fetch(`${url}/Blog/GetBlogsByUserId/${userId}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
-    },
-  });
-  if (!response.ok) {
-    const errorData = await response.json();
-    const message = errorData.message;
-    console.log(message);
+export const getBlogItemsByUserId = async (
+  userId: string,
+): Promise<IBlogItems[]> => {
+  try {
+    const { data: recipes, error: recipesError } = await supabase
+      .from("blogs")
+      .select("*")
+      .eq("user_id", userId)
+      .order("date", { ascending: false });
+
+    if (recipesError) {
+      console.error("Failed to fetch user's blogs:", recipesError.message);
+      return [];
+    }
+
+    if (!recipes || recipes.length === 0) {
+      return [];
+    }
+
+    const blogIds = recipes.map((recipe) => recipe.id);
+
+    const [
+      { data: ingredientRows, error: ingredientsError },
+      { data: stepRows, error: stepsError },
+    ] = await Promise.all([
+      supabase
+        .from("ingredients")
+        .select("id, blog_id, title, ingredients")
+        .in("blog_id", blogIds)
+        .order("id", { ascending: true }),
+
+      supabase
+        .from("steps")
+        .select("id, blog_id, title, steps")
+        .in("blog_id", blogIds)
+        .order("id", { ascending: true }),
+    ]);
+
+    if (ingredientsError) {
+      console.error("Failed to fetch ingredients:", ingredientsError.message);
+      return [];
+    }
+
+    if (stepsError) {
+      console.error("Failed to fetch steps:", stepsError.message);
+      return [];
+    }
+
+    return recipes.map((recipe) => ({
+      id: Number(recipe.id),
+      userId: recipe.user_id,
+      publisherName: recipe.publisher_name ?? "PlatO User",
+      date: recipe.date ?? recipe.created_at ?? "",
+      image: recipe.image ?? null,
+      recipeName: recipe.recipe_name ?? "",
+      description: recipe.description ?? "",
+
+      ingredients: (ingredientRows ?? [])
+        .filter((row) => row.blog_id === recipe.id)
+        .map((row) => ({
+          title: row.title ?? "",
+          ingredients: row.ingredients ?? [],
+        })),
+
+      steps: (stepRows ?? [])
+        .filter((row) => row.blog_id === recipe.id)
+        .map((row) => ({
+          title: row.title ?? "",
+          steps: row.steps ?? [],
+        })),
+
+      tags: recipe.tags ?? [],
+      rating: 0,
+      numberOfRatings: 0,
+      averageRating: 0,
+      numberOfLikes: 0,
+
+      postType: recipe.post_type ?? "recipe",
+      totalTime: recipe.total_time ?? "",
+      servings: recipe.servings ?? "",
+      source: recipe.source ?? "",
+      isPublished: recipe.is_published ?? false,
+      isDeleted: recipe.is_deleted ?? false,
+    }));
+  } catch (error) {
+    console.error("Unexpected error fetching user's blogs:", error);
     return [];
   }
-
-  const data = await response.json();
-  return data;
 };
+
 export const getBlogbyId = async (blogId: number) => {
   try {
     const { data: blog, error } = await supabase
@@ -405,16 +507,16 @@ export const getBlogbyId = async (blogId: number) => {
 
     const { data: ingredients, error: ingredientsError } = await supabase
       .from("ingredients")
-      .select("title, ingredients")
-      .eq("blog_id", blogId);
-
+      .select("id, blog_id, title, ingredients")
+      .eq("blog_id", blogId)
+      .order("id", { ascending: true });
     if (ingredientsError) throw ingredientsError;
 
     const { data: steps, error: stepsError } = await supabase
       .from("steps")
-      .select("title, steps")
-      .eq("blog_id", blogId);
-
+      .select("id, blog_id, title, steps")
+      .eq("blog_id", blogId)
+      .order("id", { ascending: true });
     if (stepsError) throw stepsError;
 
     return {
@@ -426,11 +528,15 @@ export const getBlogbyId = async (blogId: number) => {
       recipeName: blog.recipe_name,
       description: blog.description,
       ingredients: (ingredients ?? []).map((group) => ({
-        title: group.title,
+        id: group.id,
+        blogId: group.blog_id,
+        title: group.title ?? "",
         ingredients: group.ingredients ?? [],
       })),
       steps: (steps ?? []).map((group) => ({
-        title: group.title,
+        id: group.id,
+        blogId: group.blog_id,
+        title: group.title ?? "",
         steps: group.steps ?? [],
       })),
       tags: blog.tags ?? [],
@@ -450,23 +556,88 @@ export const getBlogbyId = async (blogId: number) => {
     return null;
   }
 };
-export const getBlogbyTag = async (tag: string, token: string) => {
-  const response = await fetch(`${url}/Blog/GetBlogsByTags/${tag}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
-    },
-  });
-  if (!response.ok) {
-    const errorData = await response.json();
-    const message = errorData.message;
-    console.log(message);
+
+export const getBlogbyTag = async (tag: string): Promise<IBlogItems[]> => {
+  try {
+    const { data: recipes, error } = await supabase
+      .from("blogs")
+      .select("*")
+      .contains("tags", [tag])
+      .eq("is_published", true)
+      .eq("is_deleted", false)
+      .order("date", { ascending: false });
+
+    if (error) {
+      console.error("Failed to fetch recipes by tag:", error.message);
+      return [];
+    }
+
+    if (!recipes || recipes.length === 0) {
+      return [];
+    }
+
+    const blogIds = recipes.map((recipe) => recipe.id);
+
+    const [
+      { data: ingredientRows, error: ingredientsError },
+      { data: stepRows, error: stepsError },
+    ] = await Promise.all([
+      supabase
+        .from("ingredients")
+        .select("id, blog_id, title, ingredients")
+        .in("blog_id", blogIds)
+        .order("id", { ascending: true }),
+
+      supabase
+        .from("steps")
+        .select("id, blog_id, title, steps")
+        .in("blog_id", blogIds)
+        .order("id", { ascending: true }),
+    ]);
+
+    if (ingredientsError) throw ingredientsError;
+    if (stepsError) throw stepsError;
+
+    return recipes.map((recipe) => ({
+      id: Number(recipe.id),
+      userId: recipe.user_id,
+      publisherName: recipe.publisher_name ?? "PlatO User",
+      date: recipe.date ?? recipe.created_at ?? "",
+      image: recipe.image ?? null,
+      recipeName: recipe.recipe_name ?? "",
+      description: recipe.description ?? "",
+
+      ingredients: (ingredientRows ?? [])
+        .filter((row) => row.blog_id === recipe.id)
+        .map((row) => ({
+          title: row.title ?? "",
+          ingredients: row.ingredients ?? [],
+        })),
+
+      steps: (stepRows ?? [])
+        .filter((row) => row.blog_id === recipe.id)
+        .map((row) => ({
+          title: row.title ?? "",
+          steps: row.steps ?? [],
+        })),
+
+      tags: recipe.tags ?? [],
+      rating: 0,
+      numberOfRatings: 0,
+      averageRating: 0,
+      numberOfLikes: 0,
+
+      postType: recipe.post_type ?? "recipe",
+      totalTime: recipe.total_time ?? "",
+      servings: recipe.servings ?? "",
+      source: recipe.source ?? "",
+      isPublished: recipe.is_published ?? false,
+      isDeleted: recipe.is_deleted ?? false,
+    }));
+  } catch (error) {
+    console.error("Unexpected error fetching recipes by tag:", error);
     return [];
   }
-
-  const data = await response.json();
-  return data;
 };
 
 export const addBlogItem = async (
@@ -844,148 +1015,183 @@ export const uploadUserImage = async (file: File, token: string) => {
 };
 
 //----------COMMENT ENDPOINTS----------//
-export const getAllComments = async (token: string) => {
-  const response = await fetch(`${url}/Comments/GetAllComments`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
-    },
-  });
-  if (!response.ok) {
-    const errorData = await response.json();
-    const message = errorData.message;
-    console.log(message);
+
+/* ---------- COMMENT ENDPOINTS ---------- */
+
+export const getAllComments = async () => {
+  const { data, error } = await supabase
+    .from("comments")
+    .select("*")
+    .order("id", { ascending: true });
+
+  if (error) {
+    console.error("Failed to fetch comments:", error.message);
     return [];
   }
 
-  const data = await response.json();
-  return data;
+  return (data ?? []).map((c) => ({
+    id: c.id,
+    blogId: c.blog_id,
+    userId: c.user_id,
+    publisherName: c.publisher_name,
+    date: c.date,
+    comment: c.comment,
+    isPublished: c.is_published,
+    isDeleted: c.is_deleted,
+  }));
 };
 
-export const getCommentItemsByUserId = async (
-  userId: number,
-  token: string,
-) => {
-  const response = await fetch(
-    `${url}/Comments/GetCommentsByUserId/${userId}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
-    },
-  );
-  if (!response.ok) {
-    const errorData = await response.json();
-    const message = errorData.message;
-    console.log(message);
+export const getCommentItemsByUserId = async (userId: string) => {
+  const { data, error } = await supabase
+    .from("comments")
+    .select("*")
+    .eq("user_id", userId)
+    .order("id", { ascending: true });
+
+  if (error) {
+    console.error("Failed to fetch user comments:", error.message);
     return [];
   }
 
-  const data = await response.json();
-  return data;
+  return (data ?? []).map((c) => ({
+    id: c.id,
+    blogId: c.blog_id,
+    userId: c.user_id,
+    publisherName: c.publisher_name,
+    date: c.date,
+    comment: c.comment,
+    isPublished: c.is_published,
+    isDeleted: c.is_deleted,
+  }));
 };
-export const getCommentbyId = async (CommentId: number, token: string) => {
-  const response = await fetch(`${url}/Comments/GetCommentById/${CommentId}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
-    },
-  });
-  if (!response.ok) {
-    const errorData = await response.json();
-    const message = errorData.message;
-    console.log(message);
-    return [];
+
+export const getCommentbyId = async (commentId: number) => {
+  const { data, error } = await supabase
+    .from("comments")
+    .select("*")
+    .eq("id", commentId)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Failed to fetch comment:", error.message);
+    return null;
   }
 
-  const data = await response.json();
-  return data;
+  if (!data) return null;
+
+  return {
+    id: data.id,
+    blogId: data.blog_id,
+    userId: data.user_id,
+    publisherName: data.publisher_name,
+    date: data.date,
+    comment: data.comment,
+    isPublished: data.is_published,
+    isDeleted: data.is_deleted,
+  };
 };
 
-export const addCommentItem = async (comment: ICommentItems, token: string) => {
-  const response = await fetch(`${url}/Comments/AddComment`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
-    },
-    body: JSON.stringify(comment),
-  });
-  if (!response.ok) {
-    const errorData = await response.json();
-    const message = errorData.message;
-    console.log(message);
+export const addCommentItem = async (comment: ICommentItems) => {
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    console.error("Sign in before posting a comment.");
     return false;
   }
-  const data = await response.json();
-  return data.success;
-};
 
-export const updateCommentItem = async (
-  Comment: ICommentItems,
-  token: string,
-) => {
-  const response = await fetch(`${url}/Comments/EditComment`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
-    },
-    body: JSON.stringify(Comment),
+  const { error } = await supabase.from("comments").insert({
+    blog_id: comment.blogId,
+    user_id: user.id,
+    publisher_name: comment.publisherName,
+    date: comment.date,
+    comment: comment.comment,
+    is_published: comment.isPublished,
+    is_deleted: comment.isDeleted,
   });
-  if (!response.ok) {
-    const errorData = await response.json();
-    const message = errorData.message;
-    console.log(message);
+
+  if (error) {
+    console.error("Failed to add comment:", error.message);
     return false;
   }
-  const data = await response.json();
-  return data.success;
+
+  return true;
 };
 
-export const deleteCommentItem = async (
-  Comment: ICommentItems,
-  token: string,
-) => {
-  const response = await fetch(`${url}/Comments/DeleteComment`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
-    },
-    body: JSON.stringify(Comment),
-  });
-  if (!response.ok) {
-    const errorData = await response.json();
-    const message = errorData.message;
-    console.log(message);
+export const updateCommentItem = async (comment: ICommentItems) => {
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) return false;
+
+  const { error } = await supabase
+    .from("comments")
+    .update({
+      publisher_name: comment.publisherName,
+      date: comment.date,
+      comment: comment.comment,
+      is_published: comment.isPublished,
+      is_deleted: comment.isDeleted,
+    })
+    .eq("id", comment.id)
+    .eq("user_id", user.id);
+
+  if (error) {
+    console.error("Failed to update comment:", error.message);
     return false;
   }
-  const data = await response.json();
-  return data.success;
+
+  return true;
 };
 
-export const getCommentItemsByBlogId = async (id: number, token: string) => {
-  const response = await fetch(`${url}/Comments/GetCommentsByBlogId/${id}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
-    },
-  });
-  if (!response.ok) {
-    const errorData = await response.json();
-    const message = errorData.message;
-    console.log(message);
+export const deleteCommentItem = async (comment: ICommentItems) => {
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) return false;
+
+  const { error } = await supabase
+    .from("comments")
+    .delete()
+    .eq("id", comment.id)
+    .eq("user_id", user.id);
+
+  if (error) {
+    console.error("Failed to delete comment:", error.message);
+    return false;
+  }
+
+  return true;
+};
+
+export const getCommentItemsByBlogId = async (id: number) => {
+  const { data, error } = await supabase
+    .from("comments")
+    .select("*")
+    .eq("blog_id", id)
+    .order("id", { ascending: true });
+
+  if (error) {
+    console.error("Failed to fetch recipe comments:", error.message);
     return [];
   }
 
-  const data = await response.json();
-  return data;
+  return (data ?? []).map((c) => ({
+    id: c.id,
+    blogId: c.blog_id,
+    userId: c.user_id,
+    publisherName: c.publisher_name,
+    date: c.date,
+    comment: c.comment,
+    isPublished: c.is_published,
+    isDeleted: c.is_deleted,
+  }));
 };
 
 //----------INGREDIENT ENDPOINTS----------//
@@ -1097,137 +1303,185 @@ export const getStepsByBlogId = async (blogId: number, token: string) => {
 };
 
 //----------REPLY ENDPOINTS----------//
-export const getAllReplies = async (token: string) => {
-  const response = await fetch(`${url}/Replys/GetAllReplies`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
-    },
-  });
-  if (!response.ok) {
-    const errorData = await response.json();
-    const message = errorData.message;
-    console.log(message);
+
+/* ---------- REPLY ENDPOINTS ---------- */
+
+export const getAllReplies = async () => {
+  const { data, error } = await supabase
+    .from("replies")
+    .select("*")
+    .order("id", { ascending: true });
+
+  if (error) {
+    console.error("Failed to fetch replies:", error.message);
     return [];
   }
 
-  const data = await response.json();
-  return data;
+  return (data ?? []).map((r) => ({
+    id: r.id,
+    commentId: r.comment_id,
+    userId: r.user_id,
+    publisherName: r.publisher_name,
+    date: r.date,
+    reply: r.reply,
+    isPublished: r.is_published,
+    isDeleted: r.is_deleted,
+  }));
 };
 
-export const getReplyItemsByUserId = async (userId: number, token: string) => {
-  const response = await fetch(`${url}/Replys/GetReplyByUserId/${userId}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
-    },
-  });
-  if (!response.ok) {
-    const errorData = await response.json();
-    const message = errorData.message;
-    console.log(message);
+export const getReplyItemsByUserId = async (userId: string) => {
+  const { data, error } = await supabase
+    .from("replies")
+    .select("*")
+    .eq("user_id", userId)
+    .order("id", { ascending: true });
+
+  if (error) {
+    console.error("Failed to fetch user replies:", error.message);
     return [];
   }
 
-  const data = await response.json();
-  return data;
+  return (data ?? []).map((r) => ({
+    id: r.id,
+    commentId: r.comment_id,
+    userId: r.user_id,
+    publisherName: r.publisher_name,
+    date: r.date,
+    reply: r.reply,
+    isPublished: r.is_published,
+    isDeleted: r.is_deleted,
+  }));
 };
-export const getReplybyId = async (replyId: number, token: string) => {
-  const response = await fetch(`${url}/Replys/GetReplyById/${replyId}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
-    },
-  });
-  if (!response.ok) {
-    const errorData = await response.json();
-    const message = errorData.message;
-    console.log(message);
-    return [];
+
+export const getReplybyId = async (replyId: number) => {
+  const { data, error } = await supabase
+    .from("replies")
+    .select("*")
+    .eq("id", replyId)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Failed to fetch reply:", error.message);
+    return null;
   }
 
-  const data = await response.json();
-  return data;
+  if (!data) return null;
+
+  return {
+    id: data.id,
+    commentId: data.comment_id,
+    userId: data.user_id,
+    publisherName: data.publisher_name,
+    date: data.date,
+    reply: data.reply,
+    isPublished: data.is_published,
+    isDeleted: data.is_deleted,
+  };
 };
 
-export const addReplyItem = async (reply: IReplyItems, token: string) => {
-  const response = await fetch(`${url}/Replys/AddReply`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
-    },
-    body: JSON.stringify(reply),
-  });
-  if (!response.ok) {
-    const errorData = await response.json();
-    const message = errorData.message;
-    console.log(message);
+export const addReplyItem = async (reply: IReplyItems) => {
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    console.error("Sign in before posting a reply.");
     return false;
   }
-  const data = await response.json();
-  return data.success;
-};
 
-export const updateReplyItem = async (reply: IReplyItems, token: string) => {
-  const response = await fetch(`${url}/Replys/EditReply`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
-    },
-    body: JSON.stringify(reply),
+  const { error } = await supabase.from("replies").insert({
+    comment_id: reply.commentId,
+    user_id: user.id,
+    publisher_name: reply.publisherName,
+    date: reply.date,
+    reply: reply.reply,
+    is_published: reply.isPublished,
+    is_deleted: reply.isDeleted,
   });
-  if (!response.ok) {
-    const errorData = await response.json();
-    const message = errorData.message;
-    console.log(message);
+
+  if (error) {
+    console.error("Failed to add reply:", error.message);
     return false;
   }
-  const data = await response.json();
-  return data.success;
+
+  return true;
 };
 
-export const deleteReplyItem = async (reply: IReplyItems, token: string) => {
-  const response = await fetch(`${url}/Replys/DeleteReply`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
-    },
-    body: JSON.stringify(reply),
-  });
-  if (!response.ok) {
-    const errorData = await response.json();
-    const message = errorData.message;
-    console.log(message);
+export const updateReplyItem = async (reply: IReplyItems) => {
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) return false;
+
+  const { error } = await supabase
+    .from("replies")
+    .update({
+      publisher_name: reply.publisherName,
+      date: reply.date,
+      reply: reply.reply,
+      is_published: reply.isPublished,
+      is_deleted: reply.isDeleted,
+    })
+    .eq("id", reply.id)
+    .eq("user_id", user.id);
+
+  if (error) {
+    console.error("Failed to update reply:", error.message);
     return false;
   }
-  const data = await response.json();
-  return data.success;
+
+  return true;
 };
 
-export const getReplyItemsByCommentId = async (id: number, token: string) => {
-  const response = await fetch(`${url}/Replys/GetReplyByCommentId/${id}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
-    },
-  });
-  if (!response.ok) {
-    const errorData = await response.json();
-    const message = errorData.message;
-    console.log(message);
+export const deleteReplyItem = async (reply: IReplyItems) => {
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) return false;
+
+  const { error } = await supabase
+    .from("replies")
+    .delete()
+    .eq("id", reply.id)
+    .eq("user_id", user.id);
+
+  if (error) {
+    console.error("Failed to delete reply:", error.message);
+    return false;
+  }
+
+  return true;
+};
+
+export const getReplyItemsByCommentId = async (id: number) => {
+  const { data, error } = await supabase
+    .from("replies")
+    .select("*")
+    .eq("comment_id", id)
+    .order("id", { ascending: true });
+
+  if (error) {
+    console.error("Failed to fetch comment replies:", error.message);
     return [];
   }
 
-  const data = await response.json();
-  return data;
+  return (data ?? []).map((r) => ({
+    id: r.id,
+    commentId: r.comment_id,
+    userId: r.user_id,
+    publisherName: r.publisher_name,
+    date: r.date,
+    reply: r.reply,
+    isPublished: r.is_published,
+    isDeleted: r.is_deleted,
+  }));
 };
+
 //----------MESSAGES ENDPOINTS----------//
 export const getAllConversations = async () => {
   const res = await axios.get(`${url}/GetAllConversations`);

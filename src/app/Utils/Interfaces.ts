@@ -90,20 +90,22 @@ export interface IUserData {
   following: number[];
   followers: number[];
 }
+
 export interface ICommentItems {
   id: number;
   blogId: number;
-  userId: number;
+  userId: number | string;
   publisherName: string;
   date: string;
   comment: string;
   isPublished: boolean;
   isDeleted: boolean;
 }
+
 export interface IReplyItems {
   id: number;
   commentId: number;
-  userId: number;
+  userId: number | string;
   publisherName: string;
   date: string;
   reply: string;

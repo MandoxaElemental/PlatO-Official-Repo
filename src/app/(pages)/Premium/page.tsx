@@ -1,36 +1,52 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import { IUserData } from '@/app/Utils/Interfaces';
-import { getUserInfoByUsername, updateUserItem } from '@/app/Utils/DataServices';
+"use client";
+import React, { useEffect, useState } from "react";
+import { IUserData } from "@/app/Utils/Interfaces";
+import {
+  getUserInfoByUsername,
+  updateUserItem,
+} from "@/app/Utils/DataServices";
 
 const Premium = () => {
   const [userData, setUserData] = useState<IUserData | null>(null);
   const [isGuest, setIsGuest] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [token, setToken] = useState('');
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('Token') || '';
-    const storedUsername = localStorage.getItem('Username') || 'Guest';
+    let cancelled = false;
 
-    setToken(storedToken);
-    setUsername(storedUsername);
-    setIsGuest(storedToken === 'guest-token' || storedUsername === 'Guest');
+    const loadUser = async () => {
+      const storedToken = localStorage.getItem("Token") || "";
+      const storedUsername = localStorage.getItem("Username") || "Guest";
 
-    if (storedToken !== 'guest-token' && storedUsername !== 'Guest') {
-      getUserInfoByUsername(storedUsername)
-        .then((data: IUserData) => {
+      setUsername(storedUsername);
+      setIsGuest(storedToken === "guest-token" || storedUsername === "Guest");
+
+      if (storedToken === "guest-token" || storedUsername === "Guest") {
+        setIsLoaded(true);
+        return;
+      }
+
+      try {
+        const data = await getUserInfoByUsername(storedUsername);
+
+        if (!cancelled && data) {
           setUserData(data);
+        }
+      } catch (err) {
+        console.error("Error fetching user:", err);
+      } finally {
+        if (!cancelled) {
           setIsLoaded(true);
-        })
-        .catch((err) => {
-          console.error('Error fetching user:', err);
-          setIsLoaded(true);
-        });
-    } else {
-      setIsLoaded(true);
-    }
+        }
+      }
+    };
+
+    loadUser();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const handleUpgrade = async () => {
@@ -41,13 +57,13 @@ const Premium = () => {
       premiumMember: true,
     };
 
-    const success = await updateUserItem(updatedUser, token);
+    const success = await updateUserItem(updatedUser);
 
     if (success) {
       setUserData(updatedUser);
-      alert('🎉 You are now a Premium Member!');
+      alert("🎉 You are now a Premium Member!");
     } else {
-      alert('❌ Failed to upgrade to Premium.');
+      alert("❌ Failed to upgrade to Premium.");
     }
   };
 
@@ -65,46 +81,51 @@ const Premium = () => {
             Welcome, <strong>{username}</strong>
           </p>
           <p className="mb-4">
-            Status:{' '}
+            Status:{" "}
             <span
               className={
-                userData?.premiumMember ? 'text-green-600' : 'text-red-600'
+                userData?.premiumMember ? "text-green-600" : "text-red-600"
               }
             >
-              {userData?.premiumMember ? 'Premium Member' : 'Free Member'}
+              {userData?.premiumMember ? "Premium Member" : "Free Member"}
             </span>
           </p>
 
           <div className="mt-8">
-  <h2 className="text-xl font-semibold mb-4 text-center">Membership Benefits</h2>
-  <div className="grid md:grid-cols-2 gap-6 text-left max-w-4xl mx-auto">
-    <div className="p-4 border rounded-lg shadow bg-white">
-      <h3 className="text-lg font-bold mb-2 text-green-700">🌟 Premium Members</h3>
-      <ul className="list-disc pl-5 space-y-2 text-gray-700">
-        <li>🚫 Ad-Free Experience</li>
-        <li>📈 Priority in Recipe Feed</li>
-        <li>🎖️ Premium Badge on Profile & Posts</li>
-        <li>📊 Advanced Analytics (Views, Likes, Saves)</li>
-        <li>👩‍🍳 Real-time Recipe Collaboration</li>
-        <li>📰 Weekly Premium Newsletter</li>
-        <li>🔓 Access to Exclusive Recipes & Videos</li>
-        <li>📦 Increased Upload Limits</li>
-        <li>📌 Pin Recipes to Your Profile</li>
-      </ul>
-    </div>
-    <div className="p-4 border rounded-lg shadow bg-gray-50">
-      <h3 className="text-lg font-bold mb-2 text-slate-700">🙋 Free Members</h3>
-      <ul className="list-disc pl-5 space-y-2 text-gray-700">
-        <li>📹 Post Videos & Pictures</li>
-        <li>📖 Share & Save Recipes</li>
-        <li>❤️ Like & Rate Recipes</li>
-        <li>👥 Follow Users & Comment on Posts</li>
-        <li>🔍 Access All Public Recipes</li>
-      </ul>
-    </div>
-  </div>
-</div>
-
+            <h2 className="text-xl font-semibold mb-4 text-center">
+              Membership Benefits
+            </h2>
+            <div className="grid md:grid-cols-2 gap-6 text-left max-w-4xl mx-auto">
+              <div className="p-4 border rounded-lg shadow bg-white">
+                <h3 className="text-lg font-bold mb-2 text-green-700">
+                  🌟 Premium Members
+                </h3>
+                <ul className="list-disc pl-5 space-y-2 text-gray-700">
+                  <li>🚫 Ad-Free Experience</li>
+                  <li>📈 Priority in Recipe Feed</li>
+                  <li>🎖️ Premium Badge on Profile & Posts</li>
+                  <li>📊 Advanced Analytics (Views, Likes, Saves)</li>
+                  <li>👩‍🍳 Real-time Recipe Collaboration</li>
+                  <li>📰 Weekly Premium Newsletter</li>
+                  <li>🔓 Access to Exclusive Recipes & Videos</li>
+                  <li>📦 Increased Upload Limits</li>
+                  <li>📌 Pin Recipes to Your Profile</li>
+                </ul>
+              </div>
+              <div className="p-4 border rounded-lg shadow bg-gray-50">
+                <h3 className="text-lg font-bold mb-2 text-slate-700">
+                  🙋 Free Members
+                </h3>
+                <ul className="list-disc pl-5 space-y-2 text-gray-700">
+                  <li>📹 Post Videos & Pictures</li>
+                  <li>📖 Share & Save Recipes</li>
+                  <li>❤️ Like & Rate Recipes</li>
+                  <li>👥 Follow Users & Comment on Posts</li>
+                  <li>🔍 Access All Public Recipes</li>
+                </ul>
+              </div>
+            </div>
+          </div>
 
           {isGuest ? (
             <div className="text-red-500 mt-4">
