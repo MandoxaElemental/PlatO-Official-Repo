@@ -23,7 +23,7 @@ import Comment from "@/app/Components/Comment";
 import Link from "next/link";
 import SaveButton from "@/app/Components/SaveButton";
 import BackButton from "@/app/Components/BackButton";
-import StarRating from "@/app/Components/Rating";
+// import StarRating from "@/app/Components/Rating";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import LikeButton from "@/app/Components/LikeButton";
 
@@ -215,7 +215,7 @@ const Blog = () => {
                     height={500}
                   />
                   <p className="font-semibold text-2xl p-2">{name}</p>
-                  {blogItem && currentUser && (
+                  {/* {blogItem && currentUser && (
                     <div className="flex flex-col items-center">
                       <StarRating
                         currentRating={blogItem?.averageRating || 0}
@@ -230,7 +230,7 @@ const Blog = () => {
                         {blogItem.numberOfRatings} ratings)
                       </p>
                     </div>
-                  )}
+                  )} */}
                   <div className="p-2 flex justify-around">
                     <div className="text-center">
                       <p className="font-semibold">Time</p>
@@ -329,8 +329,21 @@ const Blog = () => {
             <div>
               <div className="p-5 border-t border-solid border-slate-300 flex items-center justify-between">
                 <div className="rounded-full overflow-hidden w-10 h-10 relative bg-blue-200">
-                  {/* <Image src="" alt="profilePic" fill className="object-cover"/> */}
+                  {currentUser?.profilePicture ? (
+                    <Image
+                      src={currentUser.profilePicture}
+                      alt="profilePic"
+                      fill
+                      sizes="40px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-blue-700 font-semibold">
+                      {currentUser?.username?.charAt(0).toUpperCase() || "?"}
+                    </div>
+                  )}
                 </div>
+
                 <TextInput
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}

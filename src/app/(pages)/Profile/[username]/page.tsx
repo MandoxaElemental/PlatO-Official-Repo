@@ -27,10 +27,10 @@ const ProfilePage = () => {
 
   useEffect(() => {
     const fetchProfileData = async () => {
-      if (!checkToken()) {
-        alert("You must be logged in to view profiles");
-        return;
-      }
+      // if (!checkToken()) {
+      //   alert("You must be logged in to view profiles");
+      //   return;
+      // }
 
       if (typeof username !== "string") return;
 

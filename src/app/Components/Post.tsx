@@ -1,3 +1,5 @@
+"use client";
+
 import { supabase } from "@/app/lib/supabase";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,31 +10,56 @@ import FollowButton from "./FollowButton";
 import SaveButton from "./SaveButton";
 import LikeButton from "./LikeButton";
 
+const DEFAULT_PROFILE = "/assets/person-circle.svg";
+const PLACEHOLDER_IMAGE = "/assets/Placeholder.png";
+
+const VIEWS = ["main", "ingredients", "steps"] as const;
+type RecipeView = (typeof VIEWS)[number];
+
 const Post = ({ blog }: { blog: IBlogItems }) => {
   const [currentUser, setCurrentUser] = useState<IUserData | null>(null);
   const [username, setUsername] = useState("");
-  const [profilePic, setProfilePic] = useState("");
-  const [, setIsFollowing] = useState<boolean>(false);
-  const [currentView, setCurrentView] = useState<
-    "main" | "ingredients" | "steps"
-  >("main");
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [profilePic, setProfilePic] = useState(DEFAULT_PROFILE);
+  const [, setIsFollowing] = useState(false);
+  const [currentView, setCurrentView] = useState<RecipeView>("main");
   const [slideWidth, setSlideWidth] = useState(500);
 
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const isRecipe = blog.postType === "recipe";
+  const isVideo = blog.postType === "video";
+  const postHref = `/Blog/${blog.id}`;
+
+  const imageUrl =
+    typeof blog.image === "string" && blog.image.trim()
+      ? blog.image
+      : PLACEHOLDER_IMAGE;
+
+  const ingredients = blog.ingredients ?? [];
+  const steps = blog.steps ?? [];
+
+  // Keep the recipe carousel sized to its actual container.
   useEffect(() => {
-    const updateSlideWidth = () => {
-      setSlideWidth(window.innerWidth < 768 ? 400 : 500);
+    const container = containerRef.current;
+    if (!container) return;
+
+    const updateWidth = () => {
+      setSlideWidth(Math.max(1, Math.min(container.clientWidth, 500)));
     };
 
-    updateSlideWidth();
-    window.addEventListener("resize", updateSlideWidth);
-    return () => window.removeEventListener("resize", updateSlideWidth);
+    updateWidth();
+
+    const observer = new ResizeObserver(updateWidth);
+    observer.observe(container);
+
+    return () => observer.disconnect();
   }, []);
 
+  // Load the post author's profile picture.
   useEffect(() => {
     let cancelled = false;
 
-    const getData = async () => {
+    const getProfilePicture = async () => {
       try {
         const { data, error } = await supabase
           .from("profiles")
@@ -43,35 +70,40 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
         if (error) throw error;
 
         if (!cancelled) {
-          setProfilePic(data?.profile_picture || "/assets/person-circle.svg");
+          setProfilePic(data?.profile_picture || DEFAULT_PROFILE);
         }
       } catch (error) {
         console.error("Failed to load profile picture:", error);
 
         if (!cancelled) {
-          setProfilePic("/assets/person-circle.svg");
+          setProfilePic(DEFAULT_PROFILE);
         }
       }
     };
 
-    getData();
+    getProfilePicture();
 
     return () => {
       cancelled = true;
     };
   }, [blog.userId]);
+
+  // Read the signed-in username on the client.
   useEffect(() => {
-    const storedUsername = localStorage.getItem("Username");
-    if (storedUsername) setUsername(storedUsername);
+    setUsername(localStorage.getItem("Username") || "");
   }, []);
 
+  // Load the current user's data for the existing social controls.
   useEffect(() => {
+    let cancelled = false;
+
     const fetchUser = async () => {
       if (!username) return;
 
       try {
         const user = await getUserInfoByUsername(username);
-        if (user) {
+
+        if (!cancelled && user) {
           setCurrentUser(user);
         }
       } catch (error) {
@@ -80,34 +112,43 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
     };
 
     fetchUser();
+
+    return () => {
+      cancelled = true;
+    };
   }, [username]);
 
+  // Swipe between recipe overview, ingredients, and steps.
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
     let touchStartX = 0;
 
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStartX = e.touches[0].clientX;
+    const handleTouchStart = (event: TouchEvent) => {
+      touchStartX = event.touches[0]?.clientX ?? 0;
     };
 
-    const handleTouchEnd = (e: TouchEvent) => {
-      const touchEndX = e.changedTouches[0].clientX;
+    const handleTouchEnd = (event: TouchEvent) => {
+      const touchEndX = event.changedTouches[0]?.clientX ?? touchStartX;
       const deltaX = touchEndX - touchStartX;
 
-      if (Math.abs(deltaX) > 50) {
-        const views = ["main", "ingredients", "steps"];
-        const currentIndex = views.indexOf(currentView);
-        const nextIndex = deltaX > 0 ? currentIndex - 1 : currentIndex + 1;
-        if (nextIndex >= 0 && nextIndex < views.length) {
-          setCurrentView(views[nextIndex] as typeof currentView);
-        }
+      if (Math.abs(deltaX) <= 50) return;
+
+      const currentIndex = VIEWS.indexOf(currentView);
+      const nextIndex = deltaX > 0 ? currentIndex - 1 : currentIndex + 1;
+
+      if (nextIndex >= 0 && nextIndex < VIEWS.length) {
+        setCurrentView(VIEWS[nextIndex]);
       }
     };
 
-    container.addEventListener("touchstart", handleTouchStart);
-    container.addEventListener("touchend", handleTouchEnd);
+    container.addEventListener("touchstart", handleTouchStart, {
+      passive: true,
+    });
+    container.addEventListener("touchend", handleTouchEnd, {
+      passive: true,
+    });
 
     return () => {
       container.removeEventListener("touchstart", handleTouchStart);
@@ -119,221 +160,385 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
     setIsFollowing(isNowFollowing);
   };
 
-  return (
-    <div className="text-center max-w-[400px] md:max-w-[500px] mb-5 border-1 border-solid border-blue-100 shadow-blue-200/50 rounded-md shadow-sm">
-      <div className="flex justify-between items-center py-2 px-5">
-        <div className="flex items-center">
-          <div className="rounded-full bg-blue-200 w-10 h-10 overflow-hidden relative">
-            <Image
-              src={profilePic || "/assets/person-circle.svg"}
-              alt="profilePic"
-              fill
-              className="object-cover"
-            />
+  const changeView = (direction: -1 | 1) => {
+    const currentIndex = VIEWS.indexOf(currentView);
+    const nextIndex = currentIndex + direction;
+
+    if (nextIndex >= 0 && nextIndex < VIEWS.length) {
+      setCurrentView(VIEWS[nextIndex]);
+    }
+  };
+
+  const renderRecipeView = () => (
+    <div
+      ref={containerRef}
+      className="relative w-full overflow-hidden bg-[#fbfaf7]"
+    >
+      <div
+        className="flex transition-transform duration-300 ease-in-out"
+        style={{
+          width: `${slideWidth * VIEWS.length}px`,
+          transform: `translateX(-${VIEWS.indexOf(currentView) * slideWidth}px)`,
+        }}
+      >
+        {/* Recipe overview */}
+        <div className="min-w-0 shrink-0" style={{ width: slideWidth }}>
+          <Link href={postHref} className="group block">
+            <div className="relative h-[260px] w-full overflow-hidden bg-[#e0effc] sm:h-[320px]">
+              <Image
+                src={imageUrl}
+                alt={blog.recipeName || "Recipe"}
+                fill
+                sizes="(max-width: 768px) 100vw, 500px"
+                className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+              />
+
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/65 to-transparent px-5 pb-5 pt-12">
+                <span className="inline-flex rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-[#336f9e]">
+                  View recipe
+                </span>
+              </div>
+            </div>
+          </Link>
+
+          <div className="px-5 py-5 text-left sm:px-6">
+            <h2 className="text-xl font-bold leading-snug tracking-tight text-[#292b25] sm:text-2xl">
+              {blog.recipeName || "Untitled recipe"}
+            </h2>
+
+            {blog.description && (
+              <p className="mt-2 whitespace-pre-line text-sm leading-6 text-[#73776f]">
+                {blog.description}
+              </p>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setCurrentView("ingredients")}
+              className="mt-4 inline-flex items-center gap-2 rounded-full border border-[#d1e4f5] bg-[#e0effc] px-4 py-2 text-sm font-semibold text-[#336f9e] transition-colors hover:bg-[#d1e4f5] focus:outline-none focus:ring-2 focus:ring-[#336f9e]/30"
+            >
+              Explore ingredients
+              <span aria-hidden="true">→</span>
+            </button>
           </div>
+        </div>
+
+        {/* Ingredients */}
+        <div
+          className="max-h-[520px] shrink-0 overflow-y-auto px-5 py-6 text-left sm:px-7"
+          style={{ width: slideWidth }}
+        >
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#336f9e]">
+            What you'll need
+          </p>
+          <h3 className="mb-5 mt-2 text-2xl font-bold text-[#292b25]">
+            Ingredients
+          </h3>
+
+          {ingredients.length > 0 ? (
+            <div className="space-y-5">
+              {ingredients.map((group, index) => (
+                <section
+                  key={`${group.title}-${index}`}
+                  className="rounded-xl border border-[#e5e5e0] bg-white p-4"
+                >
+                  <h4 className="mb-3 font-semibold text-[#292b25]">
+                    {group.title}
+                  </h4>
+
+                  <ul className="space-y-2">
+                    {(group.ingredients ?? []).map(
+                      (ingredient, ingredientIndex) => (
+                        <li
+                          key={ingredientIndex}
+                          className="flex gap-3 text-sm leading-5 text-[#73776f]"
+                        >
+                          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#336f9e]" />
+                          <span>{ingredient}</span>
+                        </li>
+                      ),
+                    )}
+                  </ul>
+                </section>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-[#73776f]">
+              No ingredients have been added yet.
+            </p>
+          )}
+
           <Link
-            href={`/Profile/${blog.publisherName}`}
-            className="pl-3 cursor-pointer font-semibold text-blue-600"
+            href={postHref}
+            className="mt-5 inline-block text-sm font-semibold text-[#336f9e] hover:text-[#285b83]"
           >
-            {blog.publisherName}
+            Open full recipe →
           </Link>
         </div>
 
-        {blog.publisherName !== localStorage.getItem("Username") && (
-          <FollowButton
-            targetUserId={Number(blog.userId)}
-            currentUser={currentUser}
-            onUpdate={handleFollowUpdate}
+        {/* Cooking steps */}
+        <div
+          className="max-h-[520px] shrink-0 overflow-y-auto px-5 py-6 text-left sm:px-7"
+          style={{ width: slideWidth }}
+        >
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#336f9e]">
+            Let's get cooking
+          </p>
+          <h3 className="mb-5 mt-2 text-2xl font-bold text-[#292b25]">
+            Method
+          </h3>
+
+          {steps.length > 0 ? (
+            <div className="space-y-5">
+              {steps.map((group, index) => (
+                <section
+                  key={`${group.title}-${index}`}
+                  className="rounded-xl border border-[#e5e5e0] bg-white p-4"
+                >
+                  <h4 className="mb-3 font-semibold text-[#292b25]">
+                    {group.title}
+                  </h4>
+
+                  <ol className="space-y-4">
+                    {(group.steps ?? []).map((step, stepIndex) => (
+                      <li
+                        key={stepIndex}
+                        className="flex items-start gap-3 text-sm leading-6 text-[#73776f]"
+                      >
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#e0effc] text-xs font-bold text-[#336f9e]">
+                          {stepIndex + 1}
+                        </span>
+                        <span>{step}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </section>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-[#73776f]">
+              No cooking steps have been added yet.
+            </p>
+          )}
+
+          <Link
+            href={postHref}
+            className="mt-5 inline-block text-sm font-semibold text-[#336f9e] hover:text-[#285b83]"
+          >
+            Open full recipe →
+          </Link>
+        </div>
+      </div>
+
+      {/* Carousel controls */}
+      {currentView !== "main" && (
+        <button
+          type="button"
+          aria-label="Previous recipe section"
+          onClick={() => changeView(-1)}
+          className="absolute inset-y-0 left-0 flex items-center px-2 transition-colors hover:bg-black/5 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#336f9e]"
+        >
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-xl text-[#336f9e] shadow-sm">
+            ‹
+          </span>
+        </button>
+      )}
+
+      {currentView !== "steps" && (
+        <button
+          type="button"
+          aria-label="Next recipe section"
+          onClick={() => changeView(1)}
+          className="absolute inset-y-0 right-0 flex items-center px-2 transition-colors hover:bg-black/5 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#336f9e]"
+        >
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-xl text-[#336f9e] shadow-sm">
+            ›
+          </span>
+        </button>
+      )}
+
+      <div className="flex justify-center gap-2 border-t border-[#e5e5e0] bg-white py-3">
+        {VIEWS.map((view) => (
+          <button
+            key={view}
+            type="button"
+            aria-label={`Show ${view}`}
+            aria-pressed={currentView === view}
+            onClick={() => setCurrentView(view)}
+            className={`h-2 rounded-full transition-all ${
+              currentView === view
+                ? "w-6 bg-[#336f9e]"
+                : "w-2 bg-[#d8d9d2] hover:bg-[#95988e]"
+            }`}
           />
+        ))}
+      </div>
+    </div>
+  );
+
+  return (
+    <article className="mx-auto mb-7 w-full max-w-[500px] overflow-hidden rounded-2xl border border-[#e5e5e0] bg-white shadow-[0_4px_18px_rgba(41,43,37,0.04)] transition-shadow duration-200 hover:shadow-[0_8px_26px_rgba(41,43,37,0.08)]">
+      {/* Author header */}
+      <div className="flex items-center justify-between gap-3 px-4 py-4 sm:px-5">
+        <div className="flex min-w-0 items-center gap-3">
+          <Link
+            href={`/Profile/${encodeURIComponent(blog.publisherName || "")}`}
+            aria-label={`View ${blog.publisherName || "author"}'s profile`}
+            className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full bg-[#e0effc] ring-2 ring-[#e0effc]"
+          >
+            <Image
+              src={profilePic || DEFAULT_PROFILE}
+              alt=""
+              fill
+              sizes="44px"
+              className="object-cover"
+            />
+          </Link>
+
+          <div className="min-w-0">
+            <Link
+              href={`/Profile/${encodeURIComponent(blog.publisherName || "")}`}
+              className="block truncate text-sm font-semibold text-[#292b25] transition-colors hover:text-[#336f9e]"
+            >
+              {blog.publisherName || "PlatO member"}
+            </Link>
+
+            <p className="mt-0.5 text-xs text-[#95988e]">
+              {isRecipe
+                ? "Shared a recipe"
+                : isVideo
+                  ? "Shared a video"
+                  : "Shared a post"}
+            </p>
+          </div>
+        </div>
+
+        {username && blog.publisherName !== username && blog.userId != null && (
+          <div className="shrink-0">
+            <FollowButton
+              targetUserId={Number(blog.userId)}
+              currentUser={currentUser}
+              onUpdate={handleFollowUpdate}
+            />
+          </div>
         )}
       </div>
 
-      {blog.postType != "video" && blog.postType != "recipe" ? (
-        <Link href={`${blog.id}`}>
-          <Image
-            className="object-cover h-[300px] w-full"
-            src={blog.image ? String(blog.image) : "/assets/Placeholder.png"}
-            alt="post"
-            width={500}
-            height={500}
-            loading="lazy"
-          />
-        </Link>
-      ) : blog.postType === "video" ? (
-        <div className="relative w-full h-auto">
+      {/* Post content */}
+      {isRecipe ? (
+        renderRecipeView()
+      ) : isVideo ? (
+        <div className="w-full bg-black">
           <video
-            className="w-full h-auto max-h-[500px] object-cover"
+            className="max-h-[520px] w-full object-contain"
             controls
+            playsInline
             preload="metadata"
-            poster={blog.image ? String(blog.image) : "/assets/Placeholder.png"}
+            poster={imageUrl}
           >
             {blog.image && <source src={String(blog.image)} type="video/mp4" />}
-            <source src={String(blog.image)} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         </div>
       ) : (
-        // Fallback for "recipe" or others (default to swipeable views)
-        <div
-          className="relative overflow-hidden max-w-[400px] md:max-w-[500px] h-[100%]"
-          ref={containerRef}
-        >
-          <div
-            className="flex transition-transform duration-500 ease-in-out"
-            style={{
-              width: `${slideWidth * 3}px`,
-              transform: `translateX(-${["main", "ingredients", "steps"].indexOf(currentView) * slideWidth}px)`,
-            }}
-          >
-            {/* Main View */}
-            <div className="w-[400px] md:w-[500px] max-h-[400px] shrink-0">
-              <Link href={`/Blog/${blog.id}`}>
-                <div className="relative group">
-                  <Image
-                    className="object-cover h-[300px] w-full"
-                    src={
-                      blog.image !== ""
-                        ? String(blog.image)
-                        : "/assets/Placeholder.png"
-                    }
-                    alt="post"
-                    width={500}
-                    height={500}
-                    loading="lazy"
-                  />
-                  <div className="absolute bottom-0 left-0 w-full h-[60px] bg-blue-200 bg-opacity-25 font-semibold text-md text-black flex items-center justify-center transform translate-y-full group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    Cook it
-                  </div>
-                </div>
-              </Link>
+        <Link href={postHref} className="block">
+          <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#e0effc]">
+            <Image
+              src={imageUrl}
+              alt={blog.recipeName || "Post"}
+              fill
+              sizes="(max-width: 768px) 100vw, 500px"
+              loading="lazy"
+              className="object-cover transition-transform duration-500 hover:scale-[1.02]"
+            />
+          </div>
 
-              <p className="font-semibold text-2xl p-2">{blog.recipeName}</p>
-              <div className="p-2 text-left">{blog.description}</div>
+          {(blog.recipeName || blog.description) && (
+            <div className="px-5 py-4 text-left">
+              {blog.recipeName && (
+                <h2 className="text-lg font-bold text-[#292b25]">
+                  {blog.recipeName}
+                </h2>
+              )}
+
+              {blog.description && (
+                <p className="mt-1 whitespace-pre-line text-sm leading-6 text-[#73776f]">
+                  {blog.description}
+                </p>
+              )}
             </div>
-
-            {/* Ingredients View */}
-            <Link href={`/Blog/${blog.id}`}>
-              <div className="w-[400px] md:w-[500px] max-h-[400px] shrink-0 overflow-y-auto">
-                <h3 className="font-bold text-lg px-2 pt-5">Ingredients:</h3>
-                {blog.ingredients.map((item, i) => (
-                  <div key={i}>
-                    <h1 className="font-bold">{item.title}</h1>
-                    <ul className="list-disc text-left pl-8 mx-5">
-                      {item.ingredients.map((ingredient, j) => (
-                        <li key={j}>{ingredient}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </Link>
-
-            {/* Steps View */}
-            <Link href={`/Blog/${blog.id}`}>
-              <div className="w-[400px] md:w-[500px] max-h-[400px] shrink-0 overflow-y-auto">
-                <h3 className="font-bold text-lg px-2 pt-5">Steps:</h3>
-                {blog.steps.map((item, i) => (
-                  <div key={i}>
-                    <h1 className="font-semibold">{item.title}</h1>
-                    <ol className="list-decimal text-left px-8 mx-5">
-                      {item.steps.map((step, j) => (
-                        <li key={j}>{step}</li>
-                      ))}
-                    </ol>
-                  </div>
-                ))}
-              </div>
-            </Link>
-          </div>
-
-          {/* Navigation Buttons */}
-          <div className="absolute inset-y-0 left-0">
-            {currentView !== "main" && (
-              <div
-                onClick={() => {
-                  const views = ["main", "ingredients", "steps"];
-                  const currentIndex = views.indexOf(currentView);
-                  if (currentIndex > 0)
-                    setCurrentView(
-                      views[currentIndex - 1] as typeof currentView,
-                    );
-                }}
-                className="bg-transparent h-full hover:opacity-50 hover:bg-black/10 p-2 rounded-r-xl flex flex-col justify-center cursor-pointer"
-              >
-                <div className="w-6 h-6 bg-[#FFFFFF80] dark:bg-[#00000080] rounded-full flex items-center justify-center">
-                  <Image
-                    width={20}
-                    height={20}
-                    className="h-5 w-5 dark:invert opacity-100"
-                    src="/assets/arrow-left-circle.svg"
-                    alt="left"
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="absolute inset-y-0 right-0">
-            {currentView !== "steps" && (
-              <div
-                onClick={() => {
-                  const views = ["main", "ingredients", "steps"];
-                  const currentIndex = views.indexOf(currentView);
-                  if (currentIndex < views.length - 1)
-                    setCurrentView(
-                      views[currentIndex + 1] as typeof currentView,
-                    );
-                }}
-                className="bg-transparent h-full hover:opacity-50 hover:bg-black/10 p-2 rounded-l-xl flex flex-col justify-center cursor-pointer"
-              >
-                <div className="w-5 h-5 bg-[#FFFFFF80] dark:bg-[#00000080] rounded-full flex items-center justify-center">
-                  <Image
-                    width={20}
-                    height={20}
-                    className="h-5 w-5 dark:invert opacity-100"
-                    src="/assets/arrow-right-circle.svg"
-                    alt="left"
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+          )}
+        </Link>
       )}
 
-      <div className="flex justify-evenly p-2 pt-5 text-xs font-blue-400">
-        <LikeButton
-          blog={blog}
-          currentUser={currentUser}
-          onUserUpdate={setCurrentUser}
-        />
-        <div className="flex items-center">
+      {/* Post actions */}
+      <div className="flex flex-wrap items-center justify-around gap-x-2 gap-y-3 border-t border-[#e5e5e0] bg-white px-2 py-3 text-[#73776f] sm:px-4">
+        <div className="flex items-center justify-center">
+          <LikeButton
+            blog={blog}
+            currentUser={currentUser}
+            onUserUpdate={setCurrentUser}
+          />
+        </div>
+
+        <Link
+          href={postHref}
+          className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-medium transition-colors hover:bg-[#fbfaf7] hover:text-[#336f9e]"
+        >
           <Image
-            width={20}
-            height={20}
-            className="h-5 w-5 dark:invert"
+            width={19}
+            height={19}
             src="/assets/chat-left.svg"
-            alt="comment"
+            alt=""
+            aria-hidden="true"
           />
-          <p className="pl-2">Comment</p>
-        </div>
-        <div className="flex items-center">
+          <span>Comment</span>
+        </Link>
+
+        <button
+          type="button"
+          onClick={async () => {
+            const shareUrl =
+              typeof window !== "undefined"
+                ? `${window.location.origin}${postHref}`
+                : postHref;
+
+            try {
+              if (navigator.share) {
+                await navigator.share({
+                  title: blog.recipeName || "PlatO post",
+                  url: shareUrl,
+                });
+              } else {
+                await navigator.clipboard.writeText(shareUrl);
+              }
+            } catch (error) {
+              if (error instanceof Error && error.name !== "AbortError") {
+                console.error("Unable to share post:", error);
+              }
+            }
+          }}
+          className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-medium transition-colors hover:bg-[#fbfaf7] hover:text-[#336f9e]"
+        >
           <Image
-            width={20}
-            height={20}
-            className="h-5 w-5 dark:invert"
+            width={19}
+            height={19}
             src="/assets/repeat.svg"
-            alt="share"
+            alt=""
+            aria-hidden="true"
           />
-          <p className="pl-2">Share</p>
+          <span>Share</span>
+        </button>
+
+        <div className="flex items-center justify-center">
+          <SaveButton
+            postId={blog.id}
+            currentUser={currentUser}
+            onUpdate={setCurrentUser}
+          />
         </div>
-        <SaveButton
-          postId={blog.id}
-          currentUser={currentUser}
-          onUpdate={setCurrentUser}
-        />
       </div>
-    </div>
+    </article>
   );
 };
 

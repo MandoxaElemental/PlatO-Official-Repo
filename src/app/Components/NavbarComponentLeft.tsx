@@ -1,81 +1,113 @@
-
 "use client";
 
-import { Button, Sidebar, SidebarItem, SidebarItemGroup, SidebarItems } from "flowbite-react";
+import {
+  Button,
+  Sidebar,
+  SidebarItem,
+  SidebarItemGroup,
+  SidebarItems,
+} from "flowbite-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-
 export function NavbarComponent() {
-
-  const [username, setUsername] = useState('');
-  // const [id, setId] = useState(0);
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
     const storedUsername = localStorage.getItem("Username");
-    // const storedId = localStorage.getItem("UserID");
-  
     if (storedUsername) setUsername(storedUsername);
-    // if (storedId) setId(Number(storedId));
   }, []);
 
+  const navItems = [
+    { label: "Home", href: "/Home", icon: "/assets/house.svg" },
+    { label: "Discover", href: "/Discover", icon: "/assets/search.svg" },
+    {
+      label: "Notifications",
+      href: "/Notifications",
+      icon: "/assets/bell.svg",
+    },
+    { label: "Premium", href: "/Premium", icon: "/assets/award.svg" },
+    { label: "Messages", href: "/Messages", icon: "/assets/envelope.svg" },
+    { label: "Recipe Book", href: "/RecipeBook", icon: "/assets/book.svg" },
+    {
+      label: username || "Profile",
+      href: username ? `/Profile/${encodeURIComponent(username)}` : "/",
+      icon: "/assets/person.svg",
+    },
+  ];
+
   return (
-    <Sidebar aria-label="Default sidebar example">
+    <Sidebar
+      aria-label="Main navigation"
+      className="h-full border-r border-[#e5e5e0] bg-white"
+    >
       <SidebarItems>
         <SidebarItemGroup>
-          <div className="flex justify-center">
-      <Image src="../assets/plato.svg" alt="plato" className=" block dark:hidden h-[120px]" width={150} height={125}/>
-      <Image src="../assets/plato-dark.svg" alt="plato" className=" hidden dark:block h-[120px]" width={150} height={125}/>
+          <a href="/Home" className="mb-8 flex justify-center">
+            <Image
+              src="/assets/plato.svg"
+              alt="PlatO"
+              width={150}
+              height={100}
+              priority
+              className="h-auto max-h-[100px] w-[130px] object-contain"
+            />
+          </a>
+
+          <div className="mb-5 px-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#95988e]">
+              Menu
+            </p>
           </div>
-          <SidebarItem href="/Home" >
-            <div className="flex items-center">
-            <Image className="h-5 w-5 dark:invert" src="../assets/house.svg" alt="home" width={0} height={100}/><p className="pl-2">Home</p>
-            </div>
-          </SidebarItem>
-          <SidebarItem href="/Discover">
-          <div className="flex items-center">
-            <Image className="h-5 w-5 dark:invert" src="../assets/search.svg" alt="discover" width={100} height={100}/><p className="pl-2">Discover</p>
-            </div>
-          </SidebarItem>
-          <SidebarItem href="/Notifications">
-          <div className="flex items-center">
-            <Image className="h-5 w-5 dark:invert" src="../assets/bell.svg" alt="notifications"  width={100} height={100}/><p className="pl-2">Notifications</p>
-            </div>
-          </SidebarItem>
-          <SidebarItem href="/Premium">
-          <div className="flex items-center">
-            <Image className="h-5 w-5 dark:invert" src="../assets/award.svg" alt="notifications" width={100} height={100}/><p className="pl-2">Premium</p>
-            </div>
-          </SidebarItem>
-          <SidebarItem href="/Messages" >
-          <div className="flex items-center">
-            <Image className="h-5 w-5 dark:invert" src="../assets/envelope.svg" alt="messages"  width={100} height={100}/><p className="pl-2">Messages</p>
-            </div>
-          </SidebarItem>
-          <SidebarItem href="/RecipeBook" >
-          <div className="flex items-center">
-            <Image className="h-5 w-5 dark:invert" src="../assets/book.svg" alt="book" width={100} height={100} /><p className="pl-2">Recipe Book</p>
-            </div>
-          </SidebarItem>
-          <SidebarItem href={`/Profile/${username}`} >
-          <div className="flex items-center">
-            <Image className="h-5 w-5 dark:invert" src="../assets/person.svg" alt="profile" width={100} height={100} /><p className="pl-2">{username}</p>
-            </div>
-          </SidebarItem>
-          <Button disabled={username === "Guest"} className="rounded-md bg-orange-200 hover:bg-orange-400 text-black w-full h-8 cursor-pointer dark:bg-orange-100 dark:hover:bg-orange-200" href="/NewPost">Post</Button>
+
+          {navItems.map((item) => (
+            <SidebarItem key={item.label} href={item.href}>
+              <div className="flex items-center gap-3 py-1 text-[#292b25]">
+                <Image
+                  src={item.icon}
+                  alt=""
+                  width={20}
+                  height={20}
+                  className="h-5 w-5"
+                />
+                <span className="font-medium">{item.label}</span>
+              </div>
+            </SidebarItem>
+          ))}
+
+          <div className="mt-6 px-3">
+            <Button
+              disabled={username === "Guest"}
+              href="/NewPost"
+              className="w-full cursor-pointer rounded-xl border-0 bg-[#336f9e] text-white hover:bg-[#285b83] focus:ring-2 focus:ring-[#336f9e]/30 disabled:opacity-50"
+            >
+              + Create a post
+            </Button>
+          </div>
         </SidebarItemGroup>
+
         <SidebarItemGroup>
-          <SidebarItem href="/Settings" >
-          <div className="flex items-center">
-            <Image className="h-5 w-5 dark:invert" src="../assets/gear.svg" alt="profile" width={100} height={100} /><p className="pl-2">Settings and Privacy</p>
+          <SidebarItem href="/Settings">
+            <div className="flex items-center gap-3 py-1 text-[#292b25]">
+              <Image
+                src="/assets/gear.svg"
+                alt=""
+                width={20}
+                height={20}
+                className="h-5 w-5"
+              />
+              <span>Settings and Privacy</span>
             </div>
           </SidebarItem>
-          <SidebarItem href="/"
+
+          <SidebarItem
+            href="/"
             onClick={() => {
               localStorage.removeItem("Token");
               localStorage.removeItem("UserID");
               localStorage.removeItem("Username");
-            }}>
+            }}
+          >
             Log Out
           </SidebarItem>
         </SidebarItemGroup>
