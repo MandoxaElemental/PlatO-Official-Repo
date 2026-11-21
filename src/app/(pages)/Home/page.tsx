@@ -184,8 +184,8 @@ export default function Home() {
             role="status"
             className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800"
           >
-            We couldn't connect to the feed, so you're viewing demo posts.
-            Please try again later.
+            We couldn&apos;t connect to the feed, so you&apos;re viewing demo
+            posts. Please try again later.
           </div>
         )}
 
@@ -197,7 +197,7 @@ export default function Home() {
                 <>
                   No results found for{" "}
                   <span className="font-semibold text-[#292b25]">
-                    "{searchQuery}"
+                    &quot;{searchQuery}&quot;
                   </span>
                 </>
               ) : (
@@ -208,7 +208,7 @@ export default function Home() {
                   </span>{" "}
                   result{filteredBlogs.length !== 1 ? "s" : ""} for{" "}
                   <span className="font-semibold text-[#292b25]">
-                    "{searchQuery}"
+                    &quot;{searchQuery}&quot;
                   </span>
                 </>
               )}
@@ -291,7 +291,7 @@ export default function Home() {
                 </div>
               ) : filteredBlogs.length > 0 ? (
                 <span className="rounded-full border border-[#e5e5e0] bg-white px-4 py-2">
-                  You've reached the end of the table.
+                  You have reached the end of the table.
                 </span>
               ) : null}
             </div>

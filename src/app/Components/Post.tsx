@@ -229,7 +229,7 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
           style={{ width: slideWidth }}
         >
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#336f9e]">
-            What you'll need
+            What you will need
           </p>
           <h3 className="mb-5 mt-2 text-2xl font-bold text-[#292b25]">
             Ingredients
@@ -282,7 +282,7 @@ const Post = ({ blog }: { blog: IBlogItems }) => {
           style={{ width: slideWidth }}
         >
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#336f9e]">
-            Let's get cooking
+            Let&apos;s get cooking
           </p>
           <h3 className="mb-5 mt-2 text-2xl font-bold text-[#292b25]">
             Method

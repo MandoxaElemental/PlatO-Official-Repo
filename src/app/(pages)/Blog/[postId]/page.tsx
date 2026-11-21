@@ -51,10 +51,10 @@ const Blog = () => {
   const [checkedIngredients, setCheckedIngredients] = useState<
     Record<string, boolean>
   >({});
-  const [, setRating] = useState<number>(0);
-  const handleRate = (rating: number) => {
-    setRating(rating);
-  };
+  // const [, setRating] = useState<number>(0);
+  // const handleRate = (rating: number) => {
+  //   setRating(rating);
+  // };
 
   useEffect(() => {
     const storedUsername = localStorage.getItem("Username");
